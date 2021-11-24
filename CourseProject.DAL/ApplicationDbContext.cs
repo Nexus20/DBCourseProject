@@ -7,8 +7,6 @@ namespace CourseProject.DAL;
 
 public class ApplicationDbContext : IdentityDbContext<User> {
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Model> Models { get; set; }
     public DbSet<Car> Cars { get; set; }
@@ -20,6 +18,7 @@ public class ApplicationDbContext : IdentityDbContext<User> {
     public DbSet<CarInStock> CarsInStock { get; set; }
     public DbSet<CarInStockEquipmentItemValue> CarInStockEquipmentItemsValues { get; set; }
     public DbSet<EquipmentItem> EquipmentItems { get; set; }
+    public DbSet<EquipmentItemCategory> EquipmentItemCategories { get; set; }
     public DbSet<EquipmentItemValue> EquipmentItemValues { get; set; }
     public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
     public DbSet<PurchaseOrderEquipmentItemValue> PurchaseOrderEquipmentItemsValues { get; set; }
@@ -28,20 +27,26 @@ public class ApplicationDbContext : IdentityDbContext<User> {
     public DbSet<SupplyOrderPart> SupplyOrderParts { get; set; }
     public DbSet<SupplyOrderPartEquipmentItemValue> SupplyOrderPartEquipmentItemsValues { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-
-        optionsBuilder
-            .UseLazyLoadingProxies()
-            .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=CourseProjectDB;Trusted_Connection=True;");
-
-        base.OnConfiguring(optionsBuilder);
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {
+        if (!Database.IsInMemory()) {
+            Database.Migrate();
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder builder) {
 
         builder.Entity<Brand>().Configure();
-        builder.Entity<Model>().Configure();
         builder.Entity<Car>().Configure();
+        builder.Entity<CarInStock>().Configure();
+        builder.Entity<CarInStockEquipmentItemValue>().Configure();
+        builder.Entity<EquipmentItem>().Configure();
+        builder.Entity<EquipmentItemCategory>().Configure();
+        builder.Entity<EquipmentItemValue>().Configure();
+        builder.Entity<Model>().Configure();
+        builder.Entity<Supplier>().Configure();
+        builder.Entity<Showroom>().Configure();
+        builder.Entity<PurchaseOrderEquipmentItemValue>().Configure();
+        builder.Entity<SupplyOrderPartEquipmentItemValue>().Configure();
 
         base.OnModelCreating(builder);
     }

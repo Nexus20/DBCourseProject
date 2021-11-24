@@ -10,9 +10,9 @@ public static class ShowroomEntityExtensions {
         builder.HasIndex(s => new {s.City, s.Street, s.House}).IsUnique();
 
         builder.HasData(new Showroom[] {
-            new() { City = "City 1", Street = "Street 1", House = "11", Phone = "0987654321"},
-            new() { City = "City 1", Street = "Street 2", House = "11", Phone = "0987654322"},
-            new() { City = "City 2", Street = "Street 12", House = "1", Phone = "0997654322"},
+            new() { Id = 1, City = "City 1", Street = "Street 1", House = "11", Phone = "0987654321"},
+            new() { Id = 2, City = "City 1", Street = "Street 2", House = "11", Phone = "0987654322"},
+            new() { Id = 3, City = "City 2", Street = "Street 12", House = "1", Phone = "0997654322"},
         });
     }
 

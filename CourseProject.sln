@@ -5,9 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseProject.WEB", "CourseProject.WEB\CourseProject.WEB.csproj", "{A4AB7C0F-3A89-4A11-9715-F14E7D9BC577}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseProject.DAL", "CourseProject.DAL\CourseProject.DAL.csproj", "{0365742E-06AB-41D6-B465-E852F471F47B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseProject.DAL", "CourseProject.DAL\CourseProject.DAL.csproj", "{0365742E-06AB-41D6-B465-E852F471F47B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseProject.Domain", "CourseProject.Domain\CourseProject.Domain.csproj", "{684035D2-760D-415A-8CB0-4F1C9F9CE9EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseProject.Domain", "CourseProject.Domain\CourseProject.Domain.csproj", "{684035D2-760D-415A-8CB0-4F1C9F9CE9EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseProject.BLL", "CourseProject.BLL\CourseProject.BLL.csproj", "{1A601FB9-F463-4A79-82A8-BC5E75A16593}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{684035D2-760D-415A-8CB0-4F1C9F9CE9EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{684035D2-760D-415A-8CB0-4F1C9F9CE9EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{684035D2-760D-415A-8CB0-4F1C9F9CE9EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A601FB9-F463-4A79-82A8-BC5E75A16593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A601FB9-F463-4A79-82A8-BC5E75A16593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A601FB9-F463-4A79-82A8-BC5E75A16593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A601FB9-F463-4A79-82A8-BC5E75A16593}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

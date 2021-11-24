@@ -10,13 +10,13 @@ public static class ModelEntityExtensions {
         builder.HasIndex(m => m.Name).IsUnique();
 
         builder.HasData(new Model[] {
-            new() { BrandId = 1, Name = "X445" },
-            new() { BrandId = 1, Name = "X5" },
-            new() { BrandId = 2, Name = "Q3" },
-            new() { BrandId = 3, Name = "C34" },
-            new() { BrandId = 4, Name = "Octavia" },
-            new() { BrandId = 5, Name = "Jetta" },
-            new() { BrandId = 6, Name = "XC90" },
+            new() { Id = 1, BrandId = 1, Name = "X445" },
+            new() { Id = 2, BrandId = 1, Name = "X5" },
+            new() { Id = 3, BrandId = 2, Name = "Q3" },
+            new() { Id = 4, BrandId = 3, Name = "C34" },
+            new() { Id = 5, BrandId = 4, Name = "Octavia" },
+            new() { Id = 6, BrandId = 5, Name = "Jetta" },
+            new() { Id = 7, BrandId = 6, Name = "XC90" },
         });
     }
 

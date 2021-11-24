@@ -1,6 +1,13 @@
+using CourseProject.BLL;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var provider = builder.Services.BuildServiceProvider();
+var configuration = provider.GetService<IConfiguration>();
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddBusinessLogicLayer(connectionString);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
