@@ -3,7 +3,7 @@ using CourseProject.DAL.Entities;
 
 namespace CourseProject.DAL.Interfaces; 
 
-public interface IRepository<TEntity> where TEntity : BaseEntity {
+public interface IRepository<TEntity> where TEntity : class {
 
     IEnumerable<TEntity> FindAll();
 

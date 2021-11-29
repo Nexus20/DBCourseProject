@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.DAL.Repositories; 
 
-public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity {
+public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
 
     protected readonly ApplicationDbContext Context;
 
