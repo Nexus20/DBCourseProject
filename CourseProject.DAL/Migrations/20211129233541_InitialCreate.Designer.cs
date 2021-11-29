@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseProject.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211129000211_InitialCreate")]
+    [Migration("20211129233541_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1869,7 +1869,7 @@ namespace CourseProject.DAL.Migrations
             modelBuilder.Entity("CourseProject.DAL.Entities.EquipmentItem", b =>
                 {
                     b.HasOne("CourseProject.DAL.Entities.Car", "Car")
-                        .WithMany()
+                        .WithMany("EquipmentItems")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2084,6 +2084,8 @@ namespace CourseProject.DAL.Migrations
 
             modelBuilder.Entity("CourseProject.DAL.Entities.Car", b =>
                 {
+                    b.Navigation("EquipmentItems");
+
                     b.Navigation("Photos");
                 });
 

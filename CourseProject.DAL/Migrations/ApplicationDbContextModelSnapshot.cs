@@ -1867,7 +1867,7 @@ namespace CourseProject.DAL.Migrations
             modelBuilder.Entity("CourseProject.DAL.Entities.EquipmentItem", b =>
                 {
                     b.HasOne("CourseProject.DAL.Entities.Car", "Car")
-                        .WithMany()
+                        .WithMany("EquipmentItems")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2082,6 +2082,8 @@ namespace CourseProject.DAL.Migrations
 
             modelBuilder.Entity("CourseProject.DAL.Entities.Car", b =>
                 {
+                    b.Navigation("EquipmentItems");
+
                     b.Navigation("Photos");
                 });
 

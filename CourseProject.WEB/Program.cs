@@ -1,4 +1,5 @@
 using CourseProject.BLL;
+using CourseProject.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ var configuration = provider.GetService<IConfiguration>();
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddBusinessLogicLayer(connectionString);
+builder.Services.AddWebLayer();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -26,8 +28,14 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints => {
+    endpoints.MapControllerRoute(
+        name: "AdminArea",
+        pattern: "{area:exists}/{controller}/{action=Index}/{id?}"
+    );
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();

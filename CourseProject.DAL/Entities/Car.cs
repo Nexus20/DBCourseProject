@@ -8,4 +8,6 @@ public class Car : BaseEntity {
     public virtual Model Model { get; set; }
 
     public virtual ICollection<CarPhoto> Photos { get; set; }
+
+    public virtual ICollection<EquipmentItem> EquipmentItems { get; set; }
 }

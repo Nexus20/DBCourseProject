@@ -3,24 +3,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CourseProject.DAL.Migrations {
-    public partial class InitialCreate : Migration {
-        protected override void Up(MigrationBuilder migrationBuilder) {
+namespace CourseProject.DAL.Migrations
+{
+    public partial class InitialCreate : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -41,36 +47,42 @@ namespace CourseProject.DAL.Migrations {
                     LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Brands",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Brands", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "EquipmentItemCategories",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UnitsOfMeasure = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_EquipmentItemCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Showrooms",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     City = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -78,20 +90,23 @@ namespace CourseProject.DAL.Migrations {
                     House = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Showrooms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
@@ -103,14 +118,16 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
@@ -122,13 +139,15 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
-                columns: table => new {
+                columns: table => new
+                {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
@@ -140,11 +159,13 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
-                columns: table => new {
+                columns: table => new
+                {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
@@ -162,13 +183,15 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
-                columns: table => new {
+                columns: table => new
+                {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
@@ -180,13 +203,15 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "Models",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BrandId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Models", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Models_Brands_BrandId",
@@ -198,7 +223,8 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "Suppliers",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -206,7 +232,8 @@ namespace CourseProject.DAL.Migrations {
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BrandId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Suppliers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Suppliers_Brands_BrandId",
@@ -218,12 +245,14 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "Managers",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ShowroomId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Managers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Managers_AspNetUsers_UserId",
@@ -241,13 +270,15 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "Cars",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Submodel = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ModelId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Cars", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Cars_Models_ModelId",
@@ -259,14 +290,16 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "PurchaseOrders",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ManagerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     State = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_PurchaseOrders", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PurchaseOrders_AspNetUsers_ClientId",
@@ -284,14 +317,16 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "SupplyOrders",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
                     ManagerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     State = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_SupplyOrders", x => x.Id);
                     table.ForeignKey(
                         name: "FK_SupplyOrders_Managers_ManagerId",
@@ -309,13 +344,15 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "CarPhotos",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CarId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_CarPhotos", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CarPhotos_Cars_CarId",
@@ -327,14 +364,16 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "CarsInStock",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VinCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CarId = table.Column<int>(type: "int", nullable: false),
                     ShowroomId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_CarsInStock", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CarsInStock_Cars_CarId",
@@ -352,14 +391,16 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "EquipmentItems",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CarId = table.Column<int>(type: "int", nullable: false),
                     Optional = table.Column<bool>(type: "bit", nullable: false),
                     EquipmentItemCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_EquipmentItems", x => x.Id);
                     table.ForeignKey(
                         name: "FK_EquipmentItems_Cars_CarId",
@@ -377,13 +418,15 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "SupplyOrderParts",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SupplyOrderId = table.Column<int>(type: "int", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_SupplyOrderParts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_SupplyOrderParts_SupplyOrders_SupplyOrderId",
@@ -395,14 +438,16 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "EquipmentItemValues",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EquipmentItemId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_EquipmentItemValues", x => x.Id);
                     table.ForeignKey(
                         name: "FK_EquipmentItemValues_EquipmentItems_EquipmentItemId",
@@ -414,11 +459,13 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "CarInStockEquipmentItemsValues",
-                columns: table => new {
+                columns: table => new
+                {
                     EquipmentItemValueId = table.Column<int>(type: "int", nullable: false),
                     CarInStockId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_CarInStockEquipmentItemsValues", x => new { x.CarInStockId, x.EquipmentItemValueId });
                     table.ForeignKey(
                         name: "FK_CarInStockEquipmentItemsValues_CarsInStock_CarInStockId",
@@ -436,11 +483,13 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "PurchaseOrderEquipmentItemsValues",
-                columns: table => new {
+                columns: table => new
+                {
                     PurchaseOrderId = table.Column<int>(type: "int", nullable: false),
                     EquipmentItemValueId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_PurchaseOrderEquipmentItemsValues", x => new { x.EquipmentItemValueId, x.PurchaseOrderId });
                     table.ForeignKey(
                         name: "FK_PurchaseOrderEquipmentItemsValues_EquipmentItemValues_EquipmentItemValueId",
@@ -458,11 +507,13 @@ namespace CourseProject.DAL.Migrations {
 
             migrationBuilder.CreateTable(
                 name: "SupplyOrderPartEquipmentItemsValues",
-                columns: table => new {
+                columns: table => new
+                {
                     SupplyOrderPartId = table.Column<int>(type: "int", nullable: false),
                     EquipmentItemValueId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_SupplyOrderPartEquipmentItemsValues", x => new { x.EquipmentItemValueId, x.SupplyOrderPartId });
                     table.ForeignKey(
                         name: "FK_SupplyOrderPartEquipmentItemsValues_EquipmentItemValues_EquipmentItemValueId",
@@ -893,7 +944,8 @@ namespace CourseProject.DAL.Migrations {
                 column: "SupplierId");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder) {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
