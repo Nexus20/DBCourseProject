@@ -7,11 +7,11 @@ namespace CourseProject.DAL.Entities {
             State = PurchaseOrderState.New;
         }
 
-        public int ClientId { get; set; }
+        public string ClientId { get; set; }
 
         public virtual Client Client { get; set; }
 
-        public int ManagerId { get; set; }
+        public Guid ManagerId { get; set; }
 
         public virtual Manager Manager { get; set; }
 

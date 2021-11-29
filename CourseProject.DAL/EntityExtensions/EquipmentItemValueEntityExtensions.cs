@@ -1,4 +1,5 @@
 ﻿using CourseProject.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseProject.DAL.EntityExtensions; 
@@ -6,6 +7,21 @@ namespace CourseProject.DAL.EntityExtensions;
 public static class EquipmentItemValueEntityExtensions {
 
     public static void Configure(this EntityTypeBuilder<EquipmentItemValue> builder) {
+
+        builder.HasMany(e => e.CarInStockEquipmentItemValues)
+            .WithOne(c => c.EquipmentItemValue)
+            .HasForeignKey(e => e.EquipmentItemValueId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(e => e.PurchaseOrderEquipmentItemsValues)
+            .WithOne(c => c.EquipmentItemValue)
+            .HasForeignKey(e => e.EquipmentItemValueId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(e => e.SupplyOrderPartEquipmentItemsValues)
+            .WithOne(c => c.EquipmentItemValue)
+            .HasForeignKey(e => e.EquipmentItemValueId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasData(new EquipmentItemValue[] {
             new() { Id = 1, EquipmentItemId = 1, Value = "Engine 1", Price = 10000 },

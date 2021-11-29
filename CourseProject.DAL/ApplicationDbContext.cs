@@ -36,6 +36,7 @@ public class ApplicationDbContext : IdentityDbContext<User> {
     protected override void OnModelCreating(ModelBuilder builder) {
 
         builder.Entity<Brand>().Configure();
+        builder.Entity<Client>().Configure();
         builder.Entity<Car>().Configure();
         builder.Entity<CarInStock>().Configure();
         builder.Entity<CarInStockEquipmentItemValue>().Configure();
@@ -43,6 +44,7 @@ public class ApplicationDbContext : IdentityDbContext<User> {
         builder.Entity<EquipmentItemCategory>().Configure();
         builder.Entity<EquipmentItemValue>().Configure();
         builder.Entity<Model>().Configure();
+        builder.Entity<Manager>().Configure();
         builder.Entity<Supplier>().Configure();
         builder.Entity<Showroom>().Configure();
         builder.Entity<PurchaseOrderEquipmentItemValue>().Configure();

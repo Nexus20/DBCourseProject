@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseProject.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211124233809_InitialCreate")]
+    [Migration("20211129000211_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1338,16 +1338,11 @@ namespace CourseProject.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClientId1")
+                    b.Property<string>("ClientId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ManagerId1")
+                    b.Property<Guid>("ManagerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("State")
@@ -1355,9 +1350,9 @@ namespace CourseProject.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId1");
+                    b.HasIndex("ClientId");
 
-                    b.HasIndex("ManagerId1");
+                    b.HasIndex("ManagerId");
 
                     b.ToTable("PurchaseOrders");
                 });
@@ -1534,10 +1529,7 @@ namespace CourseProject.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ManagerId1")
+                    b.Property<Guid>("ManagerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("State")
@@ -1548,7 +1540,7 @@ namespace CourseProject.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ManagerId1");
+                    b.HasIndex("ManagerId");
 
                     b.HasIndex("SupplierId");
 
@@ -1855,7 +1847,7 @@ namespace CourseProject.DAL.Migrations
                     b.HasOne("CourseProject.DAL.Entities.EquipmentItemValue", "EquipmentItemValue")
                         .WithMany("CarInStockEquipmentItemValues")
                         .HasForeignKey("EquipmentItemValueId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CarInStock");
@@ -1928,7 +1920,7 @@ namespace CourseProject.DAL.Migrations
                     b.HasOne("CourseProject.DAL.Entities.Brand", "Brand")
                         .WithMany("Models")
                         .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Brand");
@@ -1938,12 +1930,14 @@ namespace CourseProject.DAL.Migrations
                 {
                     b.HasOne("CourseProject.DAL.Entities.Client", "Client")
                         .WithMany("PurchaseOrders")
-                        .HasForeignKey("ClientId1");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("CourseProject.DAL.Entities.Manager", "Manager")
                         .WithMany("PurchaseOrders")
-                        .HasForeignKey("ManagerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -1956,7 +1950,7 @@ namespace CourseProject.DAL.Migrations
                     b.HasOne("CourseProject.DAL.Entities.EquipmentItemValue", "EquipmentItemValue")
                         .WithMany("PurchaseOrderEquipmentItemsValues")
                         .HasForeignKey("EquipmentItemValueId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CourseProject.DAL.Entities.PurchaseOrder", "PurchaseOrder")
@@ -1975,7 +1969,7 @@ namespace CourseProject.DAL.Migrations
                     b.HasOne("CourseProject.DAL.Entities.Brand", "Brand")
                         .WithMany("Suppliers")
                         .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Brand");
@@ -1985,8 +1979,8 @@ namespace CourseProject.DAL.Migrations
                 {
                     b.HasOne("CourseProject.DAL.Entities.Manager", "Manager")
                         .WithMany("SupplyOrders")
-                        .HasForeignKey("ManagerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CourseProject.DAL.Entities.Supplier", "Supplier")
@@ -2016,7 +2010,7 @@ namespace CourseProject.DAL.Migrations
                     b.HasOne("CourseProject.DAL.Entities.EquipmentItemValue", "EquipmentItemValue")
                         .WithMany("SupplyOrderPartEquipmentItemsValues")
                         .HasForeignKey("EquipmentItemValueId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CourseProject.DAL.Entities.SupplyOrderPart", "SupplyOrderPart")

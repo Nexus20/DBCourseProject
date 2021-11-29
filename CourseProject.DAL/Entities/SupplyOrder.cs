@@ -12,7 +12,7 @@ public class SupplyOrder : BaseEntity {
 
     public virtual Supplier Supplier { get; set; }
 
-    public int ManagerId { get; set; }
+    public Guid ManagerId { get; set; }
 
     public virtual Manager Manager { get; set; }
 
