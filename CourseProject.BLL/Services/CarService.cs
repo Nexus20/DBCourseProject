@@ -38,4 +38,28 @@ public class CarService : ICarService {
     public Task<OperationResult> DeleteCarAsync(CarDto carDto) {
         throw new NotImplementedException();
     }
+
+    public IEnumerable<CarDto> GetAllCars() {
+
+        var source = _unitOfWork.GetRepository<ICarRepository, Car>().FindAllWithDetails();
+
+        //var source = includeDeleted
+        //    ? _unitOfWork.GetRepository<IGameRepository, Game>().FindAllWithDetails()
+        //    : _unitOfWork.GetRepository<IGameRepository, Game>().FindAllWithDetails(g => g.IsDeleted == false);
+
+        //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
+
+        return _mapper.Map<IEnumerable<Car>, IEnumerable<CarDto>>(source);
+    }
+
+    public OperationResult<CarDto> GetCarById(int id) {
+
+        var operationResult = new OperationResult<CarDto>();
+
+        var car = _unitOfWork.GetRepository<ICarRepository, Car>().FirstOrDefaultWithDetails(c => c.Id == id);
+
+        operationResult.Result = _mapper.Map<Car, CarDto>(car);
+
+        return operationResult;
+    }
 }

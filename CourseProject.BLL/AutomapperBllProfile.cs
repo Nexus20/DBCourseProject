@@ -12,6 +12,10 @@ public class AutomapperBllProfile : Profile {
         CreateMap<Brand, BrandDto>().ReverseMap();
         CreateMap<Model, ModelDto>().ReverseMap();
         CreateMap<Supplier, SupplierDto>().ReverseMap();
+        CreateMap<CarPhoto, CarPhotoDto>().ReverseMap();
+        CreateMap<EquipmentItem, EquipmentItemDto> ().ReverseMap();
+        CreateMap<EquipmentItemValue, EquipmentItemValueDto> ().ReverseMap();
+        CreateMap<EquipmentItemCategory, EquipmentItemCategoryDto> ().ReverseMap();
     }
 
 }

@@ -7,7 +7,9 @@ public class CarViewModel : BaseViewModel {
 
     public ModelViewModel Model { get; set; }
 
+    public string FullModel => $"{Model.Brand.Name} {Model.Name} {Submodel}";
+
     public ICollection<CarPhotoViewModel> Photos { get; set; }
 
-    public virtual ICollection<EquipmentItemViewModel> EquipmentItems { get; set; }
+    public ICollection<EquipmentItemViewModel> EquipmentItems { get; set; }
 }

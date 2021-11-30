@@ -1,0 +1,63 @@
+﻿@model List<CourseProject.WEB.Models.BrandViewModel>
+
+@{
+    ViewData["Title"] = "Cars list";
+}
+
+<h1>Cars</h1>
+<hr>
+
+<p>
+    <a asp-action="Create" asp-area="Admin" asp-controller="Brands" class="btn btn-primary btn-lg">Add a new brand</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].ModelsCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].CarsCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].SuppliersCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModelsCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CarsCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuppliersCount)
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="@($"dropdownMenuButton{item.Id}")" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
+                            <li><a asp-action="Edit" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
+                            <li><a asp-action="Details" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Details</a></li>
+                            <li class="dropdown-divider"></li>
+                            <li><a asp-action="Delete" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

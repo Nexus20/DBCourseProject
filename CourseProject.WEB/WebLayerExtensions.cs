@@ -1,6 +1,4 @@
-﻿using CourseProject.WEB;
-
-namespace CourseProject.DAL {
+﻿namespace CourseProject.WEB {
     public static class WebLayerExtensions {
 
         public static IServiceCollection AddWebLayer(this IServiceCollection services) {

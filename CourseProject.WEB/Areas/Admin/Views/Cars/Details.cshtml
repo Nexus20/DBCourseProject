@@ -1,0 +1,38 @@
+﻿@model CarViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.FullModel</h1>
+<hr />
+
+<div>
+    <div class="row">
+        <div class="col-sm-6">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.EquipmentItems)
+                </dt>
+                <dd class="col-sm-8">
+                    @foreach (var item in Model.EquipmentItems) {
+                        @item.Category.Name
+                        @foreach (var value in item.EquipmentItemValues) {
+                            @value.Value
+                        }
+                    }
+                </dd>
+            </dl>
+        </div>
+        <div class="col-sm-6 fotorama" data-nav="thumbs">
+            @foreach (var image in Model.Photos) {
+                <img src="@image.Path" alt="">
+            }
+        </div>
+    </div>
+    
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a> 
+    <a asp-action="Index" class="btn btn-primary">Back to list</a>
+</div>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CourseProject.BLL.DTO;
 using CourseProject.WEB.Models;
 
 namespace CourseProject.WEB; 
@@ -7,10 +8,15 @@ public class AutomapperWebProfile : Profile {
 
     public AutomapperWebProfile() {
 
-        CreateMap<CarViewModel, CarViewModel>().ReverseMap();
-        CreateMap<BrandViewModel, BrandViewModel>().ReverseMap();
-        CreateMap<ModelViewModel, ModelViewModel>().ReverseMap();
-        CreateMap<SupplierViewModel, SupplierViewModel>().ReverseMap();
+        CreateMap<CarDto, CarViewModel>().ReverseMap();
+        CreateMap<BrandDto, BrandViewModel>().ReverseMap();
+        CreateMap<BrandDto, CreateEditBrandViewModel>().ReverseMap();
+        CreateMap<ModelDto, ModelViewModel>().ReverseMap();
+        CreateMap<SupplierDto, SupplierViewModel>().ReverseMap();
+        CreateMap<CarPhotoDto, CarPhotoViewModel>().ReverseMap();
+        CreateMap<EquipmentItemDto, EquipmentItemViewModel>().ReverseMap();
+        CreateMap<EquipmentItemValueDto, EquipmentItemValueViewModel>().ReverseMap();
+        CreateMap<EquipmentItemCategoryDto, EquipmentItemCategoryViewModel>().ReverseMap();
     }
 
 }

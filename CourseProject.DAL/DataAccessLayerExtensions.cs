@@ -9,6 +9,8 @@ namespace CourseProject.DAL {
         public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, string connectionString) {
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             return services;
         }

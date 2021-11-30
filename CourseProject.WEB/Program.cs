@@ -1,5 +1,6 @@
 using CourseProject.BLL;
 using CourseProject.DAL;
+using CourseProject.WEB;
 
 var builder = WebApplication.CreateBuilder(args);
 

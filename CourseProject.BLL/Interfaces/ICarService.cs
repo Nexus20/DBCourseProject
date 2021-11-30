@@ -11,4 +11,7 @@ public interface ICarService {
 
     Task<OperationResult> DeleteCarAsync(CarDto carDto);
 
+    IEnumerable<CarDto> GetAllCars();
+
+    OperationResult<CarDto> GetCarById(int id);
 }
