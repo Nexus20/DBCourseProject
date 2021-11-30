@@ -1,8 +1,43 @@
-﻿@model dynamic
+﻿@model CreateEditCarViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "Create";
 }
 
-<h2>title</h2>
+<h1>Add new сar</h1>
+
+<hr />
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Create" asp-controller="Cars" asp-area="Admin" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Submodel" class="form-label"></label>
+                <input asp-for="Submodel" class="form-control" />
+                <span asp-validation-for="Submodel" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ModelId" class="form-label"></label>
+                <select asp-for="ModelId" class="form-control" asp-items="ViewBag.Models"></select>
+                <span asp-validation-for="ModelId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Images" class="form-label"></label>
+                <input type="file" asp-for="Images" multiple accept="image/*" />
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

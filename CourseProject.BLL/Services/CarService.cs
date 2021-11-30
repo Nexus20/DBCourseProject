@@ -4,6 +4,7 @@ using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace CourseProject.BLL.Services; 
 
@@ -18,7 +19,8 @@ public class CarService : ICarService {
         _mapper = mapper;
     }
 
-    public async Task<OperationResult> CreateCarAsync(CarDto carDto) {
+    public async Task<OperationResult> CreateCarAsync(CarDto carDto, IFormFileCollection formFileCollection = null,
+        string directoryPath = null) {
 
         var operationResult = new OperationResult();
 
@@ -27,6 +29,29 @@ public class CarService : ICarService {
         await _unitOfWork.GetRepository<IRepository<Car>, Car>().CreateAsync(car);
 
         await _unitOfWork.SaveChangesAsync();
+
+        if (formFileCollection != null && formFileCollection.Any() && directoryPath != null) {
+            directoryPath = Path.Combine(directoryPath, car.Id.ToString());
+
+            if (!Directory.Exists(directoryPath)) {
+                var dirInfo = new DirectoryInfo(directoryPath);
+                dirInfo.Create();
+            }
+
+            foreach (var uploadedImage in formFileCollection) {
+
+                var path = $"~/img/cars/{car.Id}/{uploadedImage.FileName}";
+
+                using (var fileStream = new FileStream(Path.Combine(directoryPath, uploadedImage.FileName), FileMode.Create)) {
+                    await uploadedImage.CopyToAsync(fileStream);
+                }
+
+                await _unitOfWork.GetRepository<IRepository<CarPhoto>, CarPhoto>().CreateAsync(new CarPhoto() { CarId = car.Id, Path = path });
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+        }
 
         return operationResult;
     }

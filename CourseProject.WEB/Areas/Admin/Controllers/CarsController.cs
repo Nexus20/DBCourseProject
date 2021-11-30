@@ -6,6 +6,7 @@ using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CourseProject.WEB.Areas.Admin.Controllers {
 
@@ -14,11 +15,17 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         private readonly ICarService _carService;
 
+        private readonly IModelService _modelService;
+
+        private readonly IWebHostEnvironment _appEnvironment;
+
         private readonly IMapper _mapper;
 
-        public CarsController(ICarService carService, IMapper mapper) {
+        public CarsController(ICarService carService, IMapper mapper, IModelService modelService, IWebHostEnvironment appEnvironment) {
             _carService = carService;
             _mapper = mapper;
+            _modelService = modelService;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: CarsController
@@ -50,19 +57,34 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         // GET: CarsController/Create
         public IActionResult Create() {
+
+            GetInformationToCreateEditCar();
+
             return View();
         }
 
         // POST: CarsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(IFormCollection collection) {
-            try {
-                return RedirectToAction(nameof(Index));
+        public async Task<IActionResult> Create(CreateEditCarViewModel model) {
+
+            if (!ModelState.IsValid) {
+                GetInformationToCreateEditCar();
+                return View("Create", model);
             }
-            catch {
-                return View();
+
+            var brandDto = _mapper.Map<CreateEditCarViewModel, CarDto>(model);
+
+            var directoryPath = Path.Combine(_appEnvironment.WebRootPath, "img", "cars");
+            var result = await _carService.CreateCarAsync(brandDto, model.Images, directoryPath);
+
+            if (result.HasErrors) {
+                ModelState.AddErrorsFromOperationResult(result);
+                GetInformationToCreateEditCar();
+                return View("Create", model);
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: CarsController/Edit/5
@@ -97,6 +119,13 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             catch {
                 return View();
             }
+        }
+
+        private void GetInformationToCreateEditCar() {
+
+            var brands = _modelService.GetAllModels();
+
+            ViewBag.Models = new SelectList(_mapper.Map<IEnumerable<ModelDto>, IEnumerable<ModelViewModel>>(brands), "Id", "NameWithBrand");
         }
     }
 }

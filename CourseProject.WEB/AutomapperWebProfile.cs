@@ -9,6 +9,7 @@ public class AutomapperWebProfile : Profile {
     public AutomapperWebProfile() {
 
         CreateMap<CarDto, CarViewModel>().ReverseMap();
+        CreateMap<CarDto, CreateEditCarViewModel>().ReverseMap();
         CreateMap<BrandDto, BrandViewModel>().ReverseMap();
         CreateMap<BrandDto, CreateEditBrandViewModel>().ReverseMap();
         CreateMap<ModelDto, ModelViewModel>().ReverseMap();
