@@ -30,7 +30,7 @@ public class CarService : ICarService {
 
         await _unitOfWork.SaveChangesAsync();
 
-        if (formFileCollection != null && formFileCollection.Any() && directoryPath != null) {
+        if (formFileCollection != null && formFileCollection.Any() && !string.IsNullOrWhiteSpace(directoryPath)) {
             directoryPath = Path.Combine(directoryPath, car.Id.ToString());
 
             if (!Directory.Exists(directoryPath)) {
@@ -40,7 +40,7 @@ public class CarService : ICarService {
 
             foreach (var uploadedImage in formFileCollection) {
 
-                var path = $"~/img/cars/{car.Id}/{uploadedImage.FileName}";
+                var path = $"/img/cars/{car.Id}/{uploadedImage.FileName}";
 
                 using (var fileStream = new FileStream(Path.Combine(directoryPath, uploadedImage.FileName), FileMode.Create)) {
                     await uploadedImage.CopyToAsync(fileStream);
@@ -60,8 +60,22 @@ public class CarService : ICarService {
         throw new NotImplementedException();
     }
 
-    public Task<OperationResult> DeleteCarAsync(CarDto carDto) {
-        throw new NotImplementedException();
+    public async Task<OperationResult> DeleteCarAsync(int id, string directoryPath = null) {
+        var operationResult = new OperationResult();
+
+        if (!string.IsNullOrWhiteSpace(directoryPath)) {
+            if (Directory.Exists(directoryPath)) {
+                var dirInfo = new DirectoryInfo(directoryPath);
+                dirInfo.Delete(true);
+            }
+
+            _unitOfWork.GetRepository<IRepository<CarPhoto>, CarPhoto>().Delete(c => c.CarId == id);
+        }
+
+        _unitOfWork.GetRepository<IRepository<Car>, Car>().Delete(c => c.Id == id);
+        await _unitOfWork.SaveChangesAsync();
+
+        return operationResult;
     }
 
     public IEnumerable<CarDto> GetAllCars() {

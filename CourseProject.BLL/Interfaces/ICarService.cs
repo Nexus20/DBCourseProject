@@ -11,7 +11,7 @@ public interface ICarService {
 
     Task<OperationResult> EditCarAsync(CarDto carDto);
 
-    Task<OperationResult> DeleteCarAsync(CarDto carDto);
+    Task<OperationResult> DeleteCarAsync(int id, string directoryPath = null);
 
     IEnumerable<CarDto> GetAllCars();
 
