@@ -10,84 +10,71 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CourseProject.WEB.Areas.Admin.Controllers {
     [Area("Admin")]
-    public class ModelsController : Controller {
+    public class EquipmentItemCategoriesController : Controller {
 
-        private readonly IBrandService _brandService;
-
-        private readonly IModelService _modelService;
+        private readonly IEquipmentItemCategoryService _equipmentItemCategoryService;
 
         private readonly IMapper _mapper;
 
-        public ModelsController(IModelService modelService, IMapper mapper, IBrandService brandService) {
-            _modelService = modelService;
+        public EquipmentItemCategoriesController(IEquipmentItemCategoryService equipmentItemCategoryService, IMapper mapper) {
+            _equipmentItemCategoryService = equipmentItemCategoryService;
             _mapper = mapper;
-            _brandService = brandService;
         }
 
 
-        // GET: ModelsController
         [HttpGet]
-        [Route("/models")]
         public IActionResult Index() {
 
-            var source = _modelService.GetAllModels();
+            var source = _equipmentItemCategoryService.GetAllCategories();
 
-            var model = _mapper.Map<IEnumerable<ModelDto>, List<ModelViewModel>>(source);
+            var model = _mapper.Map<IEnumerable<EquipmentItemCategoryDto>, List<EquipmentItemCategoryViewModel>>(source);
 
             return View(model);
         }
 
-        // GET: ModelsController/Details/5
         [HttpGet]
-        [Route("/models/{id:int}")]
         public IActionResult Details(int id) {
             return View();
         }
 
-        // GET: ModelsController/Create
         [HttpGet]
-        [Route("/models/new")]
         public IActionResult Create() {
-            GetInformationToCreateEditModel();
-            return View();
+            var model = new CreateEditEquipmentItemCategoryViewModel {
+                UnitsOfMeasure = "none",
+            };
+            return View(model);
         }
 
-        // POST: ModelsController/Create
         [HttpPost]
-        [Route("/models/new")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateEditModelViewModel model) {
+        public async Task<IActionResult> Create(CreateEditEquipmentItemCategoryViewModel model) {
 
             if (!ModelState.IsValid) {
-                GetInformationToCreateEditModel();
                 return View("Create", model);
             }
 
-            var modelDto = _mapper.Map<CreateEditModelViewModel, ModelDto>(model);
+            var categoryDto = _mapper.Map<CreateEditEquipmentItemCategoryViewModel, EquipmentItemCategoryDto>(model);
 
-            var result = await _modelService.CreateModelAsync(modelDto);
+            var result = await _equipmentItemCategoryService.CreateCategoryAsync(categoryDto);
 
             if (result.HasErrors) {
                 ModelState.AddErrorsFromOperationResult(result);
-                GetInformationToCreateEditModel();
                 return View("Create", model);
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: ModelsController/Edit/5
         public async Task<IActionResult> Edit(int id) {
 
-            var result = await _modelService.GetModelById(id);
+            var result = await _equipmentItemCategoryService.GetCategoryById(id);
 
             if (result.HasErrors) {
                 TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
                 return RedirectToAction(nameof(ErrorController.Error502), "Error");
             }
 
-            GetInformationToCreateEditModel();
-            var model = _mapper.Map<ModelDto, CreateEditModelViewModel>(result.Result);
+            var model = _mapper.Map<EquipmentItemCategoryDto, CreateEditEquipmentItemCategoryViewModel>(result.Result);
 
             return View(model);
         }
@@ -95,20 +82,18 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         // POST: ModelsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CreateEditModelViewModel model) {
+        public async Task<IActionResult> Edit(CreateEditEquipmentItemCategoryViewModel model) {
 
             if (!ModelState.IsValid) {
-                GetInformationToCreateEditModel();
                 return View("Edit", model);
             }
 
-            var modelDto = _mapper.Map<CreateEditModelViewModel, ModelDto>(model);
+            var categoryDto = _mapper.Map<CreateEditEquipmentItemCategoryViewModel, EquipmentItemCategoryDto>(model);
 
-            var result = await _modelService.EditModelAsync(modelDto);
+            var result = await _equipmentItemCategoryService.EditCategoryAsync(categoryDto);
 
             if (result.HasErrors) {
                 ModelState.AddErrorsFromOperationResult(result);
-                GetInformationToCreateEditModel();
                 return View("Edit", model);
             }
 
@@ -118,24 +103,23 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         // GET: ModelsController/Delete/5
         public async Task<IActionResult> Delete(int id) {
 
-            var result = await _modelService.GetModelById(id);
+            var result = await _equipmentItemCategoryService.GetCategoryById(id);
 
             if (result.HasErrors) {
                 TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
                 return RedirectToAction(nameof(ErrorController.Error502), "Error");
             }
 
-            var model = _mapper.Map<ModelDto, ModelViewModel>(result.Result);
+            var model = _mapper.Map<EquipmentItemCategoryDto, EquipmentItemCategoryViewModel>(result.Result);
 
             return View(model);
         }
 
-        // POST: ModelsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id) {
 
-            var result = await _modelService.DeleteModelAsync(id);
+            var result = await _equipmentItemCategoryService.DeleteCategoryAsync(id);
 
             if (result.HasErrors) {
                 TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
@@ -144,13 +128,5 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
             return RedirectToAction(nameof(Index));
         }
-
-        private void GetInformationToCreateEditModel() {
-
-            var brands = _brandService.GetAllBrands();
-
-            ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(brands), "Id", "Name");
-        }
-
     }
 }

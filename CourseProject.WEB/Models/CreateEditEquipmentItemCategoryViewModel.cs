@@ -2,13 +2,11 @@
 
 namespace CourseProject.WEB.Models; 
 
-public class EquipmentItemCategoryViewModel : BaseViewModel {
+public class CreateEditEquipmentItemCategoryViewModel : BaseViewModel {
 
     [Required]
     public string Name { get; set; }
 
     [Display(Name = "Units of measure")]
     public string UnitsOfMeasure { get; set; }
-
-    public ICollection<EquipmentItemViewModel> EquipmentItems { get; set; }
 }
