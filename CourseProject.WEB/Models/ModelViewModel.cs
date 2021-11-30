@@ -8,4 +8,6 @@ public class ModelViewModel : BaseViewModel {
     public BrandViewModel Brand { get; set; }
 
     public ICollection<CarViewModel> Cars { get; set; }
+
+    public int CarsCount => Cars == null ? 0 : Cars.Count();
 }

@@ -38,6 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Models\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Models\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Models\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Brands\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Delete.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Details.cshtml" />
@@ -64,6 +67,18 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Areas\Admin\Views\Brands\Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Models\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Models\Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Models\Create.cshtml" />
   </ItemGroup>
 
 </Project>

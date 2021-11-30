@@ -65,7 +65,7 @@ public class BrandService : IBrandService {
 
         var operationResult = new OperationResult<BrandDto>();
 
-        var brand = await _unitOfWork.GetRepository<IRepository<Brand>, Brand>().FirstOrDefaultAsync(c => c.Id == id);
+        var brand = await _unitOfWork.GetRepository<IRepository<Brand>, Brand>().FirstOrDefaultAsync(b => b.Id == id);
 
         operationResult.Result = _mapper.Map<Brand, BrandDto>(brand);
 

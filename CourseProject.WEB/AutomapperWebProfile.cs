@@ -12,6 +12,7 @@ public class AutomapperWebProfile : Profile {
         CreateMap<BrandDto, BrandViewModel>().ReverseMap();
         CreateMap<BrandDto, CreateEditBrandViewModel>().ReverseMap();
         CreateMap<ModelDto, ModelViewModel>().ReverseMap();
+        CreateMap<ModelDto, CreateEditModelViewModel>().ReverseMap();
         CreateMap<SupplierDto, SupplierViewModel>().ReverseMap();
         CreateMap<CarPhotoDto, CarPhotoViewModel>().ReverseMap();
         CreateMap<EquipmentItemDto, EquipmentItemViewModel>().ReverseMap();

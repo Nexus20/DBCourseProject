@@ -1,10 +1,10 @@
 ﻿@model List<CourseProject.WEB.Models.BrandViewModel>
 
 @{
-    ViewData["Title"] = "Cars list";
+    ViewData["Title"] = "Brands list";
 }
 
-<h1>Cars</h1>
+<h1>Brands</h1>
 <hr>
 
 <p>
@@ -52,8 +52,10 @@
                         <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
                             <li><a asp-action="Edit" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
                             <li><a asp-action="Details" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Details</a></li>
-                            <li class="dropdown-divider"></li>
-                            <li><a asp-action="Delete" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
+                            @if (item.CarsCount == 0) {
+                                <li class="dropdown-divider"></li>
+                                <li><a asp-action="Delete" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
+                            }
                         </ul>
                     </div>
                 </td>
