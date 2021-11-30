@@ -110,20 +110,33 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         // GET: BrandsController/Delete/5
-        public IActionResult Delete(int id) {
-            return View();
+        public async Task<IActionResult> Delete(int id) {
+
+            var result = await _brandService.GetBrandById(id);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            var model = _mapper.Map<BrandDto, BrandViewModel>(result.Result);
+
+            return View(model);
         }
 
         // POST: BrandsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection) {
-            try {
-                return RedirectToAction(nameof(Index));
+        public async Task<IActionResult> DeleteConfirm(int id) {
+
+            var result = await _brandService.DeleteBrandAsync(id);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
             }
-            catch {
-                return View();
-            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

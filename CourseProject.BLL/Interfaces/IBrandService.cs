@@ -9,7 +9,7 @@ public interface IBrandService {
 
     Task<OperationResult> EditBrandAsync(BrandDto brandDto);
 
-    Task<OperationResult> DeleteBrandAsync(BrandDto brandDto);
+    Task<OperationResult> DeleteBrandAsync(int id);
 
     IEnumerable<BrandDto> GetAllBrands();
 

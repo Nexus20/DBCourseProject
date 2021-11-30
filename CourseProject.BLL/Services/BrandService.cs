@@ -44,8 +44,14 @@ public class BrandService : IBrandService {
         return operationResult;
     }
 
-    public Task<OperationResult> DeleteBrandAsync(BrandDto brandDto) {
-        throw new NotImplementedException();
+    public async Task<OperationResult> DeleteBrandAsync(int id) {
+
+        var operationResult = new OperationResult();
+
+        _unitOfWork.GetRepository<IBrandRepository, Brand>().Delete(b => b.Id == id);
+        await _unitOfWork.SaveChangesAsync();
+
+        return operationResult;
     }
 
     public IEnumerable<BrandDto> GetAllBrands() {
