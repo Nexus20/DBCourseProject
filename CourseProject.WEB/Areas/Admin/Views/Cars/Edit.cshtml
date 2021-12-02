@@ -1,8 +1,349 @@
-﻿@model dynamic
+﻿@model EditCarViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = $"Edit car {Model.ViewModel.FullModel}";
 }
 
-<h2>title</h2>
+<h1>Edit car @Model.ViewModel.FullModel</h1>
+
+<hr />
+<div class="row">
+    <div class="col-sm-6">
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ViewModel.FullModel)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ViewModel.FullModel)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ViewModel.EquipmentItems)
+            </dt>
+            <dd class="col-sm-8">
+                <ul class="list-group" id="equipment-list">
+                    @foreach (var item in Model.ViewModel.EquipmentItems) {
+                        <li class="list-group-item equipment-item">
+                            <div class="d-flex justify-content-between">
+                                <div class="equipment-item-category-name">@item.Category.Name</div>
+                                <button class="btn btn-outline-success btn-add-equipment-item-value" title="Add value to this equipment item" data-equipment-item-id="@item.Id">
+                                    <span class="fa fa-plus"></span>
+                                </button>
+                                <button class="btn btn-outline-danger btn-delete-equipment-item" title="Remove this equipment item" data-equipment-item-id="@item.Id">
+                                    <span class="fa fa-times"></span>
+                                </button>
+                            </div>
+                            <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="@item.Id">
+                                @foreach (var value in item.EquipmentItemValues) {
+                                    <li class="list-group-item equipment-item-value">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="equipment-item-value-name">@value.Value</div>
+                                            <button class="btn btn-outline-danger btn-delete-equipment-item-value" title="Remove this equipment item value" data-equipment-item-value-id="@value.Id">
+                                                <span class="fa fa-times"></span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Edit" asp-controller="Cars" asp-area="Admin" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EditModel.Id" />
+            <div class="mb-3">
+                <label asp-for="EditModel.Submodel" class="form-label"></label>
+                <input asp-for="EditModel.Submodel" class="form-control" />
+                <span asp-validation-for="EditModel.Submodel" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EditModel.ModelId" class="form-label"></label>
+                <select asp-for="EditModel.ModelId" class="form-control" asp-items="ViewBag.Models"></select>
+                <span asp-validation-for="EditModel.ModelId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EditModel.Images" class="form-label"></label>
+                <input type="file" asp-for="EditModel.Images" multiple accept="image/*" />
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-12">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" value="@Model.ViewModel.Id" id="car-id" />
+            <div class="mb-3">
+                <label for="categories-select">Select equipment categories for this car</label>
+                <select id="categories-select" class="form-control">
+                    @foreach (var category in (ViewBag.EquipmentCategories as IEnumerable<EquipmentItemCategoryViewModel>)!) {
+                        <option value="@category.Id">@category.Name (@category.UnitsOfMeasure)</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="is-optional-check">Is optional</label>
+                <input type="checkbox" id="is-optional-check" class="form-check" value="true" />
+            </div>
+            <div class="mb-3">
+                <button type="button" id="btn-add-categories" class="btn btn-primary">Add categories</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@{
+    // Delete equipment item confirmation modal
+}
+<div class="modal fade" id="deleteEquipmentItemConfirmationModal" tabindex="-1" aria-labelledby="deleteEquipmentItemConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteEquipmentItemConfirmationModal">Modal title</h5>
+                <button type="button" class="btn-close btn-cancel-delete-equipment-item" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete this equipment item? (It&apos;s values also will be deleted)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-cancel-delete-equipment-item">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-delete-equipment-item">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    // Delete equipment item value confirmation modal
+}
+<div class="modal fade" id="deleteEquipmentItemValueConfirmationModal" tabindex="-1" aria-labelledby="deleteEquipmentItemValueConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteEquipmentItemValueConfirmationModal">Modal title</h5>
+                <button type="button" class="btn-close btn-cancel-delete-equipment-item-value" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete this equipment item value?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-cancel-delete-equipment-item-value">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-delete-equipment-item-value">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    // Add equipment item value confirmation modal
+}
+<div class="modal fade" id="addEquipmentItemValueConfirmationModal" tabindex="-1" aria-labelledby="addEquipmentItemValueConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEquipmentItemValueConfirmationModal">Modal title</h5>
+                <button type="button" class="btn-close btn-cancel-add-equipment-item-value" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label for="value-input">Value</label>
+                        <input type="text" id="value-input" class="form-control"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price-input">Price</label>
+                        <input type="text" id="price-input" class="form-control"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-cancel-add-equipment-item-value">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-add-equipment-item-value">Add equipment item value</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+
+    $('#btn-add-categories').click(e => {
+
+        const formData = new FormData();
+        formData.append('CarId', $('#car-id').val());
+        const categoryId = $('#categories-select').val();
+
+        formData.append('EquipmentItemCategoryId', parseInt(categoryId));
+        formData.append('Optional', $('#categories-select').val() === 'true');
+
+        let categoryName = $('#categories-select option:selected').text();
+        categoryName = categoryName.replace(' (none)', '');
+
+        $.ajax({
+            method: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: '@Url.Action("AddEquipmentItems", "Cars")',
+            success: data => {
+                $('#equipment-list').append(
+                    `<li class="list-group-item equipment-item">
+                            <div class="d-flex justify-content-between">
+                                <div class="equipment-item-category-name">${categoryName}</div>
+                                <button class="btn btn-outline-success btn-add-equipment-item-value" title="Add value to this equipment item" data-equipment-item-id="${data.id}">
+                                    <span class="fa fa-plus"></span>
+                                </button>
+                                <button class="btn btn-outline-danger btn-delete-equipment-item" title="Remove this equipment item" data-equipment-item-id="${data.id}">
+                                    <span class="fa fa-times"></span>
+                                </button>
+                            </div>
+                            <ul class="list-group equipment-item-values-list mt-3">
+                            </ul>
+                        </li>`
+                );
+            },
+            error: data => {
+                console.log('Error');
+            }
+        });
+    });
+
+
+    $('#equipment-list').on('click',
+        '.btn-add-equipment-item-value',
+        e => {
+            const addConfirmationModal = new bootstrap.Modal(document.getElementById('addEquipmentItemValueConfirmationModal'));
+            addConfirmationModal.show();
+
+            const equipmentItemId = e.currentTarget.dataset.equipmentItemId;
+
+            $('#btn-confirm-add-equipment-item-value').click(e2 => {
+
+                const formData = new FormData();
+                formData.append('Value', $('#value-input').val());
+                formData.append('Price', $('#price-input').val());
+                formData.append('EquipmentItemId', equipmentItemId);
+
+                $.ajax({
+                    method: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    url: '@Url.Action("AddEquipmentItemValue", "Cars")',
+                    success: data => {
+                        $(`.equipment-item-values-list[data-equipment-item-id="${equipmentItemId}"]`).first().append(
+                            `<li class="list-group-item equipment-item-value">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="equipment-item-value-name">${data.value}</div>
+                                            <button class="btn btn-outline-danger btn-delete-equipment-item-value" title="Remove this equipment item value" data-equipment-item-value-id="${data.id}">
+                                                <span class="fa fa-times"></span>
+                                            </button>
+                                        </div>
+                                    </li>`
+                        );
+                    },
+                    error: data => {
+                        console.log(data);
+                    }
+                });
+
+                addConfirmationModal.hide();
+
+                $('#value-input').val('');
+                $('#price-input').val('');
+
+                $(e2.currentTarget).off();
+            });
+
+
+            $('.btn-cancel-add-equipment-item-value').click(e3 => {
+                addConfirmationModal.hide();
+                $(e3.currentTarget).off();
+            });
+            });
+
+
+    $('#equipment-list').on('click',
+        '.btn-delete-equipment-item',
+        e => {
+
+            const deleteConfirmationModal = new bootstrap.Modal(document.getElementById('deleteEquipmentItemConfirmationModal'));
+            deleteConfirmationModal.show();
+            const equipmentItemId = e.currentTarget.dataset.equipmentItemId;
+
+
+            $('#btn-confirm-delete-equipment-item').click(e2 => {
+                
+                $.ajax({
+                    url: '@Url.Action("DeleteEquipmentItem", "Cars")',
+                    data: { equipmentItemId },
+                    success: data => {
+                        $(e.currentTarget).parents('.equipment-item').remove();
+                    },
+                    error: data => {
+                        console.log(JSON.parse(data));
+                    }
+                });
+
+                deleteConfirmationModal.hide();
+                $(e2.currentTarget).off();
+            });
+
+            $('.btn-cancel-delete-equipment-item').click(e3 => {
+                deleteConfirmationModal.hide();
+                $(e3.currentTarget).off();
+            });
+
+        });
+
+    $('#equipment-list').on('click',
+        '.btn-delete-equipment-item-value',
+        e => {
+
+            const deleteConfirmationModal = new bootstrap.Modal(document.getElementById('deleteEquipmentItemValueConfirmationModal'));
+            deleteConfirmationModal.show();
+            const equipmentItemValueId = e.currentTarget.dataset.equipmentItemValueId;
+
+
+            $('#btn-confirm-delete-equipment-item-value').click(e2 => {
+                
+                $.ajax({
+                    url: '@Url.Action("DeleteEquipmentItemValue", "Cars")',
+                    data: { equipmentItemValueId },
+                    success: data => {
+                        $(e.currentTarget).parents('.equipment-item-value').remove();
+                    },
+                    error: data => {
+                        console.log(JSON.parse(data));
+                    }
+                });
+
+                deleteConfirmationModal.hide();
+                $(e2.currentTarget).off();
+            });
+
+            $('.btn-cancel-delete-equipment-item-value').click(e3 => {
+                deleteConfirmationModal.hide();
+                $(e3.currentTarget).off();
+            });
+
+        });
+
+
+</script>
+}

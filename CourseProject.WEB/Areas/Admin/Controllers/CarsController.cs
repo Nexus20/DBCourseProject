@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
@@ -17,21 +18,35 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         private readonly IModelService _modelService;
 
+        private readonly IBrandService _brandService;
+
+        private readonly IEquipmentItemCategoryService _equipmentItemCategoryService;
+
         private readonly IWebHostEnvironment _appEnvironment;
 
         private readonly IMapper _mapper;
 
-        public CarsController(ICarService carService, IMapper mapper, IModelService modelService, IWebHostEnvironment appEnvironment) {
+        private readonly IEquipmentItemService _equipmentItemService;
+
+        private readonly IEquipmentItemValueService _equipmentItemValueService;
+
+        public CarsController(ICarService carService, IMapper mapper, IModelService modelService, IWebHostEnvironment appEnvironment, IEquipmentItemCategoryService equipmentItemCategoryService, IEquipmentItemService equipmentItemService, IEquipmentItemValueService equipmentItemValueService, IBrandService brandService) {
             _carService = carService;
             _mapper = mapper;
             _modelService = modelService;
             _appEnvironment = appEnvironment;
+            _equipmentItemCategoryService = equipmentItemCategoryService;
+            _equipmentItemService = equipmentItemService;
+            _equipmentItemValueService = equipmentItemValueService;
+            _brandService = brandService;
         }
 
         // GET: CarsController
-        public IActionResult Index() {
+        public IActionResult Index([FromQuery] CarFilterModel filterModel) {
 
-            var source = _carService.GetAllCars();
+            GetInfoToCreateFilters();
+
+            var source = filterModel.IsReset ? _carService.GetAllCars() : _carService.GetAllCars(filterModel);
 
             var model = _mapper.Map<IEnumerable<CarDto>, List<CarViewModel>>(source);
 
@@ -89,7 +104,21 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         // GET: CarsController/Edit/5
         public IActionResult Edit(int id) {
-            return View();
+
+            var result = _carService.GetCarById(id);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            var editModel = _mapper.Map<CarDto, CreateEditCarViewModel>(result.Result);
+            var viewModel = _mapper.Map<CarDto, CarViewModel>(result.Result);
+
+            GetInformationToCreateEditCar();
+            ViewBag.EquipmentCategories = _mapper.Map<IEnumerable<EquipmentItemCategoryDto>, IEnumerable<EquipmentItemCategoryViewModel>>(_equipmentItemCategoryService.GetAllCategories());
+
+            return View(new EditCarViewModel() { EditModel = editModel, ViewModel = viewModel });
         }
 
         // POST: CarsController/Edit/5
@@ -139,6 +168,61 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             var brands = _modelService.GetAllModels();
 
             ViewBag.Models = new SelectList(_mapper.Map<IEnumerable<ModelDto>, IEnumerable<ModelViewModel>>(brands), "Id", "NameWithBrand");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEquipmentItems(EquipmentItemViewModel model) {
+
+            var dto = _mapper.Map<EquipmentItemViewModel, EquipmentItemDto>(model);
+
+            var result = await _equipmentItemService.CreateItemAsync(dto);
+
+            if (result.HasErrors) {
+                return BadRequest();
+            }
+
+            return Ok(result.Result);
+        }
+
+        public async Task<IActionResult> DeleteEquipmentItem(int equipmentItemId) {
+
+            var result = await _equipmentItemService.DeleteItemAsync(equipmentItemId);
+
+            if (result.HasErrors) {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        public async Task<IActionResult> DeleteEquipmentItemValue(int equipmentItemValueId) {
+
+            var result = await _equipmentItemValueService.DeleteItemValueAsync(equipmentItemValueId);
+
+            if (result.HasErrors) {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEquipmentItemValue(EquipmentItemValueViewModel model) {
+
+            var dto = _mapper.Map<EquipmentItemValueViewModel, EquipmentItemValueDto>(model);
+
+            var result = await _equipmentItemValueService.CreateItemValueAsync(dto);
+
+            if (result.HasErrors) {
+                return BadRequest();
+            }
+
+            return Ok(result.Result);
+        }
+
+        private void GetInfoToCreateFilters() {
+            ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(_brandService.GetAllBrands()), "Id", "Name");
+            ViewBag.Models = new SelectList(_mapper.Map<IEnumerable<ModelDto>, IEnumerable<ModelViewModel>>(_modelService.GetAllModels()), "Id", "NameWithBrand");
         }
     }
 }

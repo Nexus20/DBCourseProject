@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
@@ -28,9 +29,11 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         // GET: ModelsController
         [HttpGet]
         [Route("/models")]
-        public IActionResult Index() {
+        public IActionResult Index([FromQuery] ModelFilterModel filterModel) {
 
-            var source = _modelService.GetAllModels();
+            GetInfoToCreateFilters();
+
+            var source = filterModel.IsReset ? _modelService.GetAllModels() : _modelService.GetAllModels(filterModel);
 
             var model = _mapper.Map<IEnumerable<ModelDto>, List<ModelViewModel>>(source);
 
@@ -150,6 +153,10 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             var brands = _brandService.GetAllBrands();
 
             ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(brands), "Id", "Name");
+        }
+
+        private void GetInfoToCreateFilters() {
+            ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(_brandService.GetAllBrands()), "Id", "Name");
         }
 
     }

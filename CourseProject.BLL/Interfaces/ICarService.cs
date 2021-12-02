@@ -1,4 +1,5 @@
 ﻿using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Validation;
 using Microsoft.AspNetCore.Http;
 
@@ -13,7 +14,7 @@ public interface ICarService {
 
     Task<OperationResult> DeleteCarAsync(int id, string directoryPath = null);
 
-    IEnumerable<CarDto> GetAllCars();
+    IEnumerable<CarDto> GetAllCars(CarFilterModel carFilterModel = null);
 
     OperationResult<CarDto> GetCarById(int id);
 }

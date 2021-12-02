@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 
-namespace CourseProject.BLL.Services; 
+namespace CourseProject.BLL.Services;
 
 public class ModelService : IModelService {
 
@@ -54,10 +55,13 @@ public class ModelService : IModelService {
         return operationResult;
     }
 
-    public IEnumerable<ModelDto> GetAllModels() {
+    public IEnumerable<ModelDto> GetAllModels(ModelFilterModel modelFilterModel = null) {
 
-        var source = _unitOfWork.GetRepository<IRepository<Model>, Model>()
-            .Find(null, null, null, null, m => m.Brand, m => m.Cars);
+        var source = modelFilterModel == null
+            ? _unitOfWork.GetRepository<IRepository<Model>, Model>()
+                .Find(null, null, null, null, m => m.Brand, m => m.Cars)
+            : _unitOfWork.GetRepository<IRepository<Model>, Model>()
+                .Find(modelFilterModel.FilterExpression, null, null, null, m => m.Brand, m => m.Cars);
 
         return _mapper.Map<IEnumerable<Model>, IEnumerable<ModelDto>>(source);
     }

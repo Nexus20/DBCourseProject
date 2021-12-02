@@ -319,9 +319,10 @@ namespace CourseProject.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CarId");
-
                     b.HasIndex("EquipmentItemCategoryId");
+
+                    b.HasIndex("CarId", "EquipmentItemCategoryId")
+                        .IsUnique();
 
                     b.ToTable("EquipmentItems");
 

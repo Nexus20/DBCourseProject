@@ -6,7 +6,6 @@ using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CourseProject.WEB.Areas.Admin.Controllers {
     [Area("Admin")]

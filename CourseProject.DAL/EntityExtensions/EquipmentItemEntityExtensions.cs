@@ -7,6 +7,8 @@ public static class EquipmentItemEntityExtensions {
 
     public static void Configure(this EntityTypeBuilder<EquipmentItem> builder) {
 
+        builder.HasIndex(b => new { b.CarId, b.EquipmentItemCategoryId }).IsUnique();
+
         builder.HasData(new EquipmentItem[] {
             new() { Id = 1, EquipmentItemCategoryId = 1, CarId = 1, Optional = false},
             new() { Id = 2, EquipmentItemCategoryId = 2, CarId = 1, Optional = false},

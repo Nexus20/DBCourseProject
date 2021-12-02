@@ -11,6 +11,17 @@
     <a asp-action="Create" asp-area="Admin" asp-controller="Models" class="btn btn-primary btn-lg">Add a new model</a>
 </p>
 
+<form method="get" asp-action="Index">
+    <div class="mb-3">
+        <select name="BrandId" asp-items="ViewBag.Brands" class="form-control">
+            <option value="0">All</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <input type="submit" value="Fitler" class="btn btn-primary"/>
+    </div>
+</form>
+
 <table class="table">
     <thead>
     <tr>

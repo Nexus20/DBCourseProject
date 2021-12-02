@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
@@ -78,13 +79,11 @@ public class CarService : ICarService {
         return operationResult;
     }
 
-    public IEnumerable<CarDto> GetAllCars() {
+    public IEnumerable<CarDto> GetAllCars(CarFilterModel carFilterModel = null) {
 
-        var source = _unitOfWork.GetRepository<ICarRepository, Car>().FindAllWithDetails();
-
-        //var source = includeDeleted
-        //    ? _unitOfWork.GetRepository<IGameRepository, Game>().FindAllWithDetails()
-        //    : _unitOfWork.GetRepository<IGameRepository, Game>().FindAllWithDetails(g => g.IsDeleted == false);
+        var source = carFilterModel != null
+            ? _unitOfWork.GetRepository<ICarRepository, Car>().FindAllWithDetails(carFilterModel.FilterExpression)
+            : _unitOfWork.GetRepository<ICarRepository, Car>().FindAllWithDetails();
 
         //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
 

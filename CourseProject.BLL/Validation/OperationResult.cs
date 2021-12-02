@@ -21,6 +21,6 @@ public class OperationResult {
     public bool HasErrors => Errors.Count != 0;
 }
 
-public class OperationResult<T> : OperationResult where T : class {
+public class OperationResult<T> : OperationResult {
     public T Result { get; set; }
 }

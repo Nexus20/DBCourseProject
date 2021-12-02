@@ -15,6 +15,8 @@ namespace CourseProject.BLL {
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IModelService, ModelService>();
             services.AddScoped<IEquipmentItemCategoryService, EquipmentItemCategoryService>();
+            services.AddScoped<IEquipmentItemService, EquipmentItemService>();
+            services.AddScoped<IEquipmentItemValueService, EquipmentItemValueService>();
 
             return services;
         }
