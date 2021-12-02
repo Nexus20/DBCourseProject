@@ -38,6 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Showrooms\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Showrooms\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\EquipmentItemCategories\Delete.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\EquipmentItemCategories\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Models\Create.cshtml" />
@@ -94,6 +96,14 @@
   <ItemGroup>
     <None Include="Views\Account\Login.cshtml" />
     <None Include="Views\Account\Register.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Showrooms\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Showrooms\Details.cshtml" />
   </ItemGroup>
 
 </Project>

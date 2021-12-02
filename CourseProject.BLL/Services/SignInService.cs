@@ -28,4 +28,12 @@ public class SignInService : ISignInService {
 
         return operationResult;
     }
+
+    public async Task<OperationResult> SignOutAsync() {
+        var operationResult = new OperationResult();
+
+        await _unitOfWork.SignInManager.SignOutAsync();
+
+        return operationResult;
+    }
 }

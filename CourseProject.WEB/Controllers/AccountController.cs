@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
-using CourseProject.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
@@ -71,6 +70,13 @@ namespace CourseProject.WEB.Controllers {
             }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout() {
+            await _signInService.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
