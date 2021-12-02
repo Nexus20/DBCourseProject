@@ -1,5 +1,4 @@
 ﻿using CourseProject.DAL.Entities;
-using CourseProject.DAL.Identity;
 using CourseProject.DAL.Interfaces;
 using CourseProject.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +17,8 @@ namespace CourseProject.DAL {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddSignInManager<SignInManager<User>>();
+                .AddSignInManager<SignInManager<User>>()
+                .AddRoleManager<RoleManager<IdentityRole>>();
 
             return services;
         }

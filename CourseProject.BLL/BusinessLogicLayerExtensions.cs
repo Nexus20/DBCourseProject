@@ -12,6 +12,9 @@ namespace CourseProject.BLL {
             services.AddAutoMapper(typeof(AutomapperBllProfile));
 
             services.AddScoped<ICarService, CarService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISignInService, SignInService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IModelService, ModelService>();
             services.AddScoped<IEquipmentItemCategoryService, EquipmentItemCategoryService>();

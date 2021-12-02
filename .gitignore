@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/CourseProject.WEB/wwwroot/Новая папка/CarInfo.xlsx

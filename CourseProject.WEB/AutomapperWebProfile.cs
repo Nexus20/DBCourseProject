@@ -20,6 +20,8 @@ public class AutomapperWebProfile : Profile {
         CreateMap<EquipmentItemValueDto, EquipmentItemValueViewModel>().ReverseMap();
         CreateMap<EquipmentItemCategoryDto, EquipmentItemCategoryViewModel>().ReverseMap();
         CreateMap<EquipmentItemCategoryDto, CreateEditEquipmentItemCategoryViewModel>().ReverseMap();
+
+        CreateMap<RegisterViewModel, UserDto>().ReverseMap();
     }
 
 }

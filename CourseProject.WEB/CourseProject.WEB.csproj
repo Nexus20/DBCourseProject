@@ -91,4 +91,9 @@
     <UpToDateCheckInput Remove="Areas\Admin\Views\EquipmentItemCategories\Delete.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Views\Account\Login.cshtml" />
+    <None Include="Views\Account\Register.cshtml" />
+  </ItemGroup>
+
 </Project>

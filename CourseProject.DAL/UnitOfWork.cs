@@ -1,6 +1,4 @@
-﻿using System.Transactions;
-using CourseProject.DAL.Entities;
-using CourseProject.DAL.Identity;
+﻿using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -20,6 +18,10 @@ public class UnitOfWork : IUnitOfWork {
     }
 
     public UserManager<User> UserManager => _services.GetRequiredService<UserManager<User>>();
+
+    public SignInManager<User> SignInManager => _services.GetRequiredService<SignInManager<User>>();
+
+    public RoleManager<IdentityRole> RoleManager => _services.GetRequiredService<RoleManager<IdentityRole>>();
 
     public TRepository GetRepository<TRepository, TEntity>()
         where TRepository : IRepository<TEntity> where TEntity : class {
