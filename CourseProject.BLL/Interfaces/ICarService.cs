@@ -17,4 +17,6 @@ public interface ICarService {
     IEnumerable<CarDto> GetAllCars(CarFilterModel carFilterModel = null);
 
     OperationResult<CarDto> GetCarById(int id);
+
+    Task<OperationResult> CreateCarAsync(IFormFile carFile, string directoryPath);
 }

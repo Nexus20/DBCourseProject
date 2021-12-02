@@ -1,5 +1,8 @@
-﻿using CourseProject.DAL.Interfaces;
+﻿using CourseProject.DAL.Entities;
+using CourseProject.DAL.Identity;
+using CourseProject.DAL.Interfaces;
 using CourseProject.DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +14,12 @@ namespace CourseProject.DAL {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<IBrandRepository, BrandRepository>();
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<SignInManager<User>>();
+
             return services;
         }
 

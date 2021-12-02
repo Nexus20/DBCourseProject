@@ -1,4 +1,9 @@
-﻿using CourseProject.DAL.Interfaces;
+﻿using System.Transactions;
+using CourseProject.DAL.Entities;
+using CourseProject.DAL.Identity;
+using CourseProject.DAL.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject.DAL; 
@@ -14,6 +19,8 @@ public class UnitOfWork : IUnitOfWork {
         _services = services;
     }
 
+    public UserManager<User> UserManager => _services.GetRequiredService<UserManager<User>>();
+
     public TRepository GetRepository<TRepository, TEntity>()
         where TRepository : IRepository<TEntity> where TEntity : class {
         return _services.GetRequiredService<TRepository>();
@@ -21,5 +28,9 @@ public class UnitOfWork : IUnitOfWork {
 
     public Task<int> SaveChangesAsync() {
         return _context.SaveChangesAsync();
+    }
+
+    public IDbContextTransaction BeginTransaction() {
+        return _context.Database.BeginTransaction();
     }
 }

@@ -11,7 +11,6 @@ public class ApplicationDbContext : IdentityDbContext<User> {
     public DbSet<Model> Models { get; set; }
     public DbSet<Car> Cars { get; set; }
     public DbSet<CarPhoto> CarPhotos { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<Client> Clients { get; set; }
     public DbSet<Manager> Managers { get; set; }
     public DbSet<Showroom> Showrooms { get; set; }

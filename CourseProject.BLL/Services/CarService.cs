@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
+using ClosedXML.Excel;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
@@ -97,6 +99,140 @@ public class CarService : ICarService {
         var car = _unitOfWork.GetRepository<ICarRepository, Car>().FirstOrDefaultWithDetails(c => c.Id == id);
 
         operationResult.Result = _mapper.Map<Car, CarDto>(car);
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> CreateCarAsync(IFormFile carFile, string directoryPath) {
+
+        var operationResult = new OperationResult<CarDto>();
+
+        await using var transaction = _unitOfWork.BeginTransaction();
+
+        try {
+
+            var excelFilePath = Path.Combine(directoryPath, carFile.FileName);
+
+            await using (var fileStream = new FileStream(excelFilePath, FileMode.Create)) {
+                await carFile.CopyToAsync(fileStream);
+            }
+
+            var workbook = new XLWorkbook(excelFilePath);
+            var worksheet = workbook.Worksheet(1);
+
+            var brandRow = worksheet.FirstRowUsed();
+
+            var brandName = brandRow.Cell(2).GetString();
+
+            var textInfo = CultureInfo.InvariantCulture.TextInfo;
+
+            var brand = await _unitOfWork.GetRepository<IRepository<Brand>, Brand>()
+                .FirstOrDefaultAsync(b => b.Name.ToLower() == brandName.ToLower());
+
+            if (brand == null) {
+                brand = new Brand() {
+                    Name = textInfo.ToTitleCase(brandName),
+                };
+
+                await _unitOfWork.GetRepository<IRepository<Brand>, Brand>().CreateAsync(brand);
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            var modelRow = brandRow.RowBelow();
+
+            var modelName = modelRow.Cell(2).GetString();
+
+            var model = await _unitOfWork.GetRepository<IRepository<Model>, Model>()
+                .FirstOrDefaultAsync(m => m.Name.ToLower() == modelName.ToLower());
+
+            if (model == null) {
+
+                model = new Model() {
+                    BrandId = brand.Id,
+                    Name = modelName
+                };
+
+                await _unitOfWork.GetRepository<IRepository<Model>, Model>().CreateAsync(model);
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            var subModelRow = modelRow.RowBelow();
+
+            var subModelName = subModelRow.Cell(2).GetString();
+
+            var car = new Car() {
+                ModelId = model.Id,
+                Submodel = textInfo.ToTitleCase(subModelName),
+            };
+
+            await _unitOfWork.GetRepository<IRepository<Car>, Car>().CreateAsync(car);
+            await _unitOfWork.SaveChangesAsync();
+
+            var equipmentItemRow = subModelRow.RowBelow(4);
+
+            while (!equipmentItemRow.Cell(1).IsEmpty()) {
+                var categoryName = equipmentItemRow.Cell(1).GetString();
+
+                var category = await _unitOfWork
+                    .GetRepository<IRepository<EquipmentItemCategory>, EquipmentItemCategory>()
+                    .FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower());
+
+                var unitsOfMeasure = equipmentItemRow.Cell(3).GetString();
+
+                if (category == null) {
+                    category = new EquipmentItemCategory() {
+                        Name = textInfo.ToTitleCase(categoryName),
+                        UnitsOfMeasure = unitsOfMeasure
+                    };
+
+                    await _unitOfWork.GetRepository<IRepository<EquipmentItemCategory>, EquipmentItemCategory>()
+                        .CreateAsync(category);
+                }
+
+                var optional = equipmentItemRow.Cell(5).GetString().ToLower() switch {
+                    "yes" => true,
+                    "no" => false,
+                    _ => throw new ArgumentException()
+                };
+
+                var equipmentItem = await _unitOfWork.GetRepository<IRepository<EquipmentItem>, EquipmentItem>()
+                    .FirstOrDefaultAsync(e => e.EquipmentItemCategoryId == category.Id && e.CarId == car.Id);
+
+                if (equipmentItem == null) {
+
+                    equipmentItem = new EquipmentItem() {
+                        EquipmentItemCategoryId = category.Id,
+                        CarId = car.Id,
+                        Optional = optional
+                    };
+
+                    await _unitOfWork.GetRepository<IRepository<EquipmentItem>, EquipmentItem>()
+                        .CreateAsync(equipmentItem);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+                
+                var value = equipmentItemRow.Cell(2).GetString();
+                var price = (decimal)equipmentItemRow.Cell(4).GetDouble();
+
+                var equipmentItemValue = new EquipmentItemValue() {
+                    EquipmentItemId = equipmentItem.Id,
+                    Price = price,
+                    Value = textInfo.ToTitleCase(value)
+                };
+
+                await _unitOfWork.GetRepository<IRepository<EquipmentItemValue>, EquipmentItemValue>()
+                    .CreateAsync(equipmentItemValue);
+                await _unitOfWork.SaveChangesAsync();
+
+                equipmentItemRow = equipmentItemRow.RowBelow();
+            }
+
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex) {
+            await transaction.RollbackAsync();
+            operationResult.AddError("Unexpected", "There is unexpected error");
+        }
 
         return operationResult;
     }

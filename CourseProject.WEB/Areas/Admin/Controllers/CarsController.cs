@@ -6,6 +6,7 @@ using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -88,15 +89,31 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
                 return View("Create", model);
             }
 
-            var brandDto = _mapper.Map<CreateEditCarViewModel, CarDto>(model);
+            var carDto = _mapper.Map<CreateEditCarViewModel, CarDto>(model);
 
             var directoryPath = Path.Combine(_appEnvironment.WebRootPath, "img", "cars");
-            var result = await _carService.CreateCarAsync(brandDto, model.Images, directoryPath);
+            var result = await _carService.CreateCarAsync(carDto, model.Images, directoryPath);
 
             if (result.HasErrors) {
                 ModelState.AddErrorsFromOperationResult(result);
                 GetInformationToCreateEditCar();
                 return View("Create", model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateViaFile(IFormFile carFile) {
+
+            var directoryPath = Path.Combine(_appEnvironment.WebRootPath, "carInfoFiles");
+
+            var result = await _carService.CreateCarAsync(carFile, directoryPath);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
             }
 
             return RedirectToAction(nameof(Index));
