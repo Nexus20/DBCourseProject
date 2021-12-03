@@ -1,0 +1,72 @@
+﻿@using CourseProject.Domain
+@model ClientViewModel
+
+<h1>Personal info</h1>
+<hr>
+
+<dl class="row">
+    <dt class="col-sm-4">
+        @Html.DisplayNameFor(model => model.UserName)
+    </dt>
+    <dd class="col-sm-8">
+        @Html.DisplayFor(model => model.UserName)
+    </dd>
+    <dt class="col-sm-4">
+        @Html.DisplayNameFor(model => model.Email)
+    </dt>
+    <dd class="col-sm-8">
+        @Html.DisplayFor(model => model.Email)
+    </dd>
+</dl>
+
+<h2>Purchase requests</h2>
+
+@if (Model.PurchaseOrders is {Count: > 0 }) {
+    <div class="row">
+        @foreach (var item in Model.PurchaseOrders) {
+
+
+            var state = item.State switch {
+                PurchaseOrderState.New => "secondary",
+                PurchaseOrderState.Processing => "info",
+                PurchaseOrderState.Canceled => "danger",
+                PurchaseOrderState.Closed => "success",
+                _ => ""
+            };
+
+
+            @*<div class="card col-sm-12 border-@state" style="margin: 20px;">
+                <div class="row no-gutters">
+                    <div class="col-sm-5">
+                        @if (item.Car.CarImages.Count > 0) {
+                            <img src="@item.Car.CarImages.First().Path" class="card-img-top" alt="">
+                        }
+                        else {
+                            <img src="/img/no-image.jpg" alt="" style="height: 300px">
+                        }
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="card-body text-@state">
+                            <h5 class="card-title">
+                                Request № @item.Id State @item.State
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                @item.Car.Year @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                            </h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a asp-controller="Home" asp-action="Car" class="card-link btn btn-outline-info" asp-route-id="@item.CarId">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+        }
+    </div>
+
+}
+else {
+    <hr>
+    <br>
+    <div class="alert alert-info" role="alert">
+        There are no requests yet
+    </div>
+}

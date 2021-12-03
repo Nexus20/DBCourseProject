@@ -50,6 +50,7 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Account\Cabinet.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Error\Error404.cshtml" />
   </ItemGroup>
 
@@ -112,6 +113,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Areas\Admin\Views\Showrooms\Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Account\Cabinet.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -38,8 +38,8 @@
                     </ul>
                     <ul class="nav navbar-nav ml-auto">
                         @if (User.Identity.IsAuthenticated) {
-                            <li class="nav-item" style="display: flex; align-items: center;">
-                                Hello, @User.Identity.Name
+                            <li class="nav-item" style="display: flex; -ms-align-items: center; -o-align-items: center; -webkit-align-items: center; align-items: center;">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Cabinet">Hello, @User.Identity.Name</a>
                             </li>
                             <li class="nav-item">
                                 <form method="post" asp-controller="Account" asp-action="Logout">

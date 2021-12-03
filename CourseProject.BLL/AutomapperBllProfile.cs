@@ -18,6 +18,8 @@ public class AutomapperBllProfile : Profile {
         CreateMap<EquipmentItemValue, EquipmentItemValueDto> ().ReverseMap();
         CreateMap<EquipmentItemCategory, EquipmentItemCategoryDto> ().ReverseMap();
         CreateMap<User, UserDto> ().ReverseMap();
+        CreateMap<Client, UserDto> ().ReverseMap();
+        CreateMap<Client, ClientDto> ().ReverseMap();
         CreateMap<Manager, ManagerDto> ().ReverseMap();
         CreateMap<Showroom, ShowroomDto> ().ReverseMap();
         CreateMap<IdentityRole, RoleDto> ().ReverseMap();

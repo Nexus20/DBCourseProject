@@ -1,7 +1,7 @@
 ﻿using CourseProject.BLL.DTO;
 using CourseProject.BLL.Validation;
 
-namespace CourseProject.BLL.Interfaces; 
+namespace CourseProject.BLL.Interfaces;
 
 public interface IUserService {
     Task<OperationResult> CreateUserAsync(UserDto userDto);
@@ -20,4 +20,8 @@ public interface IUserService {
     Task<OperationResult> DeleteUserAsync(string userId);
 
     Task<OperationResult> ChangeUserPasswordAsync(UserDto dto);
+
+    Task<OperationResult<ClientDto>> GetClientByIdAsync(string userId);
+
+    Task<OperationResult> CreateClientAsync(UserDto userDto);
 }

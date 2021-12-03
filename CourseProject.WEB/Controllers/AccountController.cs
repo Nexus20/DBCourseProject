@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using System.Text.Json;
+using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +40,8 @@ namespace CourseProject.WEB.Controllers {
 
             var userDto = _mapper.Map<RegisterViewModel, UserDto>(model);
 
-            var result = await _userService.CreateUserAsync(userDto);
+            var result = await _userService.CreateClientAsync(userDto);
+            //var result = await _userService.CreateUserAsync(userDto);
 
             if (result.HasErrors) {
                 ModelState.AddErrorsFromOperationResult(result);
@@ -70,6 +73,21 @@ namespace CourseProject.WEB.Controllers {
             }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Cabinet() {
+
+            var result = await _userService.GetClientByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            var model = _mapper.Map<ClientDto, ClientViewModel>(result.Result);
+
+            return View(model);
         }
 
         [HttpPost]

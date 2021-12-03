@@ -42,6 +42,54 @@ public class UserService : IUserService {
         return operationResult;
     }
 
+    public async Task<OperationResult<ClientDto>> GetClientByIdAsync(string userId) {
+
+        var operationResult = new OperationResult<ClientDto>();
+
+        var client = await _unitOfWork.GetRepository<IRepository<Client>, Client>()
+            .FirstOrDefaultAsync(c => c.Id == userId, c => c.PurchaseOrders);
+
+        if (client == null) {
+            operationResult.AddError(nameof(userId), "There is no such client");
+            return operationResult;
+        }
+
+        operationResult.Result = _mapper.Map<Client, ClientDto>(client);
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> CreateClientAsync(UserDto userDto) {
+
+        var operationResult = new OperationResult();
+
+        var user = await _unitOfWork.UserManager.FindByEmailAsync(userDto.Email);
+
+        if (user != null) {
+            operationResult.AddError(nameof(userDto.Email), "User with such email already exists");
+            return operationResult;
+        }
+
+        var client = _mapper.Map<UserDto, Client>(userDto);
+        client.Name = client.Surname = client.Patronymic = "";
+
+        var result = await _unitOfWork.UserManager.CreateAsync(client, userDto.Password);
+
+        if (result.Errors.Any()) {
+
+            foreach (var error in result.Errors) {
+                operationResult.AddError(error.Code, error.Description);
+            }
+
+            return operationResult;
+        }
+
+        await _unitOfWork.UserManager.AddToRoleAsync(client, "user");
+        await _unitOfWork.SignInManager.SignInAsync(client, false);
+
+        return operationResult;
+    }
+
     public async Task<OperationResult<IList<string>>> GetUserRolesAsync(string userId) {
 
         var operationResult = new OperationResult<IList<string>>();
