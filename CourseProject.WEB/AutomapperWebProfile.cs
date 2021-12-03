@@ -33,6 +33,8 @@ public class AutomapperWebProfile : Profile {
         CreateMap<ChangePasswordViewModel, UserDto>().ReverseMap();
 
         CreateMap<RoleDto, RoleViewModel>().ReverseMap();
+
+        CreateMap<PurchaseOrderDto, PurchaseOrderViewModel>();
     }
 
 }

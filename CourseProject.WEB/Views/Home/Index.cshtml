@@ -1,8 +1,54 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<CourseProject.WEB.Models.CarViewModel>
+
+@{
+    ViewData["Title"] = "Cars list";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Cars</h1>
+<hr>
+
+<p>
+    <a asp-action="Create" asp-area="Admin" asp-controller="Cars" class="btn btn-primary btn-lg">Add a new car</a>
+</p>
+
+<form method="get" asp-action="Index">
+    <div class="d-flex gap-2 mb-3">
+        <select name="BrandId" asp-items="ViewBag.Brands" class="form-control">
+            <option value="0">All</option>
+        </select>
+        <select name="ModelId" asp-items="ViewBag.Models" class="form-control">
+            <option value="0">All</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <input type="submit" value="Fitler" class="btn btn-primary"/>
+    </div>
+</form>
+
+<div class="row">
+
+    @foreach (var item in Model) {
+        <div class="col-sm-12">
+            <div class="card car-card" style="margin: 15px;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.FullModel</h5>
+                    <div class="row">
+                        <div class="col-sm-12 fotorama" data-height="300" data-nav="thumbs" style="display: flex; -o-justify-content: center; -webkit-justify-content: center; justify-content: center;">
+                            @if (item.Photos.Count > 0) {
+
+                                @foreach (var photo in item.Photos) {
+                                    <img src="@photo.Path" alt="">
+                                }
+                            }
+                            else {
+                                <img src="/img/no-image.jpg" alt="" style="height: 300px">
+                            }
+                        </div>
+                    </div>
+
+                    <a asp-action="Details" asp-controller="Home" asp-area="" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
+    }
 </div>

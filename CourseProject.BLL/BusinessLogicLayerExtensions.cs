@@ -23,6 +23,7 @@ namespace CourseProject.BLL {
             services.AddScoped<IEquipmentItemCategoryService, EquipmentItemCategoryService>();
             services.AddScoped<IEquipmentItemService, EquipmentItemService>();
             services.AddScoped<IEquipmentItemValueService, EquipmentItemValueService>();
+            services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 
             return services;
         }

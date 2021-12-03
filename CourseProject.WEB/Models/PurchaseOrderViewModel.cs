@@ -14,6 +14,6 @@ namespace CourseProject.WEB.Models {
 
         public PurchaseOrderState State { get; set; }
 
-        public ICollection<EquipmentItemValue> EquipmentItemsValues { get; set; }
+        public ICollection<EquipmentItemValueViewModel> EquipmentItemsValues { get; set; }
     }
 }

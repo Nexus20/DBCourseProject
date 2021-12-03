@@ -46,8 +46,8 @@ public class UserService : IUserService {
 
         var operationResult = new OperationResult<ClientDto>();
 
-        var client = await _unitOfWork.GetRepository<IRepository<Client>, Client>()
-            .FirstOrDefaultAsync(c => c.Id == userId, c => c.PurchaseOrders);
+        var client = await _unitOfWork.GetRepository<IClientRepository, Client>()
+            .FirstOrDefaultWithDetailsAsync(c => c.Id == userId);
 
         if (client == null) {
             operationResult.AddError(nameof(userId), "There is no such client");

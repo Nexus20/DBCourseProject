@@ -1,5 +1,4 @@
-﻿using CourseProject.DAL.Entities;
-using CourseProject.Domain;
+﻿using CourseProject.Domain;
 
 namespace CourseProject.BLL.DTO {
     public class PurchaseOrderDto : BaseDto {
@@ -14,6 +13,6 @@ namespace CourseProject.BLL.DTO {
 
         public PurchaseOrderState State { get; set; }
 
-        public ICollection<EquipmentItemValue> EquipmentItemsValues { get; set; }
+        public ICollection<EquipmentItemValueDto> EquipmentItemsValues { get; set; }
     }
 }

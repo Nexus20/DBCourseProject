@@ -13,6 +13,7 @@ public static class ManagerEntityExtensions {
         builder.HasMany(m => m.PurchaseOrders)
             .WithOne(o => o.Manager)
             .HasForeignKey(o => o.ManagerId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(m => m.SupplyOrders)

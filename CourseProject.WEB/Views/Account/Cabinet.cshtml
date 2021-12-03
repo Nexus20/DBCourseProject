@@ -34,12 +34,11 @@
                 _ => ""
             };
 
-
-            @*<div class="card col-sm-12 border-@state" style="margin: 20px;">
+            <div class="card col-sm-12 border-@state" style="margin: 20px;">
                 <div class="row no-gutters">
                     <div class="col-sm-5">
-                        @if (item.Car.CarImages.Count > 0) {
-                            <img src="@item.Car.CarImages.First().Path" class="card-img-top" alt="">
+                        @if (item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.Photos.Count > 0) {
+                            <img src="@item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.Photos.First().Path" class="card-img-top" alt="">
                         }
                         else {
                             <img src="/img/no-image.jpg" alt="" style="height: 300px">
@@ -51,14 +50,19 @@
                                 Request № @item.Id State @item.State
                             </h5>
                             <h6 class="card-subtitle mb-2 text-muted">
-                                @item.Car.Year @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                                @item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.FullModel
                             </h6>
+                            <ul class="list-group">
+                                @foreach (var equipmentItemValue in item.EquipmentItemsValues) {
+                                    <li class="list-group-item">@equipmentItemValue.EquipmentItem.Category.Name: @equipmentItemValue.Value (&dollar; @equipmentItemValue.Price)</li>
+                                }
+                            </ul>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a asp-controller="Home" asp-action="Car" class="card-link btn btn-outline-info" asp-route-id="@item.CarId">Details</a>
+                            <a asp-controller="Home" asp-action="Details" class="card-link btn btn-outline-info" asp-route-id="@item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.Id">Details</a>
                         </div>
                     </div>
                 </div>
-            </div>*@
+            </div>
         }
     </div>
 

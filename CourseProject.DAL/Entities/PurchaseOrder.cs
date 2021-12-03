@@ -11,7 +11,7 @@ namespace CourseProject.DAL.Entities {
 
         public virtual Client Client { get; set; }
 
-        public Guid ManagerId { get; set; }
+        public Guid? ManagerId { get; set; }
 
         public virtual Manager Manager { get; set; }
 
