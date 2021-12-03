@@ -10,5 +10,7 @@ public class ShowroomViewModel : BaseViewModel {
 
     public string Phone { get; set; }
 
+    public string FullAddress => $"Showroom #{Id} {City} {Street} {House}";
+
     public virtual ICollection<ManagerViewModel> Managers { get; set; }
 }

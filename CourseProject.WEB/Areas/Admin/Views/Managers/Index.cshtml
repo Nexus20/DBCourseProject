@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ManagerViewModel>
+@{
+    ViewData["Title"] = "Managers list";
+}
+
+<h1>Managers</h1>
+<hr>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary btn-lg">Create New</a>
+</p>
+
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.User.UserName)</th>
+        <th>@Html.DisplayNameFor(model => model.User.Email)</th>
+        <th>@Html.DisplayNameFor(model => model.Showroom)</th>
+    </tr>
+    @foreach (var manager in Model) {
+        <tr>
+            <td>@manager.User.UserName</td>
+            <td>@manager.User.Email</td>
+            <td>@manager.Showroom.FullAddress</td>
+        </tr>
+    }
+</table>

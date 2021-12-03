@@ -4,6 +4,8 @@ using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject.BLL.Services; 
 
@@ -13,9 +15,12 @@ public class UserService : IUserService {
 
     private readonly IMapper _mapper;
 
-    public UserService(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IServiceProvider _services;
+
+    public UserService(IUnitOfWork unitOfWork, IMapper mapper, IServiceProvider services) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _services = services;
     }
 
     public IEnumerable<UserDto> Users =>
@@ -86,6 +91,97 @@ public class UserService : IUserService {
 
         return operationResult;
     }
+
+    public async Task<OperationResult> EditUserAsync(UserDto dto) {
+
+        var operationResult = new OperationResult();
+
+        var user = await _unitOfWork.UserManager.FindByIdAsync(dto.Id);
+
+        if (user == null) {
+            operationResult.AddError(nameof(dto.Id), "Such user not found");
+            return operationResult;
+        }
+
+        user.UserName = dto.UserName;
+        user.Email = dto.Email;
+
+        var result = await _unitOfWork.UserManager.UpdateAsync(user);
+
+        if (result.Errors.Any()) {
+            foreach (var error in result.Errors) {
+                operationResult.AddError(error.Code, error.Description);
+            }
+
+            return operationResult;
+        }
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> DeleteUserAsync(string userId) {
+
+        var operationResult = new OperationResult();
+
+        var user = await _unitOfWork.UserManager.FindByIdAsync(userId);
+
+        if (user == null) {
+            operationResult.AddError(nameof(userId), "Such user not found");
+            return operationResult;
+        }
+
+        var result = await _unitOfWork.UserManager.DeleteAsync(user);
+
+        if (result.Errors.Any()) {
+            foreach (var error in result.Errors) {
+                operationResult.AddError(error.Code, error.Description);
+            }
+
+            return operationResult;
+        }
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> ChangeUserPasswordAsync(UserDto dto) {
+
+        var operationResult = new OperationResult();
+
+        var user = await _unitOfWork.UserManager.FindByIdAsync(dto.Id);
+
+        if (user == null) {
+            operationResult.AddError(nameof(dto.Id), "Such user not found");
+            return operationResult;
+        }
+
+        var passwordValidator = _services.GetRequiredService<IPasswordValidator<User>>();
+        var passwordHasher = _services.GetRequiredService<IPasswordHasher<User>>();
+
+        var result = await passwordValidator.ValidateAsync(_unitOfWork.UserManager, user, dto.Password);
+
+        if (result.Errors.Any()) {
+            foreach (var error in result.Errors) {
+                operationResult.AddError(error.Code, error.Description);
+            }
+
+            return operationResult;
+        }
+
+        user.PasswordHash = passwordHasher.HashPassword(user, dto.Password);
+
+        result = await _unitOfWork.UserManager.UpdateAsync(user);
+
+        if (result.Errors.Any()) {
+            foreach (var error in result.Errors) {
+                operationResult.AddError(error.Code, error.Description);
+            }
+
+            return operationResult;
+        }
+
+        return operationResult;
+    }
+
 
     public async Task<OperationResult> CreateUserAsync(UserDto userDto) {
 

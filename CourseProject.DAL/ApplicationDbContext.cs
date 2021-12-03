@@ -48,6 +48,7 @@ public class ApplicationDbContext : IdentityDbContext<User> {
         builder.Entity<Showroom>().Configure();
         builder.Entity<PurchaseOrderEquipmentItemValue>().Configure();
         builder.Entity<SupplyOrderPartEquipmentItemValue>().Configure();
+        builder.Entity<User>().Configure();
 
         base.OnModelCreating(builder);
     }

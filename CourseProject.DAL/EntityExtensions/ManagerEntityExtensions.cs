@@ -8,6 +8,8 @@ public static class ManagerEntityExtensions {
 
     public static void Configure(this EntityTypeBuilder<Manager> builder) {
 
+        builder.Property(m => m.Id).ValueGeneratedOnAdd();
+
         builder.HasMany(m => m.PurchaseOrders)
             .WithOne(o => o.Manager)
             .HasForeignKey(o => o.ManagerId)

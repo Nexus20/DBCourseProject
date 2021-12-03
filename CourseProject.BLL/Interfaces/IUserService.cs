@@ -14,4 +14,10 @@ public interface IUserService {
 
     Task<OperationResult> EditUserRolesAsync(string userId, IEnumerable<string> addedRoles,
         IEnumerable<string> removedRoles);
+
+    Task<OperationResult> EditUserAsync(UserDto dto);
+
+    Task<OperationResult> DeleteUserAsync(string userId);
+
+    Task<OperationResult> ChangeUserPasswordAsync(UserDto dto);
 }

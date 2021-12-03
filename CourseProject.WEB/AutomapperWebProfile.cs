@@ -24,8 +24,13 @@ public class AutomapperWebProfile : Profile {
         CreateMap<ShowroomDto, ShowroomViewModel>().ReverseMap();
         CreateMap<ShowroomDto, CreateEditShowroomViewModel>().ReverseMap();
         CreateMap<UserDto, UserViewModel>().ReverseMap();
+        CreateMap<ManagerDto, ManagerViewModel>().ReverseMap();
 
         CreateMap<RegisterViewModel, UserDto>().ReverseMap();
+        CreateMap<CreateUserViewModel, UserDto>().ReverseMap();
+        CreateMap<EditUserViewModel, UserDto>().ReverseMap();
+        CreateMap<ChangePasswordViewModel, UserDto>().ReverseMap();
+
         CreateMap<RoleDto, RoleViewModel>().ReverseMap();
     }
 
