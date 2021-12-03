@@ -1,4 +1,6 @@
-﻿namespace CourseProject.BLL.Validation;
+﻿using CourseProject.BLL.DTO;
+
+namespace CourseProject.BLL.Validation;
 
 public class OperationResult {
 

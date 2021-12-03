@@ -13,6 +13,7 @@ namespace CourseProject.BLL {
 
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IShowroomService, ShowroomService>();
+            services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISignInService, SignInService>();
             services.AddScoped<IRoleService, RoleService>();

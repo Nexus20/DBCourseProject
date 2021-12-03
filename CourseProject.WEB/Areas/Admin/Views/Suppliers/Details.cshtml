@@ -1,0 +1,46 @@
+﻿@model SupplierViewModel
+
+@{
+    ViewData["Title"] = $"Supplier #{Model.Name}";
+}
+
+<h1>Supplier #@Model.Name</h1>
+<hr>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Brand)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Brand.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+    
+    <div class="row">
+        <div class="col-5">
+            <div class="d-flex gap-1">
+                <a asp-action="Index" asp-area="Admin" asp-controller="Suppliers" class="btn btn-primary">Go to list</a>
+                <a asp-action="Edit" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                <a asp-action="Delete" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,6 @@
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
-using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -18,6 +17,8 @@ public class RoleService : IRoleService {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
+    public IEnumerable<RoleDto> Roles =>
+        _mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleDto>>(_unitOfWork.RoleManager.Roles);
 
     public async Task<OperationResult> CreateRoleAsync(string roleName) {
 
@@ -32,6 +33,30 @@ public class RoleService : IRoleService {
         role = new IdentityRole(roleName);
 
         await _unitOfWork.RoleManager.CreateAsync(role);
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> DeleteRoleAsync(string id) {
+
+        var operationResult = new OperationResult();
+
+        var role = await _unitOfWork.RoleManager.FindByIdAsync(id);
+
+        if (role == null) {
+            operationResult.AddError(nameof(id), "Such role not found");
+            return operationResult;
+        }
+
+        var result = await _unitOfWork.RoleManager.DeleteAsync(role);
+
+        if (result.Errors.Any()) {
+            foreach (var error in result.Errors) {
+                operationResult.AddError(error.Code, error.Description);
+            }
+
+            return operationResult;
+        }
 
         return operationResult;
     }

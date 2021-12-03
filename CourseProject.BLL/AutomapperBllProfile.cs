@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.DAL.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.BLL; 
 
@@ -18,6 +19,7 @@ public class AutomapperBllProfile : Profile {
         CreateMap<EquipmentItemCategory, EquipmentItemCategoryDto> ().ReverseMap();
         CreateMap<User, UserDto> ().ReverseMap();
         CreateMap<Showroom, ShowroomDto> ().ReverseMap();
+        CreateMap<IdentityRole, RoleDto> ().ReverseMap();
     }
 
 }

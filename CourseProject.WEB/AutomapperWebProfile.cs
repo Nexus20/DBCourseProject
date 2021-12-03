@@ -15,6 +15,7 @@ public class AutomapperWebProfile : Profile {
         CreateMap<ModelDto, ModelViewModel>().ReverseMap();
         CreateMap<ModelDto, CreateEditModelViewModel>().ReverseMap();
         CreateMap<SupplierDto, SupplierViewModel>().ReverseMap();
+        CreateMap<SupplierDto, CreateEditSupplierViewModel>().ReverseMap();
         CreateMap<CarPhotoDto, CarPhotoViewModel>().ReverseMap();
         CreateMap<EquipmentItemDto, EquipmentItemViewModel>().ReverseMap();
         CreateMap<EquipmentItemValueDto, EquipmentItemValueViewModel>().ReverseMap();
@@ -22,8 +23,10 @@ public class AutomapperWebProfile : Profile {
         CreateMap<EquipmentItemCategoryDto, CreateEditEquipmentItemCategoryViewModel>().ReverseMap();
         CreateMap<ShowroomDto, ShowroomViewModel>().ReverseMap();
         CreateMap<ShowroomDto, CreateEditShowroomViewModel>().ReverseMap();
+        CreateMap<UserDto, UserViewModel>().ReverseMap();
 
         CreateMap<RegisterViewModel, UserDto>().ReverseMap();
+        CreateMap<RoleDto, RoleViewModel>().ReverseMap();
     }
 
 }
