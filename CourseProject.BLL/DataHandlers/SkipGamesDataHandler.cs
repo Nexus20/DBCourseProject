@@ -7,8 +7,8 @@ namespace CourseProject.BLL.DataHandlers {
 
         public override void AddExpression(SelectionPipelineExpressions<Car> expressions, CarFilterModel filterModel) {
 
-            if (filterModel.SkipCount is > 0) {
-                expressions.SkipCount = filterModel.SkipCount.Value;
+            if (filterModel.PageNumber > 1) {
+                expressions.SkipCount = filterModel.TakeCount * (filterModel.PageNumber - 1);
             }
 
             base.AddExpression(expressions, filterModel);

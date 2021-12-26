@@ -34,21 +34,30 @@ namespace CourseProject.WEB.Controllers {
         }
 
         [HttpGet]
-        public IActionResult Index([FromQuery] CarFilterViewModel filterModel) {
+        public async Task<IActionResult> Index([FromQuery] CarFilterViewModel filterModel) {
 
-            GetInfoToCreateFilters();
+            var source = await _carService.GetAllCarsAsync(_mapper.Map<CarFilterViewModel, CarFilterModel>(filterModel));
 
-            var source = filterModel.IsReset ? _carService.GetAllCars() : _carService.GetAllCars(filterModel);
+            var model = new CarsWithFiltersViewModel() {
+                Cars = _mapper.Map<IEnumerable<CarDto>, List<CarViewModel>>(source.Dtos),
+                Filters = new CarFilterViewModel(),
+                PageViewModel = new PageViewModel(source.PossibleDtosCount, filterModel.PageNumber, filterModel.TakeCount)
+            };
 
-            var model = _mapper.Map<IEnumerable<CarDto>, List<CarViewModel>>(source);
+            if (ModelState.IsValid) {
+                model.SelectedBrand = filterModel.BrandId;
+                model.SelectedModel = filterModel.ModelId;
+                model.SelectedOrderType = filterModel.OrderType;
+                model.Model = filterModel.Model;
+            }
 
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Details(int id) {
+        public async Task<IActionResult> Details(int id) {
 
-            var result = _carService.GetCarById(id);
+            var result = await _carService.GetCarByIdAsync(id);
 
             if (result.HasErrors) {
                 TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
@@ -69,14 +78,9 @@ namespace CourseProject.WEB.Controllers {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private void GetInfoToCreateFilters() {
-            ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(_brandService.GetAllBrands()), "Id", "Name");
-            ViewBag.Models = new SelectList(_mapper.Map<IEnumerable<ModelDto>, IEnumerable<ModelViewModel>>(_modelService.GetAllModels()), "Id", "NameWithBrand");
-        }
+        public async Task<IActionResult> CreatePurchaseOrder(int carId) {
 
-        public IActionResult CreatePurchaseOrder(int carId) {
-
-            var result = _carService.GetCarById(carId);
+            var result = await _carService.GetCarByIdAsync(carId);
 
             if (result.HasErrors) {
                 TempData["Errors"] = JsonSerializer.Serialize(result.Errors);

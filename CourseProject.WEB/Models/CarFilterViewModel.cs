@@ -2,15 +2,13 @@
 
 namespace CourseProject.WEB.Models; 
 
-public class CarFilterViewModel {
+public class CarFilterViewModel : FilterViewModel {
 
-    public uint BrandId { get; set; }
+    public uint? BrandId { get; set; }
 
-    public uint ModelId { get; set; }
+    public uint? ModelId { get; set; }
 
-    public CarOrderType OrderType { get; set; }
+    public CarOrderType? OrderType { get; set; }
 
-    public int? SkipCount { get; set; }
-
-    public int? TakeCount { get; set; }
+    public string? Model { get; set; }
 }

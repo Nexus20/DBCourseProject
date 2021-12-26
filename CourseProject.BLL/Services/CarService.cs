@@ -4,9 +4,12 @@ using ClosedXML.Excel;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
+using CourseProject.BLL.Pipeline;
+using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
+using CourseProject.DAL.SelectionPipelineExpressions;
 using Microsoft.AspNetCore.Http;
 
 namespace CourseProject.BLL.Services; 
@@ -17,9 +20,12 @@ public class CarService : ICarService {
 
     private readonly IMapper _mapper;
 
-    public CarService(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel> _builderDirector;
+
+    public CarService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel> builderDirector) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _builderDirector = builderDirector;
     }
 
     public async Task<OperationResult> CreateCarAsync(CarDto carDto, IFormFileCollection formFileCollection = null,
@@ -81,22 +87,30 @@ public class CarService : ICarService {
         return operationResult;
     }
 
-    public IEnumerable<CarDto> GetAllCars(CarFilterModel carFilterModel = null) {
+    public async Task<DtoListWithPossibleEntitiesCount<CarDto>> GetAllCarsAsync(CarFilterModel filterModel) {
 
-        var source = carFilterModel != null
-            ? _unitOfWork.GetRepository<ICarRepository, Car>().FindAllWithDetails(carFilterModel.FilterExpression)
-            : _unitOfWork.GetRepository<ICarRepository, Car>().FindAllWithDetails();
+        var pipeline = new CarSelectionPipeline(filterModel, _builderDirector);
+
+        var expressions = pipeline.Process();
+
+        var source = _unitOfWork.GetRepository<ICarRepository, Car>().FindAllWithDetails(expressions);
+
+        var possibleCarsCount = await _unitOfWork.GetRepository<ICarRepository, Car>()
+            .CountAsync(expressions.FilterExpressions);
 
         //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
 
-        return _mapper.Map<IEnumerable<Car>, IEnumerable<CarDto>>(source);
+        return new DtoListWithPossibleEntitiesCount<CarDto>() {
+            Dtos = _mapper.Map<IEnumerable<Car>, IEnumerable<CarDto>>(source),
+            PossibleDtosCount = possibleCarsCount
+        };
     }
 
-    public OperationResult<CarDto> GetCarById(int id) {
+    public async Task<OperationResult<CarDto>> GetCarByIdAsync(int id) {
 
         var operationResult = new OperationResult<CarDto>();
 
-        var car = _unitOfWork.GetRepository<ICarRepository, Car>().FirstOrDefaultWithDetails(c => c.Id == id);
+        var car = await _unitOfWork.GetRepository<ICarRepository, Car>().FirstOrDefaultWithDetailsAsync(c => c.Id == id);
 
         operationResult.Result = _mapper.Map<Car, CarDto>(car);
 

@@ -8,16 +8,17 @@ namespace CourseProject.BLL.DataHandlers {
 
         public override void AddExpression(SelectionPipelineExpressions<Car> expressions, CarFilterModel filterModel) {
 
-            if (filterModel.OrderType != CarOrderType.None) {
-
-                if (filterModel.OrderType != CarOrderType.AlphabetAsc) {
-
-                    expressions.AscendingOrderExpression = c => $"{c.Model.Brand}{c.Model.Name}{c.Submodel}";
-
-                } else if (filterModel.OrderType != CarOrderType.AlphabetDesc) {
-
-                    expressions.DescendingOrderExpression = c => $"{c.Model.Brand}{c.Model.Name}{c.Submodel}";
-                }
+            switch (filterModel.OrderType) {
+                case CarOrderType.AlphabetAsc:
+                    expressions.AscendingOrderExpressions.Add(c => c.Model.Brand.Name);
+                    expressions.AscendingOrderExpressions.Add(c => c.Model.Name);
+                    expressions.AscendingOrderExpressions.Add(c => c.Submodel);
+                    break;
+                case CarOrderType.AlphabetDesc:
+                    expressions.DescendingOrderExpressions.Add(c => c.Model.Brand.Name);
+                    expressions.DescendingOrderExpressions.Add(c => c.Model.Name);
+                    expressions.DescendingOrderExpressions.Add(c => c.Submodel);
+                    break;
             }
 
             base.AddExpression(expressions, filterModel);

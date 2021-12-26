@@ -11,7 +11,7 @@ public class CarRepository : Repository<Car>, ICarRepository {
     public CarRepository(ApplicationDbContext context) : base(context) {
     }
 
-    public Task<Car> FirstOrDefaultWithDetails(Expression<Func<Car, bool>> filter) {
+    public Task<Car> FirstOrDefaultWithDetailsAsync(Expression<Func<Car, bool>> filter) {
         return FindAllWithDetailsWithoutFilter().AsNoTracking().FirstOrDefaultAsync(filter);
     }
 
@@ -34,12 +34,26 @@ public class CarRepository : Repository<Car>, ICarRepository {
             query = expressions.FilterExpressions.Aggregate(query, (current, expression) => current.Where(expression));
         }
 
-        if (expressions.AscendingOrderExpression != null) {
-            query = query.OrderBy(expressions.AscendingOrderExpression);
+        if (expressions.AscendingOrderExpressions.Any()) {
+            query = query.OrderBy(expressions.AscendingOrderExpressions[0]);
+
+            if (expressions.AscendingOrderExpressions.Count > 1) {
+
+                for (var i = 1; i < expressions.AscendingOrderExpressions.Count; i++) {
+                    query = (query as IOrderedQueryable<Car>).ThenBy(expressions.AscendingOrderExpressions[i]);
+                }
+            }
         }
 
-        if (expressions.DescendingOrderExpression != null) {
-            query = query.OrderByDescending(expressions.DescendingOrderExpression);
+        if (expressions.DescendingOrderExpressions.Any()) {
+            query = query.OrderByDescending(expressions.DescendingOrderExpressions[0]);
+
+            if (expressions.DescendingOrderExpressions.Count > 1) {
+
+                for (var i = 1; i < expressions.DescendingOrderExpressions.Count; i++) {
+                    query = (query as IOrderedQueryable<Car>).ThenByDescending(expressions.DescendingOrderExpressions[i]);
+                }
+            }
         }
 
         if (expressions.SkipCount > 0) {

@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +15,20 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
         _dbSet = context.Set<TEntity>();
     }
 
+    public Task<int> CountAsync(List<Expression<Func<TEntity, bool>>> expressions, int? skipCount = null) {
+
+        IQueryable<TEntity> query = _dbSet;
+
+        if (expressions.Any()) {
+            query = expressions.Aggregate(query, (current, expression) => current.Where(expression));
+        }
+
+        if (skipCount is > 0) {
+            query = query.Skip(skipCount.Value);
+        }
+
+        return query.CountAsync();
+    }
 
     public IEnumerable<TEntity> FindAll() {
         return _dbSet.AsNoTracking();

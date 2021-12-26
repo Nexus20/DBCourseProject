@@ -36,6 +36,7 @@ namespace CourseProject.BLL {
 
             services.AddScoped<BrandModelFilterDataHandler>();
             services.AddScoped<AlphabetOrderDataHandler>();
+            services.AddScoped<ModelSearchDataHandler>();
             services.AddScoped<SkipGamesDataHandler>();
             services.AddScoped<TakeGamesDataHandler>();
 

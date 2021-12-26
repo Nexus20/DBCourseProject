@@ -7,8 +7,8 @@ namespace CourseProject.BLL.DataHandlers {
 
         public override void AddExpression(SelectionPipelineExpressions<Car> expressions, CarFilterModel filterModel) {
 
-            if (filterModel.TakeCount is > 0) {
-                expressions.TakeCount = filterModel.TakeCount.Value;
+            if (filterModel.TakeCount > 0) {
+                expressions.TakeCount = filterModel.TakeCount;
             }
 
             base.AddExpression(expressions, filterModel);

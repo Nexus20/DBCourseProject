@@ -14,9 +14,9 @@ public interface ICarService {
 
     Task<OperationResult> DeleteCarAsync(int id, string directoryPath = null);
 
-    IEnumerable<CarDto> GetAllCars(CarFilterModel carFilterModel = null);
+    Task<DtoListWithPossibleEntitiesCount<CarDto>> GetAllCarsAsync(CarFilterModel carFilterModel = null);
 
-    OperationResult<CarDto> GetCarById(int id);
+    Task<OperationResult<CarDto>> GetCarByIdAsync(int id);
 
     Task<OperationResult> CreateCarAsync(IFormFile carFile, string directoryPath);
 }

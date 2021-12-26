@@ -13,6 +13,8 @@ public interface IRepository<TEntity> where TEntity : class {
 
     void Update(TEntity entity);
 
+    Task<int> CountAsync(List<Expression<Func<TEntity, bool>>> expressions, int? skipCount = null);
+
     IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>>? filter = null,
         Expression<Func<TEntity, object>>? orderByExpr = null,
         int? skipCount = null,

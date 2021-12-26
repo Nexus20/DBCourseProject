@@ -15,6 +15,7 @@ namespace CourseProject.BLL.PipelineBuilders {
         public IDataHandler<SelectionPipelineExpressions<Car>, CarFilterModel> Construct() {
 
             _selectionPipelineBuilder.SetFirstChainPart<BrandModelFilterDataHandler>()
+                .SetNextChainPart<ModelSearchDataHandler>()
                 .SetNextChainPart<AlphabetOrderDataHandler>()
                 .SetNextChainPart<SkipGamesDataHandler>()
                 .SetNextChainPart<TakeGamesDataHandler>();

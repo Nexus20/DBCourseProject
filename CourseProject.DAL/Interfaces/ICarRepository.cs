@@ -6,7 +6,7 @@ namespace CourseProject.DAL.Interfaces;
 
 public interface ICarRepository : IRepository<Car> {
 
-    Task<Car> FirstOrDefaultWithDetails(Expression<Func<Car, bool>> filter);
+    Task<Car> FirstOrDefaultWithDetailsAsync(Expression<Func<Car, bool>> filter);
 
     IEnumerable<Car> FindAllWithDetails(SelectionPipelineExpressions<Car> expressions);
 
