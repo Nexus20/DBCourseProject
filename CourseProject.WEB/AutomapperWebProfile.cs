@@ -38,6 +38,8 @@ public class AutomapperWebProfile : Profile {
         CreateMap<PurchaseOrderDto, PurchaseOrderViewModel>();
 
         CreateMap<CarFilterModel, CarFilterViewModel>().ReverseMap();
+
+        CreateMap<MaxOrdersClientDto, MaxOrdersClientViewModel>().ReverseMap();
     }
 
 }

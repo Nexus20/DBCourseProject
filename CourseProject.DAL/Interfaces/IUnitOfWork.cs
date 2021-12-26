@@ -12,6 +12,8 @@ public interface IUnitOfWork {
 
     RoleManager<IdentityRole> RoleManager { get; }
 
+    IStatisticsRepository StatisticsRepository { get; }
+
     TRepository GetRepository<TRepository, TEntity>()
         where TRepository : IRepository<TEntity> where TEntity : class;
 

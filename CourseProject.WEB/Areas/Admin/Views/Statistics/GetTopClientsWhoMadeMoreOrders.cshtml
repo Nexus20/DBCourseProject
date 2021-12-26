@@ -1,4 +1,4 @@
-﻿@model System.Collections.Generic.List<CourseProject.WEB.Models.ClientViewModel>
+﻿@model List<MaxOrdersClientViewModel>
 
 @{
     ViewBag.Title = "Top clients by orders count";
@@ -9,16 +9,16 @@
 <table class="table">
     <tr>
         <th>@Html.DisplayNameFor(model => model[0].Id)</th>
-        <th>@Html.DisplayNameFor(model => model[0].UserName)</th>
+        <th>Full name</th>
         <th>@Html.DisplayNameFor(model => model[0].Email)</th>
         <th>Orders count</th>
     </tr>
     @foreach (var client in Model) {
         <tr>
             <td>@client.Id</td>
-            <td>@client.UserName</td>
+            <td>@client.FullName</td>
             <td>@client.Email</td>
-            <td>@client.PurchaseOrders.Count</td>
+            <td>@client.OrdersCount</td>
         </tr>
     }
 </table>

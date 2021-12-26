@@ -23,6 +23,8 @@ public class UnitOfWork : IUnitOfWork {
 
     public RoleManager<IdentityRole> RoleManager => _services.GetRequiredService<RoleManager<IdentityRole>>();
 
+    public IStatisticsRepository StatisticsRepository => _services.GetRequiredService<IStatisticsRepository>();
+
     public TRepository GetRepository<TRepository, TEntity>()
         where TRepository : IRepository<TEntity> where TEntity : class {
         return _services.GetRequiredService<TRepository>();

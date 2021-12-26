@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.DAL.Entities;
+using CourseProject.DAL.StatisticsModels;
 using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.BLL;
@@ -40,6 +41,8 @@ public class AutomapperBllProfile : Profile {
             .ReverseMap()
             .ForMember(entity => entity.PurchaseOrderEquipmentItemsValues,
                 options => options.Ignore());
+
+        CreateMap<MaxOrdersClient, MaxOrdersClientDto>();
     }
 
 }

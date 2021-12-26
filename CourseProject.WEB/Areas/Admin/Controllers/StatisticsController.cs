@@ -26,11 +26,11 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         [HttpGet]
-        public IActionResult GetTopClientsWhoMadeMoreOrders() {
+        public async Task<IActionResult> GetTopClientsWhoMadeMoreOrders() {
 
-            var dto = _statisticsService.GetTopClientsWhoMadeMoreOrders();
+            var source = await _statisticsService.GetTopClientsWhoMadeMoreOrders();
 
-            var model = _mapper.Map<IEnumerable<ClientDto>, List<ClientViewModel>>(dto);
+            var model = _mapper.Map<IEnumerable<MaxOrdersClientDto>, List<MaxOrdersClientViewModel>>(source);
 
             return View(model);
         }

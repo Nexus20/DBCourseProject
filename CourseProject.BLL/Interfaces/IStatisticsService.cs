@@ -4,7 +4,7 @@ namespace CourseProject.BLL.Interfaces;
 
 public interface IStatisticsService {
     
-    IEnumerable<ClientDto> GetTopClientsWhoMadeMoreOrders();
+    Task<IEnumerable<MaxOrdersClientDto>> GetTopClientsWhoMadeMoreOrders();
 
     IEnumerable<ModelDto> GetTopMostFrequentlyPurchasedCarModels();
 }

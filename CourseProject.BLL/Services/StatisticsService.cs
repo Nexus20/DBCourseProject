@@ -3,6 +3,7 @@ using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
+using CourseProject.DAL.StatisticsModels;
 
 namespace CourseProject.BLL.Services; 
 
@@ -17,13 +18,11 @@ public class StatisticsService : IStatisticsService {
         _mapper = mapper;
     }
 
-    public IEnumerable<ClientDto> GetTopClientsWhoMadeMoreOrders() {
+    public async Task<IEnumerable<MaxOrdersClientDto>> GetTopClientsWhoMadeMoreOrders() {
 
-        var clients = _unitOfWork.GetRepository<IClientRepository, Client>().FindAllWithDetails();
+        var source = await _unitOfWork.StatisticsRepository.GetTopClientsWhoMadeMoreOrders();
 
-        var topClients = clients.OrderByDescending(c => c.PurchaseOrders.Count).Take(3);
-
-        return _mapper.Map<IEnumerable<Client>, IEnumerable<ClientDto>>(topClients);
+        return _mapper.Map<IEnumerable<MaxOrdersClient>, IEnumerable<MaxOrdersClientDto>>(source);
     }
 
     public IEnumerable<ModelDto> GetTopMostFrequentlyPurchasedCarModels() {
