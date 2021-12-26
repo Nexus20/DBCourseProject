@@ -13,7 +13,9 @@ namespace CourseProject.DAL {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<IBrandRepository, BrandRepository>();
+            services.AddScoped<IModelRepository, ModelRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             services.AddIdentity<User, IdentityRole>()

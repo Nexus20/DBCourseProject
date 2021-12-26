@@ -42,7 +42,7 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         // GET: CarsController
-        public IActionResult Index([FromQuery] CarFilterModel filterModel) {
+        public IActionResult Index([FromQuery] CarFilterViewModel filterModel) {
 
             GetInfoToCreateFilters();
 

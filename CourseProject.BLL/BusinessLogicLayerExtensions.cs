@@ -1,6 +1,11 @@
-﻿using CourseProject.BLL.Interfaces;
+﻿using CourseProject.BLL.DataHandlers;
+using CourseProject.BLL.FilterModels;
+using CourseProject.BLL.Interfaces;
+using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Services;
 using CourseProject.DAL;
+using CourseProject.DAL.Entities;
+using CourseProject.DAL.SelectionPipelineExpressions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject.BLL {
@@ -24,6 +29,15 @@ namespace CourseProject.BLL {
             services.AddScoped<IEquipmentItemService, EquipmentItemService>();
             services.AddScoped<IEquipmentItemValueService, EquipmentItemValueService>();
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
+
+            services.AddScoped<IPipelineBuilder<SelectionPipelineExpressions<Car>, CarFilterModel>, CarSelectionPipelineBuilder>();
+            services.AddScoped<IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel>, CarSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<BrandModelFilterDataHandler>();
+            services.AddScoped<AlphabetOrderDataHandler>();
+            services.AddScoped<SkipGamesDataHandler>();
+            services.AddScoped<TakeGamesDataHandler>();
 
             return services;
         }

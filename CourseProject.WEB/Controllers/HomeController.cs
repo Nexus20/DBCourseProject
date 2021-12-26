@@ -34,7 +34,7 @@ namespace CourseProject.WEB.Controllers {
         }
 
         [HttpGet]
-        public IActionResult Index([FromQuery] CarFilterModel filterModel) {
+        public IActionResult Index([FromQuery] CarFilterViewModel filterModel) {
 
             GetInfoToCreateFilters();
 

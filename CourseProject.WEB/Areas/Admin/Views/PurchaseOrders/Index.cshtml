@@ -1,0 +1,80 @@
+﻿@model System.Collections.Generic.List<CourseProject.WEB.Models.PurchaseOrderViewModel>
+
+@{
+    ViewData["Title"] = "Showrooms list";
+}
+
+<h1>Purchase orders</h1>
+<hr>
+
+<p><a class="btn btn-primary btn-lg" asp-action="CreateSalesReport">Create sales report</a></p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].State)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].CreationDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].LastUpdateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Client.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Client.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].EquipmentItemsValues.ElementAt(0).EquipmentItem.Car)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastUpdateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.FullModel)
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="@($"dropdownMenuButton{item.Id}")" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
+                            <li><a asp-action="Details" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">View order</a></li>
+                            <li class="dropdown-divider"></li>
+                            <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Process order</a></li>
+                            <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Cancel order</a></li>
+                            <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Close order</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

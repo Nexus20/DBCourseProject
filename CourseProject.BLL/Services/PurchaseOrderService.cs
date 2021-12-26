@@ -44,6 +44,8 @@ public class PurchaseOrderService : IPurchaseOrderService {
             var purchaseOrder = new PurchaseOrder() {
                 ClientId = clientId,
                 State = PurchaseOrderState.New,
+                CreationDate = DateTime.Now,
+                LastUpdateDate = DateTime.Now
             };
 
             await _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().CreateAsync(purchaseOrder);
@@ -71,7 +73,27 @@ public class PurchaseOrderService : IPurchaseOrderService {
         return operationResult;
     }
 
-    public Task<OperationResult<PurchaseOrderDto>> GetOrderById(int id) {
-        throw new NotImplementedException();
+    public OperationResult<PurchaseOrderDto> GetOrderById(int id) {
+
+        var operationResult = new OperationResult<PurchaseOrderDto>();
+
+        var order = _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>()
+            .FirstOrDefaultWithDetails(p => p.Id == id);
+
+        if (order == null) {
+            operationResult.AddError(nameof(id), "Such order not found");
+            return operationResult;
+        }
+
+        operationResult.Result = _mapper.Map<PurchaseOrder, PurchaseOrderDto>(order);
+
+        return operationResult;
+    }
+
+    public IEnumerable<PurchaseOrderDto> GetAllOrders() {
+
+        var source = _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>().FindAllWithDetails();
+
+        return _mapper.Map<IEnumerable<PurchaseOrder>, IEnumerable<PurchaseOrderDto>>(source);
     }
 }

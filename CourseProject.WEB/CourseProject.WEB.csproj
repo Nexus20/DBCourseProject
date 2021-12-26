@@ -10,12 +10,14 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Utils\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+    <PackageReference Include="DinkToPdfAll" Version="1.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,6 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\PurchaseOrders\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\PurchaseOrders\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Showrooms\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Showrooms\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\EquipmentItemCategories\Delete.cshtml" />
@@ -50,6 +54,9 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Cars\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Statistics\GetTopClientsWhoMadeMoreOrders.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Statistics\GetTopMostFrequentlyPurchasedCarModels.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\Statistics\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Account\Cabinet.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Error\Error404.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\CreatePurchaseOrder.cshtml" />
@@ -127,6 +134,26 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Views\Home\CreatePurchaseOrder.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\PurchaseOrders\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\PurchaseOrders\Details.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Statistics\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Statistics\GetTopClientsWhoMadeMoreOrders.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\Statistics\GetTopMostFrequentlyPurchasedCarModels.cshtml" />
   </ItemGroup>
 
 </Project>

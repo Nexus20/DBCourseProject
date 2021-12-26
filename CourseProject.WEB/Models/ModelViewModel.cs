@@ -1,8 +1,11 @@
-﻿namespace CourseProject.WEB.Models; 
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CourseProject.WEB.Models; 
 
 public class ModelViewModel : BaseViewModel {
     public string Name { get; set; }
 
+    [Display(Name = "Model")]
     public string NameWithBrand => Brand == null ? string.Empty : $"{Brand.Name} {Name}";
 
     public int BrandId { get; set; }

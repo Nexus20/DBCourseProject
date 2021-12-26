@@ -14,5 +14,9 @@ namespace CourseProject.BLL.DTO {
         public PurchaseOrderState State { get; set; }
 
         public ICollection<EquipmentItemValueDto> EquipmentItemsValues { get; set; }
+
+        public DateTime CreationDate { get; set; }
+
+        public DateTime LastUpdateDate { get; set; }
     }
 }

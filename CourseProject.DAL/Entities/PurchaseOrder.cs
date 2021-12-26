@@ -5,6 +5,7 @@ namespace CourseProject.DAL.Entities {
 
         public PurchaseOrder() {
             State = PurchaseOrderState.New;
+            CreationDate = LastUpdateDate = DateTime.Now;
         }
 
         public string ClientId { get; set; }
@@ -18,5 +19,9 @@ namespace CourseProject.DAL.Entities {
         public PurchaseOrderState State { get; set; }
 
         public virtual ICollection<PurchaseOrderEquipmentItemValue> PurchaseOrderEquipmentItemsValues { get; set; }
+
+        public DateTime CreationDate { get; set; }
+
+        public DateTime LastUpdateDate { get; set; }
     }
 }

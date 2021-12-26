@@ -1341,6 +1341,12 @@ namespace CourseProject.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdateDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("ManagerId")
                         .HasColumnType("uniqueidentifier");
 

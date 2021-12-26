@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.WEB.Models;
 
 namespace CourseProject.WEB; 
@@ -35,6 +36,8 @@ public class AutomapperWebProfile : Profile {
         CreateMap<RoleDto, RoleViewModel>().ReverseMap();
 
         CreateMap<PurchaseOrderDto, PurchaseOrderViewModel>();
+
+        CreateMap<CarFilterModel, CarFilterViewModel>().ReverseMap();
     }
 
 }

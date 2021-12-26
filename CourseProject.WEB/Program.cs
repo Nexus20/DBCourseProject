@@ -10,6 +10,7 @@ var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddBusinessLogicLayer(connectionString);
 builder.Services.AddWebLayer();
+DinkToPdfAll.LibraryLoader.Load();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
