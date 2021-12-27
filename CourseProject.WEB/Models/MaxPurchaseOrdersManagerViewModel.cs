@@ -1,6 +1,6 @@
-﻿namespace CourseProject.DAL.StatisticsModels; 
+﻿namespace CourseProject.WEB.Models; 
 
-public class MaxOrdersClient {
+public class MaxPurchaseOrdersManagerViewModel {
 
     public string Id { get; set; }
 

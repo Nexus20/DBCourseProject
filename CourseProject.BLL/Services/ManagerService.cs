@@ -4,8 +4,6 @@ using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject.BLL.Services; 
 

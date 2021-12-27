@@ -1,14 +1,12 @@
 ﻿using CourseProject.BLL.DataHandlers;
-using CourseProject.DAL.Entities;
-using CourseProject.DAL.SelectionPipelineExpressions;
 
 namespace CourseProject.BLL.PipelineBuilders {
-    public interface IPipelineBuilder<TExpressions, TFilterModel> {
+    public interface IPipelineBuilder<TEntity, TFilterModel> where TEntity : class where TFilterModel : class {
 
-        IPipelineBuilder<TExpressions, TFilterModel> SetFirstChainPart<T>() where T : IDataHandler<TExpressions, TFilterModel>;
+        IPipelineBuilder<TEntity, TFilterModel> SetFirstChainPart<T>() where T : IDataHandler<TEntity, TFilterModel>;
 
-        IPipelineBuilder<TExpressions, TFilterModel> SetNextChainPart<T>() where T : IDataHandler<TExpressions, TFilterModel>;
+        IPipelineBuilder<TEntity, TFilterModel> SetNextChainPart<T>() where T : IDataHandler<TEntity, TFilterModel>;
 
-        IDataHandler<SelectionPipelineExpressions<Car>, TFilterModel> GetPipeline();
+        IDataHandler<TEntity, TFilterModel> GetPipeline();
     }
 }

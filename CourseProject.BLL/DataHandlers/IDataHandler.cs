@@ -1,8 +1,10 @@
-﻿namespace CourseProject.BLL.DataHandlers {
-    public interface IDataHandler<TExpressions, TFilterModel> {
+﻿using CourseProject.DAL.SelectionPipelineExpressions;
 
-        IDataHandler<TExpressions, TFilterModel> SetNext(IDataHandler<TExpressions, TFilterModel> nextHandler);
+namespace CourseProject.BLL.DataHandlers {
+    public interface IDataHandler<TEntity, TFilterModel> where TEntity : class {
 
-        void AddExpression(TExpressions expressions, TFilterModel filterModel);
+        IDataHandler<TEntity, TFilterModel> SetNext(IDataHandler<TEntity, TFilterModel> nextHandler);
+
+        void AddExpression(SelectionPipelineExpressions<TEntity> expressions, TFilterModel filterModel);
     }
 }

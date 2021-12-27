@@ -4,33 +4,33 @@ using CourseProject.DAL.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject.BLL.PipelineBuilders {
-    public class CarSelectionPipelineBuilder : IPipelineBuilder<Car, CarFilterModel> {
+    public class ModelSelectionPipelineBuilder : IPipelineBuilder<Model, ModelFilterModel> {
 
         private readonly IServiceProvider _serviceProvider;
 
-        private IDataHandler<Car, CarFilterModel> _firstDataHandler;
+        private IDataHandler<Model, ModelFilterModel> _firstDataHandler;
 
-        private IDataHandler<Car, CarFilterModel> _currentDataHandler;
+        private IDataHandler<Model, ModelFilterModel> _currentDataHandler;
 
-        public CarSelectionPipelineBuilder(IServiceProvider serviceProvider) {
+        public ModelSelectionPipelineBuilder(IServiceProvider serviceProvider) {
             _serviceProvider = serviceProvider;
         }
 
-        public IPipelineBuilder<Car, CarFilterModel> SetFirstChainPart<T>() where T : IDataHandler<Car, CarFilterModel> {
+        public IPipelineBuilder<Model, ModelFilterModel> SetFirstChainPart<T>() where T : IDataHandler<Model, ModelFilterModel> {
 
             var dataHandler = _serviceProvider.GetRequiredService<T>();
             _firstDataHandler = _currentDataHandler = dataHandler;
             return this;
         }
 
-        public IPipelineBuilder<Car, CarFilterModel> SetNextChainPart<T>() where T : IDataHandler<Car, CarFilterModel> {
+        public IPipelineBuilder<Model, ModelFilterModel> SetNextChainPart<T>() where T : IDataHandler<Model, ModelFilterModel> {
 
             var dataHandler = _serviceProvider.GetRequiredService<T>();
             _currentDataHandler = _currentDataHandler.SetNext(dataHandler);
             return this;
         }
 
-        public IDataHandler<Car, CarFilterModel> GetPipeline() {
+        public IDataHandler<Model, ModelFilterModel> GetPipeline() {
             return _firstDataHandler;
         }
     }

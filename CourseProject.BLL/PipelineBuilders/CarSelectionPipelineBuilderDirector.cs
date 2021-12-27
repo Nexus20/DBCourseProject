@@ -1,24 +1,24 @@
 ﻿using CourseProject.BLL.DataHandlers;
+using CourseProject.BLL.DataHandlers.CarDataHandlers;
 using CourseProject.BLL.FilterModels;
 using CourseProject.DAL.Entities;
-using CourseProject.DAL.SelectionPipelineExpressions;
 
 namespace CourseProject.BLL.PipelineBuilders {
-    public class CarSelectionPipelineBuilderDirector : IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel> {
+    public class CarSelectionPipelineBuilderDirector : IPipelineBuilderDirector<Car, CarFilterModel> {
 
-        private readonly IPipelineBuilder<SelectionPipelineExpressions<Car>, CarFilterModel> _selectionPipelineBuilder;
+        private readonly IPipelineBuilder<Car, CarFilterModel> _selectionPipelineBuilder;
 
-        public CarSelectionPipelineBuilderDirector(IPipelineBuilder<SelectionPipelineExpressions<Car>, CarFilterModel> selectionPipelineBuilder) {
+        public CarSelectionPipelineBuilderDirector(IPipelineBuilder<Car, CarFilterModel> selectionPipelineBuilder) {
             _selectionPipelineBuilder = selectionPipelineBuilder;
         }
 
-        public IDataHandler<SelectionPipelineExpressions<Car>, CarFilterModel> Construct() {
+        public IDataHandler<Car, CarFilterModel> Construct() {
 
             _selectionPipelineBuilder.SetFirstChainPart<BrandModelFilterDataHandler>()
                 .SetNextChainPart<ModelSearchDataHandler>()
                 .SetNextChainPart<AlphabetOrderDataHandler>()
-                .SetNextChainPart<SkipGamesDataHandler>()
-                .SetNextChainPart<TakeGamesDataHandler>();
+                .SetNextChainPart<SkipGamesDataHandler<Car, CarFilterModel>>()
+                .SetNextChainPart<TakeGamesDataHandler<Car, CarFilterModel>>();
 
             return _selectionPipelineBuilder.GetPipeline();
         }

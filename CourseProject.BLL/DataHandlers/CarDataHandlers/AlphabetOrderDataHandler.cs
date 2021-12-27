@@ -2,9 +2,9 @@
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.SelectionPipelineExpressions;
 
-namespace CourseProject.BLL.DataHandlers {
+namespace CourseProject.BLL.DataHandlers.CarDataHandlers {
 
-    public class AlphabetOrderDataHandler : DataHandler<SelectionPipelineExpressions<Car>, CarFilterModel> {
+    public class AlphabetOrderDataHandler : DataHandler<Car, CarFilterModel> {
 
         public override void AddExpression(SelectionPipelineExpressions<Car> expressions, CarFilterModel filterModel) {
 

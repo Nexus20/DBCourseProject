@@ -24,10 +24,24 @@ public class StatisticsService : IStatisticsService {
         return _mapper.Map<IEnumerable<MaxOrdersClient>, IEnumerable<MaxOrdersClientDto>>(source);
     }
 
+    public async Task<IEnumerable<MaxPurchaseOrdersManagerDto>> GetTopManagersWhoCompletedMorePurchaseOrdersAsync() {
+
+        var source = await _unitOfWork.StatisticsRepository.GetTopManagersWhoCompletedMorePurchaseOrdersAsync();
+
+        return _mapper.Map<IEnumerable<MaxPurchaseOrdersManager>, IEnumerable<MaxPurchaseOrdersManagerDto>>(source);
+    }
+
     public async Task<IEnumerable<MostPurchasedModelDto>> GetTopMostPurchasedCarModelsAsync() {
 
         var source = await _unitOfWork.StatisticsRepository.GetTopMostPurchasedCarModelsAsync();
 
         return _mapper.Map<IEnumerable<MostPurchasedModel>, IEnumerable<MostPurchasedModelDto>>(source);
+    }
+
+    public async Task<OrdersProfitDto> GetProfitAsync() {
+
+        var source = await _unitOfWork.StatisticsRepository.GetProfitAsync();
+
+        return _mapper.Map<OrdersProfit, OrdersProfitDto>(source);
     }
 }

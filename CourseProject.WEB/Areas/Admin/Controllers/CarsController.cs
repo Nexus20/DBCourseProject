@@ -18,8 +18,6 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         private readonly IModelService _modelService;
 
-        private readonly IBrandService _brandService;
-
         private readonly IEquipmentItemCategoryService _equipmentItemCategoryService;
 
         private readonly IWebHostEnvironment _appEnvironment;
@@ -30,7 +28,7 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         private readonly IEquipmentItemValueService _equipmentItemValueService;
 
-        public CarsController(ICarService carService, IMapper mapper, IModelService modelService, IWebHostEnvironment appEnvironment, IEquipmentItemCategoryService equipmentItemCategoryService, IEquipmentItemService equipmentItemService, IEquipmentItemValueService equipmentItemValueService, IBrandService brandService) {
+        public CarsController(ICarService carService, IMapper mapper, IModelService modelService, IWebHostEnvironment appEnvironment, IEquipmentItemCategoryService equipmentItemCategoryService, IEquipmentItemService equipmentItemService, IEquipmentItemValueService equipmentItemValueService) {
             _carService = carService;
             _mapper = mapper;
             _modelService = modelService;
@@ -38,7 +36,6 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             _equipmentItemCategoryService = equipmentItemCategoryService;
             _equipmentItemService = equipmentItemService;
             _equipmentItemValueService = equipmentItemValueService;
-            _brandService = brandService;
         }
 
         // GET: CarsController

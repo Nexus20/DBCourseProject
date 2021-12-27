@@ -12,7 +12,9 @@ public interface IModelService {
 
     Task<OperationResult> DeleteModelAsync(int id);
 
-    IEnumerable<ModelDto> GetAllModels(ModelFilterModel modelFilterModel = null);
+    IEnumerable<ModelDto> GetAllModels();
+
+    Task<DtoListWithPossibleEntitiesCount<ModelDto>> GetAllModelsAsync(ModelFilterModel filterModel);
 
     Task<OperationResult<ModelDto>> GetModelById(int id);
 }

@@ -1,11 +1,12 @@
 ﻿using CourseProject.BLL.DataHandlers;
+using CourseProject.BLL.DataHandlers.CarDataHandlers;
+using CourseProject.BLL.DataHandlers.ModelDataHandlers;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Services;
 using CourseProject.DAL;
 using CourseProject.DAL.Entities;
-using CourseProject.DAL.SelectionPipelineExpressions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject.BLL {
@@ -31,14 +32,22 @@ namespace CourseProject.BLL {
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
 
-            services.AddScoped<IPipelineBuilder<SelectionPipelineExpressions<Car>, CarFilterModel>, CarSelectionPipelineBuilder>();
-            services.AddScoped<IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel>, CarSelectionPipelineBuilderDirector>();
+            services.AddScoped<IPipelineBuilder<Car, CarFilterModel>, CarSelectionPipelineBuilder>();
+            services.AddScoped<IPipelineBuilderDirector<Car, CarFilterModel>, CarSelectionPipelineBuilderDirector>();
 
             services.AddScoped<BrandModelFilterDataHandler>();
-            services.AddScoped<AlphabetOrderDataHandler>();
-            services.AddScoped<ModelSearchDataHandler>();
-            services.AddScoped<SkipGamesDataHandler>();
-            services.AddScoped<TakeGamesDataHandler>();
+            services.AddScoped<DataHandlers.CarDataHandlers.AlphabetOrderDataHandler>();
+            services.AddScoped<DataHandlers.CarDataHandlers.ModelSearchDataHandler>();
+
+            services.AddScoped<IPipelineBuilder<Model, ModelFilterModel>, ModelSelectionPipelineBuilder>();
+            services.AddScoped<IPipelineBuilderDirector<Model, ModelFilterModel>, ModelSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<BrandFilterDataHandler>();
+            services.AddScoped<DataHandlers.ModelDataHandlers.AlphabetOrderDataHandler>();
+            services.AddScoped<DataHandlers.ModelDataHandlers.ModelSearchDataHandler>();
+
+            services.AddScoped(typeof(SkipGamesDataHandler<,>));
+            services.AddScoped(typeof(TakeGamesDataHandler<,>));
 
             return services;
         }

@@ -1,5 +1,4 @@
-﻿using CourseProject.DAL.Entities;
-using CourseProject.Domain;
+﻿using CourseProject.Domain;
 
 namespace CourseProject.WEB.Models {
     public class PurchaseOrderViewModel : BaseViewModel {

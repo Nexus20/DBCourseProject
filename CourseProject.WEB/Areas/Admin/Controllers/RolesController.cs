@@ -2,7 +2,6 @@
 using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
-using CourseProject.DAL.Entities;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;

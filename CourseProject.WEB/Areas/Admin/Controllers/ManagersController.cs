@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using AutoMapper;
+﻿using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
-using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
 using Microsoft.AspNetCore.Mvc;

@@ -40,9 +40,9 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         // GET: BrandsController/Details/5
         [HttpGet]
-        public IActionResult Details(int id) {
+        public async Task<IActionResult> Details(int id) {
 
-            var result = _purchaseOrderService.GetOrderById(id);
+            var result = await _purchaseOrderService.GetOrderById(id);
 
             if (result.HasErrors) {
                 TempData["Errors"] = JsonSerializer.Serialize(result.Errors);

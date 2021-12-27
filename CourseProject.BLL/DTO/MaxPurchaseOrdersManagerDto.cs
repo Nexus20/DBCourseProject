@@ -1,6 +1,6 @@
-﻿namespace CourseProject.DAL.StatisticsModels; 
+﻿namespace CourseProject.BLL.DTO; 
 
-public class MaxOrdersClient {
+public class MaxPurchaseOrdersManagerDto {
 
     public string Id { get; set; }
 

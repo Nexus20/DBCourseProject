@@ -1,6 +1,4 @@
-﻿using CourseProject.Domain;
-
-namespace CourseProject.DAL.Entities; 
+﻿namespace CourseProject.DAL.Entities; 
 
 public class SupplyOrderPart : BaseEntity {
 

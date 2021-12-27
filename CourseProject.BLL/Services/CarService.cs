@@ -9,7 +9,6 @@ using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
-using CourseProject.DAL.SelectionPipelineExpressions;
 using Microsoft.AspNetCore.Http;
 
 namespace CourseProject.BLL.Services; 
@@ -20,9 +19,9 @@ public class CarService : ICarService {
 
     private readonly IMapper _mapper;
 
-    private readonly IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel> _builderDirector;
+    private readonly IPipelineBuilderDirector<Car, CarFilterModel> _builderDirector;
 
-    public CarService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel> builderDirector) {
+    public CarService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<Car, CarFilterModel> builderDirector) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _builderDirector = builderDirector;

@@ -1,5 +1,4 @@
 ﻿using CourseProject.BLL.DTO;
-using CourseProject.DAL.StatisticsModels;
 
 namespace CourseProject.BLL.Interfaces; 
 
@@ -7,5 +6,9 @@ public interface IStatisticsService {
     
     Task<IEnumerable<MaxOrdersClientDto>> GetTopClientsWhoMadeMoreOrdersAsync();
 
+    Task<OrdersProfitDto> GetProfitAsync();
+
     Task<IEnumerable<MostPurchasedModelDto>> GetTopMostPurchasedCarModelsAsync();
+
+    Task<IEnumerable<MaxPurchaseOrdersManagerDto>> GetTopManagersWhoCompletedMorePurchaseOrdersAsync();
 }

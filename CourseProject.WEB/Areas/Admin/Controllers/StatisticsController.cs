@@ -1,9 +1,6 @@
-﻿using System.Text.Json;
-using AutoMapper;
+﻿using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
-using CourseProject.WEB.Controllers;
-using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +37,7 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
             var source = await _statisticsService.GetTopMostPurchasedCarModelsAsync();
 
-            var model = _mapper.Map<IEnumerable<MostPurchasedModelDto>, List<MostPurchasedViewModel>>(source);
+            var model = _mapper.Map<IEnumerable<MostPurchasedModelDto>, List<MostPurchasedModelViewModel>>(source);
 
             return View(model);
         }

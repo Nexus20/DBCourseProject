@@ -29,13 +29,21 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         // GET: ModelsController
         [HttpGet]
         [Route("/models")]
-        public IActionResult Index([FromQuery] ModelFilterModel filterModel) {
+        public async Task<IActionResult> Index([FromQuery] ModelFilterViewModel filterModel) {
 
-            GetInfoToCreateFilters();
+            var source = await _modelService.GetAllModelsAsync(_mapper.Map<ModelFilterViewModel, ModelFilterModel>(filterModel));
 
-            var source = filterModel.IsReset ? _modelService.GetAllModels() : _modelService.GetAllModels(filterModel);
+            var model = new ModelsWithFiltersViewModel() {
+                Models = _mapper.Map<IEnumerable<ModelDto>, List<ModelViewModel>>(source.Dtos),
+                Filters = new ModelFilterViewModel(),
+                PageViewModel = new PageViewModel(source.PossibleDtosCount, filterModel.PageNumber, filterModel.TakeCount)
+            };
 
-            var model = _mapper.Map<IEnumerable<ModelDto>, List<ModelViewModel>>(source);
+            if (ModelState.IsValid) {
+                model.SelectedBrand = filterModel.BrandId;
+                model.SelectedOrderType = filterModel.OrderType;
+                model.Model = filterModel.Model;
+            }
 
             return View(model);
         }
@@ -153,10 +161,6 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             var brands = _brandService.GetAllBrands();
 
             ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(brands), "Id", "Name");
-        }
-
-        private void GetInfoToCreateFilters() {
-            ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(_brandService.GetAllBrands()), "Id", "Name");
         }
 
     }

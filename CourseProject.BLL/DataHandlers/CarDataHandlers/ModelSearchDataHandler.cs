@@ -2,9 +2,9 @@
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.SelectionPipelineExpressions;
 
-namespace CourseProject.BLL.DataHandlers; 
+namespace CourseProject.BLL.DataHandlers.CarDataHandlers; 
 
-public class ModelSearchDataHandler : DataHandler<SelectionPipelineExpressions<Car>, CarFilterModel> {
+public class ModelSearchDataHandler : DataHandler<Car, CarFilterModel> {
     public override void AddExpression(SelectionPipelineExpressions<Car> expressions, CarFilterModel filterModel) {
 
         if (!string.IsNullOrWhiteSpace(filterModel.Model)) {

@@ -44,6 +44,7 @@ public class AutomapperBllProfile : Profile {
 
         CreateMap<MaxOrdersClient, MaxOrdersClientDto>().ReverseMap();
         CreateMap<MostPurchasedModel, MostPurchasedModelDto>().ReverseMap();
+        CreateMap<MaxPurchaseOrdersManager, MaxPurchaseOrdersManagerDto>().ReverseMap();
     }
 
 }

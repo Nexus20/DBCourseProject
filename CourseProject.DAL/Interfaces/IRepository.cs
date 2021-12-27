@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using CourseProject.DAL.Entities;
+using CourseProject.DAL.SelectionPipelineExpressions;
 
 namespace CourseProject.DAL.Interfaces; 
 
@@ -25,4 +25,10 @@ public interface IRepository<TEntity> where TEntity : class {
         params Expression<Func<TEntity, object>>[] includeExpressions);
 
     Task<bool> ContainsAsync(Expression<Func<TEntity, bool>> filter);
+
+    IEnumerable<TEntity> FindAllWithDetails(SelectionPipelineExpressions<TEntity> expressions);
+
+    IEnumerable<TEntity> FindAllWithDetails(Expression<Func<TEntity, bool>> filter = null);
+
+    Task<TEntity> FirstOrDefaultWithDetailsAsync(Expression<Func<TEntity, bool>> filter);
 }

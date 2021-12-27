@@ -73,12 +73,12 @@ public class PurchaseOrderService : IPurchaseOrderService {
         return operationResult;
     }
 
-    public OperationResult<PurchaseOrderDto> GetOrderById(int id) {
+    public async Task<OperationResult<PurchaseOrderDto>> GetOrderById(int id) {
 
         var operationResult = new OperationResult<PurchaseOrderDto>();
 
-        var order = _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>()
-            .FirstOrDefaultWithDetails(p => p.Id == id);
+        var order = await _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>()
+            .FirstOrDefaultWithDetailsAsync(p => p.Id == id);
 
         if (order == null) {
             operationResult.AddError(nameof(id), "Such order not found");

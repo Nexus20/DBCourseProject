@@ -1,14 +1,16 @@
-﻿namespace CourseProject.BLL.DataHandlers {
-    public abstract class DataHandler<TExpressions, TFilterModel> : IDataHandler<TExpressions, TFilterModel> {
+﻿using CourseProject.DAL.SelectionPipelineExpressions;
 
-        private IDataHandler<TExpressions, TFilterModel> _nextHandler;
+namespace CourseProject.BLL.DataHandlers {
+    public abstract class DataHandler<TEntity, TFilterModel> : IDataHandler<TEntity, TFilterModel> where TEntity : class {
 
-        public IDataHandler<TExpressions, TFilterModel> SetNext(IDataHandler<TExpressions, TFilterModel> nextHandler) {
+        private IDataHandler<TEntity, TFilterModel> _nextHandler;
+
+        public IDataHandler<TEntity, TFilterModel> SetNext(IDataHandler<TEntity, TFilterModel> nextHandler) {
             _nextHandler = nextHandler;
             return _nextHandler;
         }
 
-        public virtual void AddExpression(TExpressions expressions, TFilterModel filterModel) {
+        public virtual void AddExpression(SelectionPipelineExpressions<TEntity> expressions, TFilterModel filterModel) {
             _nextHandler?.AddExpression(expressions, filterModel);
         }
     }

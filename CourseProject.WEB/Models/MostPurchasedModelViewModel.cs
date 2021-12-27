@@ -1,6 +1,6 @@
 ﻿namespace CourseProject.WEB.Models; 
 
-public class MostPurchasedViewModel {
+public class MostPurchasedModelViewModel {
 
     public string Brand { get; set; }
 

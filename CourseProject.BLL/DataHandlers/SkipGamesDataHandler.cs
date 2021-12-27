@@ -1,11 +1,10 @@
 ﻿using CourseProject.BLL.FilterModels;
-using CourseProject.DAL.Entities;
 using CourseProject.DAL.SelectionPipelineExpressions;
 
 namespace CourseProject.BLL.DataHandlers {
-    public class SkipGamesDataHandler : DataHandler<SelectionPipelineExpressions<Car>, CarFilterModel> {
+    public class SkipGamesDataHandler<TEntity, TFilterModel> : DataHandler<TEntity, TFilterModel> where TEntity : class where TFilterModel : FilterModel {
 
-        public override void AddExpression(SelectionPipelineExpressions<Car> expressions, CarFilterModel filterModel) {
+        public override void AddExpression(SelectionPipelineExpressions<TEntity> expressions, TFilterModel filterModel) {
 
             if (filterModel.PageNumber > 1) {
                 expressions.SkipCount = filterModel.TakeCount * (filterModel.PageNumber - 1);

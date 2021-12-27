@@ -2,7 +2,7 @@
 using CourseProject.DAL.StatisticsModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseProject.DAL.Repositories; 
+namespace CourseProject.DAL.Repositories;
 
 public class StatisticsRepository : IStatisticsRepository {
 
@@ -75,6 +75,70 @@ public class StatisticsRepository : IStatisticsRepository {
                     Model = reader.GetString(1),
                     OrdersCount = reader.GetInt32(2),
                 });
+            }
+        }
+
+        await reader.CloseAsync();
+
+        return result;
+    }
+
+    public async Task<IEnumerable<MaxPurchaseOrdersManager>> GetTopManagersWhoCompletedMorePurchaseOrdersAsync() {
+
+        var result = new List<MaxPurchaseOrdersManager>();
+
+        await using var command = Context.Database.GetDbConnection().CreateCommand();
+
+        command.CommandText = "SELECT TOP 3 m.Id, u.[Name], u.Surname, u.Patronymic, u.Email, count(po.Id) AS OrdersCount FROM [dbo].[AspNetUsers] u " +
+                              "JOIN dbo.Managers m ON m.UserId = u.Id " +
+                              "JOIN dbo.PurchaseOrders po ON po.ManagerId = m.Id " +
+                              "WHERE po.[State] = 2 AND MONTH(po.LastUpdateDate) = MONTH(GETDATE()) - 1 " +
+                              "GROUP BY m.Id, u.[Name], u.Surname, u.Patronymic, u.Email " +
+                              "ORDER BY OrdersCount DESC";
+
+        await Context.Database.OpenConnectionAsync();
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (reader.HasRows) {
+
+            while (await reader.ReadAsync()) {
+
+                result.Add(new MaxPurchaseOrdersManager() {
+                    Id = reader.GetString(0),
+                    Name = reader.GetString(1),
+                    Surname = reader.GetString(2),
+                    Patronymic = reader.GetString(3),
+                    Email = reader.GetString(4),
+                    OrdersCount = reader.GetInt32(5),
+                });
+            }
+        }
+
+        await reader.CloseAsync();
+
+        return result;
+    }
+
+    public async Task<OrdersProfit> GetProfitAsync() {
+
+        var result = new OrdersProfit();
+
+        await using var command = Context.Database.GetDbConnection().CreateCommand();
+
+        command.CommandText = "SELECT coalesce(sum(eiv.Price), 0) AS Profit, (SELECT count(*) FROM dbo.PurchaseOrders) AS OrdersCount FROM dbo.PurchaseOrders po " +
+                              "JOIN dbo.PurchaseOrderEquipmentItemsValues poeiv ON poeiv.PurchaseOrderId = po.Id " +
+                              "JOIN dbo.EquipmentItemValues eiv ON eiv.Id = poeiv.EquipmentItemValueId " +
+                              "WHERE po.[State] = 2 AND MONTH(po.LastUpdateDate) = MONTH(GETDATE()) - 1";
+
+        await Context.Database.OpenConnectionAsync();
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (reader.HasRows) {
+
+            if (await reader.ReadAsync()) {
+
+                result.Profit = reader.GetDecimal(0);
+                result.OrdersCount = reader.GetInt32(1);
             }
         }
 

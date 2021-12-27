@@ -7,7 +7,7 @@ public interface IPurchaseOrderService {
 
     Task<OperationResult> CreateOrderAsync(string clientId, int[] equipment);
 
-    OperationResult<PurchaseOrderDto> GetOrderById(int id);
+    Task<OperationResult<PurchaseOrderDto>> GetOrderById(int id);
 
     IEnumerable<PurchaseOrderDto> GetAllOrders();
 }

@@ -1,7 +1,7 @@
 ﻿using CourseProject.BLL.DataHandlers;
 
 namespace CourseProject.BLL.PipelineBuilders {
-    public interface IPipelineBuilderDirector<TExpressions, TFilterModel> {
-        IDataHandler<TExpressions, TFilterModel> Construct();
+    public interface IPipelineBuilderDirector<TEntity, TFilterModel> where TEntity : class {
+        IDataHandler<TEntity, TFilterModel> Construct();
     }
 }

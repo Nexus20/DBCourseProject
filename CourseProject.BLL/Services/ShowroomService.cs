@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
-using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;

@@ -8,9 +8,9 @@ namespace CourseProject.BLL.Pipeline {
 
         private readonly CarFilterModel _filterModel;
 
-        private readonly IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel> _builderDirector;
+        private readonly IPipelineBuilderDirector<Car, CarFilterModel> _builderDirector;
 
-        public CarSelectionPipeline(CarFilterModel filterModel, IPipelineBuilderDirector<SelectionPipelineExpressions<Car>, CarFilterModel> builderDirector) {
+        public CarSelectionPipeline(CarFilterModel filterModel, IPipelineBuilderDirector<Car, CarFilterModel> builderDirector) {
             _filterModel = filterModel;
             _builderDirector = builderDirector;
         }
