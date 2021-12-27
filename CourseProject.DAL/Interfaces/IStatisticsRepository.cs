@@ -4,5 +4,7 @@ namespace CourseProject.DAL.Interfaces;
 
 public interface IStatisticsRepository {
 
-    Task<IEnumerable<MaxOrdersClient>> GetTopClientsWhoMadeMoreOrders();
+    Task<IEnumerable<MaxOrdersClient>> GetTopClientsWhoMadeMoreOrdersAsync();
+
+    Task<IEnumerable<MostPurchasedModel>> GetTopMostPurchasedCarModelsAsync();
 }

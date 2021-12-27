@@ -28,7 +28,7 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         [HttpGet]
         public async Task<IActionResult> GetTopClientsWhoMadeMoreOrders() {
 
-            var source = await _statisticsService.GetTopClientsWhoMadeMoreOrders();
+            var source = await _statisticsService.GetTopClientsWhoMadeMoreOrdersAsync();
 
             var model = _mapper.Map<IEnumerable<MaxOrdersClientDto>, List<MaxOrdersClientViewModel>>(source);
 
@@ -36,11 +36,11 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         [HttpGet]
-        public IActionResult GetTopMostFrequentlyPurchasedCarModels() {
+        public async Task<IActionResult> GetTopMostFrequentlyPurchasedCarModels() {
 
-            var dto = _statisticsService.GetTopMostFrequentlyPurchasedCarModels();
+            var source = await _statisticsService.GetTopMostPurchasedCarModelsAsync();
 
-            var model = _mapper.Map<IEnumerable<ModelDto>, List<ModelViewModel>>(dto);
+            var model = _mapper.Map<IEnumerable<MostPurchasedModelDto>, List<MostPurchasedViewModel>>(source);
 
             return View(model);
         }

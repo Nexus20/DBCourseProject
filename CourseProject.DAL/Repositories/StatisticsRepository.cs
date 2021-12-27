@@ -12,7 +12,7 @@ public class StatisticsRepository : IStatisticsRepository {
         Context = context;
     }
 
-    public async Task<IEnumerable<MaxOrdersClient>> GetTopClientsWhoMadeMoreOrders() {
+    public async Task<IEnumerable<MaxOrdersClient>> GetTopClientsWhoMadeMoreOrdersAsync() {
 
         var result = new List<MaxOrdersClient>();
 
@@ -39,6 +39,42 @@ public class StatisticsRepository : IStatisticsRepository {
                     OrdersCount = reader.GetInt32(5),
                 });
 
+            }
+        }
+
+        await reader.CloseAsync();
+
+        return result;
+    }
+
+    public async Task<IEnumerable<MostPurchasedModel>> GetTopMostPurchasedCarModelsAsync() {
+
+        var result = new List<MostPurchasedModel>();
+
+        await using var command = Context.Database.GetDbConnection().CreateCommand();
+
+        command.CommandText = "SELECT TOP 10 b.[Name], m.[Name], count(poeiv.PurchaseOrderId) AS OrdersCount FROM [dbo].[Models] m " +
+                              "JOIN dbo.Brands b ON m.BrandId = b.Id " +
+                              "JOIN dbo.Cars c ON c.ModelId = m.Id " +
+                              "JOIN dbo.EquipmentItems ei ON ei.CarId = c.Id " +
+                              "JOIN dbo.EquipmentItemValues eiv ON eiv.Id = ei.Id " +
+                              "JOIN dbo.PurchaseOrderEquipmentItemsValues poeiv ON poeiv.EquipmentItemValueId = eiv.Id " +
+                              "GROUP BY b.[Name], m.[Name] " +
+                              "ORDER BY OrdersCount DESC";
+
+
+        await Context.Database.OpenConnectionAsync();
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (reader.HasRows) {
+
+            while (await reader.ReadAsync()) {
+
+                result.Add(new MostPurchasedModel() {
+                    Brand = reader.GetString(0),
+                    Model = reader.GetString(1),
+                    OrdersCount = reader.GetInt32(2),
+                });
             }
         }
 

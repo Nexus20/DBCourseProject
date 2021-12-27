@@ -42,7 +42,8 @@ public class AutomapperBllProfile : Profile {
             .ForMember(entity => entity.PurchaseOrderEquipmentItemsValues,
                 options => options.Ignore());
 
-        CreateMap<MaxOrdersClient, MaxOrdersClientDto>();
+        CreateMap<MaxOrdersClient, MaxOrdersClientDto>().ReverseMap();
+        CreateMap<MostPurchasedModel, MostPurchasedModelDto>().ReverseMap();
     }
 
 }

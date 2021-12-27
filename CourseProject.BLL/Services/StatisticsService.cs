@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
-using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 using CourseProject.DAL.StatisticsModels;
 
@@ -18,20 +17,17 @@ public class StatisticsService : IStatisticsService {
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<MaxOrdersClientDto>> GetTopClientsWhoMadeMoreOrders() {
+    public async Task<IEnumerable<MaxOrdersClientDto>> GetTopClientsWhoMadeMoreOrdersAsync() {
 
-        var source = await _unitOfWork.StatisticsRepository.GetTopClientsWhoMadeMoreOrders();
+        var source = await _unitOfWork.StatisticsRepository.GetTopClientsWhoMadeMoreOrdersAsync();
 
         return _mapper.Map<IEnumerable<MaxOrdersClient>, IEnumerable<MaxOrdersClientDto>>(source);
     }
 
-    public IEnumerable<ModelDto> GetTopMostFrequentlyPurchasedCarModels() {
+    public async Task<IEnumerable<MostPurchasedModelDto>> GetTopMostPurchasedCarModelsAsync() {
 
-        //var models = _unitOfWork.GetRepository<IModelRepository, Model>().FindAllWithDetails();
-        var models = _unitOfWork.GetRepository<IModelRepository, Model>().FindAllWithDetails().OrderByDescending(m => m.Cars.Sum(c => c.EquipmentItems.Sum(ei => ei.EquipmentItemValues.Sum(ev => ev.PurchaseOrderEquipmentItemsValues.Count())))).Take(10);
+        var source = await _unitOfWork.StatisticsRepository.GetTopMostPurchasedCarModelsAsync();
 
-        var dto = _mapper.Map<IEnumerable<Model>, IEnumerable<ModelDto>>(models);
-
-        return dto;
+        return _mapper.Map<IEnumerable<MostPurchasedModel>, IEnumerable<MostPurchasedModelDto>>(source);
     }
 }
