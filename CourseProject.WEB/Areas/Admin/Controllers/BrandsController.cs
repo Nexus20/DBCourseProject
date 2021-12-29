@@ -1,10 +1,13 @@
 ﻿using System.Text.Json;
 using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.PaginatedFilteredViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseProject.WEB.Areas.Admin.Controllers {
@@ -24,11 +27,20 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         // GET: BrandsController
         [HttpGet]
         [Route("/brands")]
-        public IActionResult Index() {
+        public async Task<IActionResult> Index([FromQuery] BrandFilterViewModel filterModel) {
 
-            var source = _brandService.GetAllBrands();
+            var source = await _brandService.GetAllBrandsAsync(_mapper.Map<BrandFilterViewModel, BrandFilterModel>(filterModel));
 
-            var model = _mapper.Map<IEnumerable<BrandDto>, List<BrandViewModel>>(source);
+            var model = new BrandsWithFiltersViewModel() {
+                Brands = _mapper.Map<IEnumerable<BrandDto>, List<BrandViewModel>>(source.Dtos),
+                Filters = new BrandFilterViewModel(),
+                PageViewModel = new PageViewModel(source.PossibleDtosCount, filterModel.PageNumber, filterModel.TakeCount)
+            };
+
+            if (ModelState.IsValid) {
+                model.SelectedOrderType = filterModel.OrderType;
+                model.Brand = filterModel.Brand;
+            }
 
             return View(model);
         }

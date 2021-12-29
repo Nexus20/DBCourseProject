@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using CourseProject.DAL.Entities;
+﻿using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +14,7 @@ public class PurchaseOrderRepository : Repository<PurchaseOrder>, IPurchaseOrder
         return Context.PurchaseOrders
             .Include(p => p.Client)
             .Include(p => p.Manager)
+            .ThenInclude(m => m.User)
             .Include(p => p.PurchaseOrderEquipmentItemsValues)
             .ThenInclude(pv => pv.EquipmentItemValue)
             .ThenInclude(ev => ev.EquipmentItem)

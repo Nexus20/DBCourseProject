@@ -2,6 +2,7 @@
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.FilterModels;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.FilterViewModels;
 
 namespace CourseProject.WEB; 
 
@@ -39,6 +40,10 @@ public class AutomapperWebProfile : Profile {
 
         CreateMap<CarFilterModel, CarFilterViewModel>().ReverseMap();
         CreateMap<ModelFilterModel, ModelFilterViewModel>().ReverseMap();
+        CreateMap<BrandFilterModel, BrandFilterViewModel>().ReverseMap();
+        CreateMap<SupplierFilterModel, SupplierFilterViewModel>().ReverseMap();
+        CreateMap<PurchaseOrderFilterModel, PurchaseOrderFilterViewModel>().ReverseMap();
+        CreateMap<SupplyOrderFilterModel, SupplyOrderFilterViewModel>().ReverseMap();
 
         CreateMap<MaxOrdersClientDto, MaxOrdersClientViewModel>().ReverseMap();
         CreateMap<MostPurchasedModelDto, MostPurchasedModelViewModel>().ReverseMap();

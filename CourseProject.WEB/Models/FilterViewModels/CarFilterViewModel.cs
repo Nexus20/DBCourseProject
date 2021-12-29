@@ -1,6 +1,6 @@
 ﻿using CourseProject.BLL.FilterModels;
 
-namespace CourseProject.WEB.Models; 
+namespace CourseProject.WEB.Models.FilterViewModels; 
 
 public class CarFilterViewModel : FilterViewModel {
 

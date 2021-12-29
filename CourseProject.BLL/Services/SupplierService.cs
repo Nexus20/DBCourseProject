@@ -2,6 +2,8 @@
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
+using CourseProject.BLL.Pipeline;
+using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
@@ -14,9 +16,12 @@ public class SupplierService : ISupplierService {
 
     private readonly IMapper _mapper;
 
-    public SupplierService(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IPipelineBuilderDirector<Supplier, SupplierFilterModel> _builderDirector;
+
+    public SupplierService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<Supplier, SupplierFilterModel> builderDirector) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _builderDirector = builderDirector;
     }
 
     public async Task<OperationResult> CreateSupplierAsync(SupplierDto dto) {
@@ -55,15 +60,23 @@ public class SupplierService : ISupplierService {
         return operationResult;
     }
 
-    public IEnumerable<SupplierDto> GetAllSuppliers(SupplierFilterModel filterModel = null) {
+    public async Task<DtoListWithPossibleEntitiesCount<SupplierDto>> GetAllSuppliersAsync(SupplierFilterModel filterModel) {
 
-        var source = filterModel == null
-            ? _unitOfWork.GetRepository<IRepository<Supplier>, Supplier>()
-                .Find(null, null, null, null, s => s.Brand, s => s.SupplyOrders)
-            : _unitOfWork.GetRepository<IRepository<Supplier>, Supplier>()
-                .Find(filterModel.FilterExpression, null, null, null, s => s.Brand, s => s.SupplyOrders);
+        var pipeline = new SelectionPipeline<Supplier, SupplierFilterModel>(filterModel, _builderDirector);
 
-        return _mapper.Map<IEnumerable<Supplier>, IEnumerable<SupplierDto>>(source);
+        var expressions = pipeline.Process();
+
+        var source = _unitOfWork.GetRepository<IRepository<Supplier>, Supplier>().FindAllWithDetails(expressions);
+
+        var possibleCarsCount = await _unitOfWork.GetRepository<IRepository<Supplier>, Supplier>()
+            .CountAsync(expressions.FilterExpressions);
+
+        //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
+
+        return new DtoListWithPossibleEntitiesCount<SupplierDto>() {
+            Dtos = _mapper.Map<IEnumerable<Supplier>, IEnumerable<SupplierDto>>(source),
+            PossibleDtosCount = possibleCarsCount
+        };
     }
 
     public async Task<OperationResult<SupplierDto>> GetSupplierByIdAsync(int id) {

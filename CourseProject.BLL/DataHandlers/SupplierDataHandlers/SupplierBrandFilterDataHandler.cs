@@ -2,10 +2,10 @@
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.SelectionPipelineExpressions;
 
-namespace CourseProject.BLL.DataHandlers.ModelDataHandlers; 
+namespace CourseProject.BLL.DataHandlers.SupplierDataHandlers; 
 
-public class BrandFilterDataHandler : DataHandler<Model, ModelFilterModel> {
-    public override void AddExpression(SelectionPipelineExpressions<Model> expressions, ModelFilterModel filterModel) {
+public class SupplierBrandFilterDataHandler : DataHandler<Supplier, SupplierFilterModel> {
+    public override void AddExpression(SelectionPipelineExpressions<Supplier> expressions, SupplierFilterModel filterModel) {
 
         if (filterModel.BrandId > 0) {
             expressions.FilterExpressions.Add(m => m.BrandId == filterModel.BrandId);

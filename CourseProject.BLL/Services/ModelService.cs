@@ -62,7 +62,7 @@ public class ModelService : IModelService {
 
     public async Task<DtoListWithPossibleEntitiesCount<ModelDto>> GetAllModelsAsync(ModelFilterModel filterModel) {
 
-        var pipeline = new ModelSelectionPipeline(filterModel, _builderDirector);
+        var pipeline = new SelectionPipeline<Model, ModelFilterModel>(filterModel, _builderDirector);
 
         var expressions = pipeline.Process();
 

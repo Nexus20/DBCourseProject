@@ -14,11 +14,11 @@ namespace CourseProject.BLL.PipelineBuilders {
 
         public IDataHandler<Model, ModelFilterModel> Construct() {
 
-            _selectionPipelineBuilder.SetFirstChainPart<BrandFilterDataHandler>()
+            _selectionPipelineBuilder.SetFirstChainPart<ModelBrandFilterDataHandler>()
                 .SetNextChainPart<ModelSearchDataHandler>()
-                .SetNextChainPart<AlphabetOrderDataHandler>()
-                .SetNextChainPart<SkipGamesDataHandler<Model, ModelFilterModel>>()
-                .SetNextChainPart<TakeGamesDataHandler<Model, ModelFilterModel>>();
+                .SetNextChainPart<ModelOrderDataHandler>()
+                .SetNextChainPart<SkipObjectsDataHandler<Model, ModelFilterModel>>()
+                .SetNextChainPart<TakeObjectsDataHandler<Model, ModelFilterModel>>();
 
             return _selectionPipelineBuilder.GetPipeline();
         }

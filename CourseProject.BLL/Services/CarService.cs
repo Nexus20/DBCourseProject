@@ -88,7 +88,7 @@ public class CarService : ICarService {
 
     public async Task<DtoListWithPossibleEntitiesCount<CarDto>> GetAllCarsAsync(CarFilterModel filterModel) {
 
-        var pipeline = new CarSelectionPipeline(filterModel, _builderDirector);
+        var pipeline = new SelectionPipeline<Car, CarFilterModel>(filterModel, _builderDirector);
 
         var expressions = pipeline.Process();
 

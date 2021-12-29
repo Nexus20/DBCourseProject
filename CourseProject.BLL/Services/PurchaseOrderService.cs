@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
+using CourseProject.BLL.Pipeline;
+using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
@@ -14,9 +17,12 @@ public class PurchaseOrderService : IPurchaseOrderService {
 
     private readonly IMapper _mapper;
 
-    public PurchaseOrderService(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IPipelineBuilderDirector<PurchaseOrder, PurchaseOrderFilterModel> _builderDirector;
+
+    public PurchaseOrderService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<PurchaseOrder, PurchaseOrderFilterModel> builderDirector) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _builderDirector = builderDirector;
     }
 
 
@@ -95,5 +101,24 @@ public class PurchaseOrderService : IPurchaseOrderService {
         var source = _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>().FindAllWithDetails();
 
         return _mapper.Map<IEnumerable<PurchaseOrder>, IEnumerable<PurchaseOrderDto>>(source);
+    }
+
+    public async Task<DtoListWithPossibleEntitiesCount<PurchaseOrderDto>> GetAllPurchaseOrdersAsync(PurchaseOrderFilterModel filterModel) {
+
+        var pipeline = new SelectionPipeline<PurchaseOrder, PurchaseOrderFilterModel>(filterModel, _builderDirector);
+
+        var expressions = pipeline.Process();
+
+        var source = _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>().FindAllWithDetails(expressions);
+
+        var possibleCarsCount = await _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>()
+            .CountAsync(expressions.FilterExpressions);
+
+        //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
+
+        return new DtoListWithPossibleEntitiesCount<PurchaseOrderDto>() {
+            Dtos = _mapper.Map<IEnumerable<PurchaseOrder>, IEnumerable<PurchaseOrderDto>>(source),
+            PossibleDtosCount = possibleCarsCount
+        };
     }
 }

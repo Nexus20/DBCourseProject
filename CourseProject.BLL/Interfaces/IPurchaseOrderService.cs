@@ -1,4 +1,5 @@
 ﻿using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Validation;
 
 namespace CourseProject.BLL.Interfaces; 
@@ -10,4 +11,7 @@ public interface IPurchaseOrderService {
     Task<OperationResult<PurchaseOrderDto>> GetOrderById(int id);
 
     IEnumerable<PurchaseOrderDto> GetAllOrders();
+
+    Task<DtoListWithPossibleEntitiesCount<PurchaseOrderDto>> GetAllPurchaseOrdersAsync(
+        PurchaseOrderFilterModel filterModel);
 }

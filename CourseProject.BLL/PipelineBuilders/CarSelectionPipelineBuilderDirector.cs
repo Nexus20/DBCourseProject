@@ -14,11 +14,11 @@ namespace CourseProject.BLL.PipelineBuilders {
 
         public IDataHandler<Car, CarFilterModel> Construct() {
 
-            _selectionPipelineBuilder.SetFirstChainPart<BrandModelFilterDataHandler>()
-                .SetNextChainPart<ModelSearchDataHandler>()
-                .SetNextChainPart<AlphabetOrderDataHandler>()
-                .SetNextChainPart<SkipGamesDataHandler<Car, CarFilterModel>>()
-                .SetNextChainPart<TakeGamesDataHandler<Car, CarFilterModel>>();
+            _selectionPipelineBuilder.SetFirstChainPart<CarBrandModelFilterDataHandler>()
+                .SetNextChainPart<CarModelSearchDataHandler>()
+                .SetNextChainPart<CarOrderDataHandler>()
+                .SetNextChainPart<SkipObjectsDataHandler<Car, CarFilterModel>>()
+                .SetNextChainPart<TakeObjectsDataHandler<Car, CarFilterModel>>();
 
             return _selectionPipelineBuilder.GetPipeline();
         }

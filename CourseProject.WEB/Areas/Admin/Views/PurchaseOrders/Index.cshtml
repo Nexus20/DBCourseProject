@@ -1,7 +1,9 @@
-﻿@model System.Collections.Generic.List<CourseProject.WEB.Models.PurchaseOrderViewModel>
+﻿@using CourseProject.BLL.FilterModels
+@using CourseProject.Domain
+@model CourseProject.WEB.Models.PaginatedFilteredViewModels.PurchaseOrdersWithFiltersViewModel
 
 @{
-    ViewData["Title"] = "Showrooms list";
+    ViewData["Title"] = "Purchase orders";
 }
 
 <h1>Purchase orders</h1>
@@ -9,72 +11,181 @@
 
 <p><a class="btn btn-primary btn-lg" asp-action="CreateSalesReport">Create sales report</a></p>
 
+<div class="row">
+    <div class="col-12">
+
+        <form method="get" asp-action="Index" asp-controller="PurchaseOrders" asp-area="Admin" id="model-filtering-form">
+            <div class="mb-3">
+                @await Component.InvokeAsync("ManagersFilterComponent", new {selectedManager = Model.SelectedManagerId})
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.OrderId" class="form-label"></label>
+                <input asp-for="@Model.Filters.OrderId" name="OrderId" class="form-control" value="@(Model.SelectedOrderId == null ? "" : $"{Model.SelectedOrderId}")"/>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <div>
+                    <label asp-for="@Model.Filters.ClientEmail" class="form-label"></label>
+                    <input asp-for="@Model.Filters.ClientEmail" name="ClientEmail" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedClientEmail) ? "" : $"{Model.SelectedClientEmail}")"/>
+                </div>
+                <div>
+                    <label asp-for="@Model.Filters.ClientPhone" class="form-label"></label>
+                    <input asp-for="@Model.Filters.ClientPhone" name="ClientPhone" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedClientPhone) ? "" : $"{Model.SelectedClientPhone}")"/>
+                </div>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <div>
+                    <label asp-for="@Model.Filters.CreationDate" class="form-label"></label>
+                    <input asp-for="@Model.Filters.CreationDate" name="CreationDate" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedCreationDate) ? "" : $"{Model.SelectedCreationDate}")"/>
+                </div>
+                <div>
+                    <label asp-for="@Model.Filters.LastUpdateDate" class="form-label"></label>
+                    <input asp-for="@Model.Filters.LastUpdateDate" name="LastUpdateDate" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedLastUpdateDate) ? "" : $"{Model.SelectedLastUpdateDate}")"/>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.State" class="form-label"></label>
+                <select asp-for="@Model.Filters.State" name="State" class="form-select">
+                    <option value="">All</option>
+                    @Html.Raw("<option " + (Model.SelectedState is PurchaseOrderState.New ? "selected = \"selected\" " : "") + "value=" + (int)PurchaseOrderState.New + ">New</option>")
+                    @Html.Raw("<option " + (Model.SelectedState is PurchaseOrderState.Processing ? "selected = \"selected\" " : "") + "value=" + (int)PurchaseOrderState.Processing + ">Processing</option>")
+                    @Html.Raw("<option " + (Model.SelectedState is PurchaseOrderState.Closed ? "selected = \"selected\" " : "") + "value=" + (int)PurchaseOrderState.Closed + ">Closed</option>")
+                    @Html.Raw("<option " + (Model.SelectedState is PurchaseOrderState.Canceled ? "selected = \"selected\" " : "") + "value=" + (int)PurchaseOrderState.Canceled + ">Canceled</option>")
+                </select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.OrderType" class="form-label"></label>
+                <select asp-for="@Model.Filters.OrderType" name="OrderType" class="form-select">
+                    @Html.Raw("<option " + (Model.SelectedOrderType is PurchaseOrderOrderType.None ? "selected = \"selected\" " : "") +               "value=" + (int)PurchaseOrderOrderType.None +               ">None</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is PurchaseOrderOrderType.OrderIdAsc ? "selected = \"selected\" " : "") +         "value=" + (int)PurchaseOrderOrderType.OrderIdAsc +         ">Order number: from least to most</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is PurchaseOrderOrderType.OrderIdDesc ? "selected = \"selected\" " : "") +        "value=" + (int)PurchaseOrderOrderType.OrderIdDesc +        ">Order number: from most to least</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is PurchaseOrderOrderType.CreationDateAsc ? "selected = \"selected\" " : "") +    "value=" + (int)PurchaseOrderOrderType.CreationDateAsc +    ">Creation date: from earliest to latest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is PurchaseOrderOrderType.CreationDateDesc ? "selected = \"selected\" " : "") +   "value=" + (int)PurchaseOrderOrderType.CreationDateDesc +   ">Creation date: from latest to earliest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is PurchaseOrderOrderType.LastUpdateDateAsc ? "selected = \"selected\" " : "") +  "value=" + (int)PurchaseOrderOrderType.LastUpdateDateAsc +  ">Last update date: from earliest to latest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is PurchaseOrderOrderType.LastUpdateDateDesc ? "selected = \"selected\" " : "") + "value=" + (int)PurchaseOrderOrderType.LastUpdateDateDesc + ">Last update date: from latest to earliest</option>")
+                </select>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Fitler" class="btn btn-primary"/>
+                <a asp-action="Index" asp-controller="PurchaseOrders" asp-area="Admin" class="btn btn-secondary">Reset All Filters</a>
+            </div>
+            <div class="mb-3">
+                <div class="form-label">Items per page:</div>
+                <div class="dropdown" id="items-per-page-dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="items-per-page-dropdown-btn-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        @Model.PageViewModel.PageSize
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="items-per-page-dropdown-btn-toggle">
+                        <li>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="10">10</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="20">20</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="50">50</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="100">100</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"model-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>
+
+@if(Model.PurchaseOrders.Any()) {
+
 <table class="table">
     <thead>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model[0].Id)
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].Id)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].State)
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].State)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].CreationDate)
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].CreationDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].LastUpdateDate)
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].LastUpdateDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].Client.UserName)
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].Client.UserName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].Client.Email)
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].Client.Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].EquipmentItemsValues.ElementAt(0).EquipmentItem.Car)
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].EquipmentItemsValues.ElementAt(0).EquipmentItem.Car)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseOrders[0].Manager)
         </th>
         <th></th>
     </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.State)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreationDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastUpdateDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Client.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Client.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.FullModel)
-                </td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="@($"dropdownMenuButton{item.Id}")" data-bs-toggle="dropdown" aria-expanded="false">
-                            Actions
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
-                            <li><a asp-action="Details" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">View order</a></li>
-                            <li class="dropdown-divider"></li>
-                            <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Process order</a></li>
-                            <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Cancel order</a></li>
-                            <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Close order</a></li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model.PurchaseOrders) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.FullModel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Manager.User.Name)
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="@($"dropdownMenuButton{item.Id}")" data-bs-toggle="dropdown" aria-expanded="false">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
+                        <li><a asp-action="Details" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">View order</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Process order</a></li>
+                        <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Cancel order</a></li>
+                        <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Close order</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+}
+else {
+    <h3>No orders found (</h3>
+}
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"model-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>

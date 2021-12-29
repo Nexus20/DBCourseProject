@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="PipelineBuilders\BrandSelectionPipelineBuilder.cs" />
+    <Compile Remove="PipelineBuilders\CarSelectionPipelineBuilder.cs" />
+    <Compile Remove="PipelineBuilders\ModelSelectionPipelineBuilder.cs" />
+    <Compile Remove="PipelineBuilders\SupplierSelectionPipelineBuilder.cs" />
+    <Compile Remove="Pipeline\CarSelectionPipeline.cs" />
+    <Compile Remove="Pipeline\ModelSelectionPipeline.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="ClosedXML" Version="0.95.4" />

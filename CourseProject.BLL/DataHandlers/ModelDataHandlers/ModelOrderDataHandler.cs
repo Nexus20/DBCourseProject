@@ -4,7 +4,7 @@ using CourseProject.DAL.SelectionPipelineExpressions;
 
 namespace CourseProject.BLL.DataHandlers.ModelDataHandlers {
 
-    public class AlphabetOrderDataHandler : DataHandler<Model, ModelFilterModel> {
+    public class ModelOrderDataHandler : DataHandler<Model, ModelFilterModel> {
 
         public override void AddExpression(SelectionPipelineExpressions<Model> expressions, ModelFilterModel filterModel) {
 

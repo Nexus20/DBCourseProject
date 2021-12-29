@@ -6,6 +6,8 @@ using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.PaginatedFilteredViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -27,13 +29,23 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         [HttpGet]
         [Route("/suppliers")]
-        public IActionResult Index([FromQuery] SupplierFilterModel filterModel) {
+        public async Task<IActionResult> Index([FromQuery] SupplierFilterViewModel filterModel) {
 
-            GetInfoToCreateFilters();
+            var source = await _supplierService.GetAllSuppliersAsync(_mapper.Map<SupplierFilterViewModel, SupplierFilterModel>(filterModel));
 
-            var source = filterModel.IsReset ? _supplierService.GetAllSuppliers() : _supplierService.GetAllSuppliers(filterModel);
+            var model = new SuppliersWithFiltersViewModel() {
+                Suppliers = _mapper.Map<IEnumerable<SupplierDto>, List<SupplierViewModel>>(source.Dtos),
+                Filters = new SupplierFilterViewModel(),
+                PageViewModel = new PageViewModel(source.PossibleDtosCount, filterModel.PageNumber, filterModel.TakeCount)
+            };
 
-            var model = _mapper.Map<IEnumerable<SupplierDto>, List<SupplierViewModel>>(source);
+            if (ModelState.IsValid) {
+                model.SelectedBrand = filterModel.BrandId;
+                model.SelectedOrderType = filterModel.OrderType;
+                model.Name = filterModel.Name;
+                model.Phone = filterModel.Phone;
+                model.Email = filterModel.Email;
+            }
 
             return View(model);
         }
@@ -161,10 +173,6 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             var brands = _brandService.GetAllBrands();
 
             ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(brands), "Id", "Name");
-        }
-
-        private void GetInfoToCreateFilters() {
-            ViewBag.Brands = new SelectList(_mapper.Map<IEnumerable<BrandDto>, IEnumerable<BrandViewModel>>(_brandService.GetAllBrands()), "Id", "Name");
         }
 
     }

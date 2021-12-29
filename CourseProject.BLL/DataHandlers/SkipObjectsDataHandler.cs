@@ -2,7 +2,7 @@
 using CourseProject.DAL.SelectionPipelineExpressions;
 
 namespace CourseProject.BLL.DataHandlers {
-    public class SkipGamesDataHandler<TEntity, TFilterModel> : DataHandler<TEntity, TFilterModel> where TEntity : class where TFilterModel : FilterModel {
+    public class SkipObjectsDataHandler<TEntity, TFilterModel> : DataHandler<TEntity, TFilterModel> where TEntity : class where TFilterModel : FilterModel {
 
         public override void AddExpression(SelectionPipelineExpressions<TEntity> expressions, TFilterModel filterModel) {
 

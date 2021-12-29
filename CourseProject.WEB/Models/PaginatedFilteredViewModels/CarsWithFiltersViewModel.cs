@@ -1,6 +1,7 @@
 ﻿using CourseProject.BLL.FilterModels;
+using CourseProject.WEB.Models.FilterViewModels;
 
-namespace CourseProject.WEB.Models; 
+namespace CourseProject.WEB.Models.PaginatedFilteredViewModels; 
 
 public class CarsWithFiltersViewModel {
 

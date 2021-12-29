@@ -1,4 +1,5 @@
 ﻿using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Validation;
 
 namespace CourseProject.BLL.Interfaces; 
@@ -14,4 +15,6 @@ public interface IBrandService {
     IEnumerable<BrandDto> GetAllBrands();
 
     Task<OperationResult<BrandDto>> GetBrandById(int id);
+
+    Task<DtoListWithPossibleEntitiesCount<BrandDto>> GetAllBrandsAsync(BrandFilterModel filterModel);
 }

@@ -1,4 +1,5 @@
-﻿@model List<CourseProject.WEB.Models.BrandViewModel>
+﻿@using CourseProject.BLL.FilterModels
+@model CourseProject.WEB.Models.PaginatedFilteredViewModels.BrandsWithFiltersViewModel
 
 @{
     ViewData["Title"] = "Brands list";
@@ -11,26 +12,81 @@
     <a asp-action="Create" asp-area="Admin" asp-controller="Brands" class="btn btn-primary btn-lg">Add a new brand</a>
 </p>
 
-<table class="table">
-    <thead>
+<div class="row">
+    <div class="col-12">
+        <form method="get" asp-action="Index" id="brand-filtering-form">
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.Brand" class="form-label"></label>
+                <input asp-for="@Model.Filters.Brand" name="Brand" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.Brand)?"":$"{Model.Brand}")" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.OrderType" class="form-label"></label>
+                <select asp-for="@Model.Filters.OrderType" name="OrderType" class="form-select">
+                    @Html.Raw("<option " + (Model.SelectedOrderType is BrandOrderType.None ? "selected = \"selected\" " : "") + "value=" + (int)BrandOrderType.None + ">None</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is BrandOrderType.AlphabetAsc ? "selected = \"selected\" " : "") + "value=" + (int)BrandOrderType.AlphabetAsc + ">Alphabetically</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is BrandOrderType.AlphabetDesc ? "selected = \"selected\" " : "") + "value=" + (int)BrandOrderType.AlphabetDesc + ">Reverse alphabetically</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is BrandOrderType.ModelsCountAsc ? "selected = \"selected\" " : "") + "value=" + (int)BrandOrderType.ModelsCountAsc + ">Models: from least to most</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is BrandOrderType.ModelsCountDesc ? "selected = \"selected\" " : "") + "value=" + (int)BrandOrderType.ModelsCountDesc + ">Models: from most to least</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is BrandOrderType.CarsCountAsc ? "selected = \"selected\" " : "") + "value=" + (int)BrandOrderType.CarsCountAsc + ">Cars: from least to most</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is BrandOrderType.CarsCountDesc ? "selected = \"selected\" " : "") + "value=" + (int)BrandOrderType.CarsCountDesc + ">Cars: from most to least</option>")
+                </select>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <input type="submit" value="Fitler" class="btn btn-primary" />
+                <a asp-action="Index" asp-controller="Brands" asp-area="Admin" class="btn btn-secondary">Reset All Filters</a>
+            </div>
+            <div class="mb-3">
+                <div class="form-label">Items per page:</div>
+                <div class="dropdown" id="items-per-page-dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="items-per-page-dropdown-btn-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        @Model.PageViewModel.PageSize
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="items-per-page-dropdown-btn-toggle">
+                        <li>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="10">10</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="20">20</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="50">50</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="100">100</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"brand-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>
+
+@if(Model.Brands.Any()) {
+
+    <table class="table">
+        <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model[0].Name)
+                @Html.DisplayNameFor(model => model.Brands[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].ModelsCount)
+                @Html.DisplayNameFor(model => model.Brands[0].ModelsCount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].CarsCount)
+                @Html.DisplayNameFor(model => model.Brands[0].CarsCount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].SuppliersCount)
+                @Html.DisplayNameFor(model => model.Brands[0].SuppliersCount)
             </th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Brands) {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -61,5 +117,19 @@
                 </td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+else {
+    <h3>No cars found (</h3>
+}
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"brand-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>

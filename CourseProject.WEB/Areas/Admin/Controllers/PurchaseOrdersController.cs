@@ -1,9 +1,12 @@
 ﻿using System.Text.Json;
 using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.PaginatedFilteredViewModels;
 using CourseProject.WEB.Utils;
 using DinkToPdf;
 using DinkToPdf.Contracts;
@@ -29,11 +32,49 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         [HttpGet]
-        public IActionResult Index() {
+        public async Task<IActionResult> Index([FromQuery] PurchaseOrderFilterViewModel filterModel) {
 
-            var source = _purchaseOrderService.GetAllOrders();
+            var source = await _purchaseOrderService.GetAllPurchaseOrdersAsync(_mapper.Map<PurchaseOrderFilterViewModel, PurchaseOrderFilterModel>(filterModel));
 
-            var model = _mapper.Map<IEnumerable<PurchaseOrderDto>, List<PurchaseOrderViewModel>>(source);
+            var model = new PurchaseOrdersWithFiltersViewModel() {
+                PurchaseOrders = _mapper.Map<IEnumerable<PurchaseOrderDto>, List<PurchaseOrderViewModel>>(source.Dtos),
+                Filters = new PurchaseOrderFilterViewModel(),
+                PageViewModel = new PageViewModel(source.PossibleDtosCount, filterModel.PageNumber, filterModel.TakeCount)
+            };
+
+            if (ModelState.IsValid) {
+                model.SelectedOrderId = filterModel.OrderId;
+                model.SelectedOrderType = filterModel.OrderType;
+                model.SelectedClientEmail = filterModel.ClientEmail;
+                model.SelectedClientPhone = filterModel.ClientPhone;
+
+                if (filterModel.CreationDate.HasValue) {
+                    var selectedDay = filterModel.CreationDate.Value.Day.ToString();
+                    if (selectedDay.Length == 1) {
+                        selectedDay = "0" + selectedDay;
+                    }
+                    var selectedMonth = filterModel.CreationDate.Value.Month.ToString();
+                    if (selectedMonth.Length == 1) {
+                        selectedMonth = "0" + selectedMonth;
+                    }
+                    model.SelectedCreationDate = $"{filterModel.CreationDate.Value.Year}-{selectedMonth}-{selectedDay}";
+                }
+
+                if (filterModel.LastUpdateDate.HasValue) {
+                    var selectedDay = filterModel.LastUpdateDate.Value.Day.ToString();
+                    if (selectedDay.Length == 1) {
+                        selectedDay = "0" + selectedDay;
+                    }
+                    var selectedMonth = filterModel.LastUpdateDate.Value.Month.ToString();
+                    if (selectedMonth.Length == 1) {
+                        selectedMonth = "0" + selectedMonth;
+                    }
+                    model.SelectedLastUpdateDate = $"{filterModel.LastUpdateDate.Value.Year}-{selectedMonth}-{selectedDay}";
+                }
+
+                model.SelectedState = filterModel.State;
+                model.SelectedManagerId = filterModel.ManagerId;
+            }
 
             return View(model);
         }

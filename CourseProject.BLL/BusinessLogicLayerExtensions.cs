@@ -1,6 +1,9 @@
 ﻿using CourseProject.BLL.DataHandlers;
+using CourseProject.BLL.DataHandlers.BrandDataHandlers;
 using CourseProject.BLL.DataHandlers.CarDataHandlers;
 using CourseProject.BLL.DataHandlers.ModelDataHandlers;
+using CourseProject.BLL.DataHandlers.PurchaseOrderDataHandlers;
+using CourseProject.BLL.DataHandlers.SupplierDataHandlers;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.PipelineBuilders;
@@ -32,22 +35,46 @@ namespace CourseProject.BLL {
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
 
-            services.AddScoped<IPipelineBuilder<Car, CarFilterModel>, CarSelectionPipelineBuilder>();
+            services.AddScoped(typeof(IPipelineBuilder<,>), typeof(SelectionPipelineBuilder<,>));
+
             services.AddScoped<IPipelineBuilderDirector<Car, CarFilterModel>, CarSelectionPipelineBuilderDirector>();
 
-            services.AddScoped<BrandModelFilterDataHandler>();
-            services.AddScoped<DataHandlers.CarDataHandlers.AlphabetOrderDataHandler>();
-            services.AddScoped<DataHandlers.CarDataHandlers.ModelSearchDataHandler>();
+            services.AddScoped<CarBrandModelFilterDataHandler>();
+            services.AddScoped<CarOrderDataHandler>();
+            services.AddScoped<CarModelSearchDataHandler>();
 
-            services.AddScoped<IPipelineBuilder<Model, ModelFilterModel>, ModelSelectionPipelineBuilder>();
             services.AddScoped<IPipelineBuilderDirector<Model, ModelFilterModel>, ModelSelectionPipelineBuilderDirector>();
 
-            services.AddScoped<BrandFilterDataHandler>();
-            services.AddScoped<DataHandlers.ModelDataHandlers.AlphabetOrderDataHandler>();
-            services.AddScoped<DataHandlers.ModelDataHandlers.ModelSearchDataHandler>();
+            services.AddScoped<ModelBrandFilterDataHandler>();
+            services.AddScoped<ModelOrderDataHandler>();
+            services.AddScoped<ModelSearchDataHandler>();
 
-            services.AddScoped(typeof(SkipGamesDataHandler<,>));
-            services.AddScoped(typeof(TakeGamesDataHandler<,>));
+            services.AddScoped<IPipelineBuilderDirector<Brand, BrandFilterModel>, BrandSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<BrandSearchDataHandler>();
+            services.AddScoped<BrandOrderDataHandler>();
+
+            services.AddScoped<IPipelineBuilderDirector<Supplier, SupplierFilterModel>, SupplierSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<SupplierBrandFilterDataHandler>();
+            services.AddScoped<SupplierOrderDataHandler>();
+            services.AddScoped<SupplierNameSearchDataHandler>();
+            services.AddScoped<SupplierEmailSearchDataHandler>();
+            services.AddScoped<SupplierPhoneSearchDataHandler>();
+
+            services.AddScoped<IPipelineBuilderDirector<PurchaseOrder, PurchaseOrderFilterModel>, PurchaseOrderSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<PurchaseOrderClientEmailSearchDataHandler>();
+            services.AddScoped<PurchaseOrderClientPhoneSearchDataHandler>();
+            services.AddScoped<PurchaseOrderCreationDateFilterDataHandler>();
+            services.AddScoped<PurchaseOrderLastUpdateDateFilterDataHandler>();
+            services.AddScoped<PurchaseOrderManagerFilterDataHandler>();
+            services.AddScoped<PurchaseOrderOrderDataHandler>();
+            services.AddScoped<PurchaseOrderOrderIdFilterDataHandler>();
+            services.AddScoped<PurchaseOrderStateFilterDataHandler>();
+
+            services.AddScoped(typeof(SkipObjectsDataHandler<,>));
+            services.AddScoped(typeof(TakeObjectsDataHandler<,>));
 
             return services;
         }

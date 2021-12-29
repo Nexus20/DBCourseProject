@@ -1,12 +1,13 @@
-﻿using System.Linq.Expressions;
-using CourseProject.DAL.Entities;
+﻿namespace CourseProject.BLL.FilterModels; 
 
-namespace CourseProject.BLL.FilterModels; 
+public class SupplierFilterModel : FilterModel {
+    public uint? BrandId { get; set; }
 
-public class SupplierFilterModel {
-    public uint BrandId { get; set; }
+    public string Name { get; set; }
 
-    public Expression<Func<Supplier, bool>> FilterExpression => s => s.BrandId == BrandId;
+    public string Email { get; set; }
 
-    public bool IsReset => BrandId == 0;
+    public string Phone { get; set; }
+
+    public SupplierOrderType OrderType { get; set; }
 }

@@ -12,7 +12,7 @@ public interface ISupplierService {
 
     Task<OperationResult> DeleteSupplierAsync(int id);
 
-    IEnumerable<SupplierDto> GetAllSuppliers(SupplierFilterModel filterModel = null);
+    Task<DtoListWithPossibleEntitiesCount<SupplierDto>> GetAllSuppliersAsync(SupplierFilterModel filterModel);
 
     Task<OperationResult<SupplierDto>> GetSupplierByIdAsync(int id);
 }

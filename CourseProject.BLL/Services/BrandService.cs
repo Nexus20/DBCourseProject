@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
+using CourseProject.BLL.Pipeline;
+using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
@@ -13,9 +16,12 @@ public class BrandService : IBrandService {
 
     private readonly IMapper _mapper;
 
-    public BrandService(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IPipelineBuilderDirector<Brand, BrandFilterModel> _builderDirector;
+
+    public BrandService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<Brand, BrandFilterModel> builderDirector) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _builderDirector = builderDirector;
     }
 
     public async Task<OperationResult> CreateBrandAsync(BrandDto brandDto) {
@@ -70,5 +76,24 @@ public class BrandService : IBrandService {
         operationResult.Result = _mapper.Map<Brand, BrandDto>(brand);
 
         return operationResult;
+    }
+
+    public async Task<DtoListWithPossibleEntitiesCount<BrandDto>> GetAllBrandsAsync(BrandFilterModel filterModel) {
+
+        var pipeline = new SelectionPipeline<Brand, BrandFilterModel>(filterModel, _builderDirector);
+
+        var expressions = pipeline.Process();
+
+        var source = _unitOfWork.GetRepository<IBrandRepository, Brand>().FindAllWithDetails(expressions);
+
+        var possibleCarsCount = await _unitOfWork.GetRepository<IBrandRepository, Brand>()
+            .CountAsync(expressions.FilterExpressions);
+
+        //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
+
+        return new DtoListWithPossibleEntitiesCount<BrandDto>() {
+            Dtos = _mapper.Map<IEnumerable<Brand>, IEnumerable<BrandDto>>(source),
+            PossibleDtosCount = possibleCarsCount
+        };
     }
 }

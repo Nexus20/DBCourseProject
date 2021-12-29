@@ -4,7 +4,7 @@ using CourseProject.DAL.SelectionPipelineExpressions;
 
 namespace CourseProject.BLL.DataHandlers.CarDataHandlers; 
 
-public class BrandModelFilterDataHandler : DataHandler<Car, CarFilterModel> {
+public class CarBrandModelFilterDataHandler : DataHandler<Car, CarFilterModel> {
     public override void AddExpression(SelectionPipelineExpressions<Car> expressions, CarFilterModel filterModel) {
 
         if (filterModel.BrandId == 0 && filterModel.ModelId > 0) {

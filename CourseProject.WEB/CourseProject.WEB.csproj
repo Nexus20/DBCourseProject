@@ -115,7 +115,6 @@
     <None Include="Areas\Admin\Views\Users\Index.cshtml" />
     <None Include="Views\Account\Login.cshtml" />
     <None Include="Views\Account\Register.cshtml" />
-    <None Include="Views\Shared\Components\BrandsFilterComponent\BrandsFilterComponent.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -160,6 +159,12 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Views\Shared\Components\ModelsFilterComponent\ModelsFilterComponent.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Shared\Components\ManagersFilterComponent\ManagersFilterComponent.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

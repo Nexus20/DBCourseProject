@@ -7,6 +7,8 @@ using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
+using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.PaginatedFilteredViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CourseProject.WEB.Controllers {

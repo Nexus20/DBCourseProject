@@ -1,4 +1,5 @@
-﻿@model System.Collections.Generic.List<CourseProject.WEB.Models.SupplierViewModel>
+﻿@using CourseProject.BLL.FilterModels
+@model CourseProject.WEB.Models.PaginatedFilteredViewModels.SuppliersWithFiltersViewModel
 
 @{
     ViewData["Title"] = "Suppliers list";
@@ -11,61 +12,113 @@
     <a asp-action="Create" asp-area="Admin" asp-controller="Suppliers" class="btn btn-primary btn-lg">Add a new supplier</a>
 </p>
 
-<form method="get" asp-action="Index">
-    <div class="mb-3">
-        <select name="BrandId" asp-items="ViewBag.Brands" class="form-control">
-            <option value="0">All</option>
-        </select>
+<div class="row">
+    <div class="col-12">
+
+        <form method="get" asp-action="Index" id="supplier-filtering-form">
+            <div class="mb-3">
+                @await Component.InvokeAsync("BrandsFilterComponent", new {selectedBrand = Model.SelectedBrand})
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.Name" class="form-label"></label>
+                <input asp-for="@Model.Filters.Name" name="Name" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.Name)?"":$"{Model.Name}")" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.Phone" class="form-label"></label>
+                <input asp-for="@Model.Filters.Phone" name="Phone" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.Phone)?"":$"{Model.Phone}")" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.Email" class="form-label"></label>
+                <input asp-for="@Model.Filters.Email" name="Email" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.Email)?"":$"{Model.Email}")" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.OrderType" class="form-label"></label>
+                <select asp-for="@Model.Filters.OrderType" name="OrderType" class="form-select">
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplierOrderType.None ? "selected = \"selected\" " : "") + "value=" + (int)SupplierOrderType.None + ">None</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplierOrderType.AlphabetAsc ? "selected = \"selected\" " : "") + "value=" + (int)SupplierOrderType.AlphabetAsc + ">Alphabetically</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplierOrderType.AlphabetDesc ? "selected = \"selected\" " : "") + "value=" + (int)SupplierOrderType.AlphabetDesc + ">Reverse alphabetically</option>")
+                </select>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Fitler" class="btn btn-primary"/>
+                <a asp-action="Index" asp-controller="Suppliers" asp-area="Admin" class="btn btn-secondary">Reset All Filters</a>
+            </div>
+            <div class="mb-3">
+                <div class="form-label">Items per page:</div>
+                <div class="dropdown" id="items-per-page-dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="items-per-page-dropdown-btn-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        @Model.PageViewModel.PageSize
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="items-per-page-dropdown-btn-toggle">
+                        <li>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="10">10</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="20">20</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="50">50</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="100">100</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="mb-3">
-        <input type="submit" value="Fitler" class="btn btn-primary"/>
+</div>
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"supplier-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
     </div>
-</form>
+</div>
+
+@if(Model.Suppliers.Any()) {
 
 <table class="table">
     <thead>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model[0].Brand)
+            @Html.DisplayNameFor(model => model.Suppliers[0].Brand)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].Name)
+            @Html.DisplayNameFor(model => model.Suppliers[0].Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].Phone)
+            @Html.DisplayNameFor(model => model.Suppliers[0].Phone)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model[0].Email)
+            @Html.DisplayNameFor(model => model.Suppliers[0].Email)
         </th>
         <th></th>
     </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
+        @foreach (var supplier in Model.Suppliers) {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Brand.Name)
+                    @Html.DisplayFor(modelItem => supplier.Brand.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => supplier.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Phone)
+                    @Html.DisplayFor(modelItem => supplier.Phone)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => supplier.Email)
                 </td>
                 <td>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="@($"dropdownMenuButton{item.Id}")" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="@($"dropdownMenuButton{supplier.Id}")" data-bs-toggle="dropdown" aria-expanded="false">
                             Actions
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
-                            <li><a asp-action="Edit" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
-                            <li><a asp-action="Details" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@item.Id" class="dropdown-item">Details</a></li>
-                            @if (item.SupplyOrders.Count == 0) {
+                        <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{supplier.Id}")">
+                            <li><a asp-action="Edit" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@supplier.Id" class="dropdown-item">Edit</a></li>
+                            <li><a asp-action="Details" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@supplier.Id" class="dropdown-item">Details</a></li>
+                            @if (supplier.SupplyOrders.Count == 0) {
                                 <li class="dropdown-divider"></li>
-                                <li><a asp-action="Delete" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
+                                <li><a asp-action="Delete" asp-area="Admin" asp-controller="Suppliers" asp-route-id="@supplier.Id" class="dropdown-item">Delete</a></li>
                             }
                         </ul>
                     </div>
@@ -74,4 +127,17 @@
         }
     </tbody>
 </table>
+}
+else {
+    <h3>No suppliers found (</h3>
+}
 
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"supplier-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>

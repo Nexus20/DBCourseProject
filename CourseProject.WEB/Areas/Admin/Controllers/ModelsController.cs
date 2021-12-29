@@ -6,6 +6,8 @@ using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.PaginatedFilteredViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
