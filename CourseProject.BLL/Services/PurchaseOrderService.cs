@@ -59,14 +59,14 @@ public class PurchaseOrderService : IPurchaseOrderService {
 
             foreach (var equipmentItemValueId in equipment) {
 
-                var pur = new PurchaseOrderEquipmentItemValue() {
+                var purchaseOrderEquipmentItemValue = new PurchaseOrderEquipmentItemValue() {
                     EquipmentItemValueId = equipmentItemValueId,
                     PurchaseOrderId = purchaseOrder.Id,
                 };
 
                 await _unitOfWork
                     .GetRepository<IRepository<PurchaseOrderEquipmentItemValue>, PurchaseOrderEquipmentItemValue>()
-                    .CreateAsync(pur);
+                    .CreateAsync(purchaseOrderEquipmentItemValue);
             }
             await _unitOfWork.SaveChangesAsync();
             await transaction.CommitAsync();

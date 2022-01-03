@@ -1,9 +1,11 @@
 ﻿using CourseProject.BLL.DataHandlers;
 using CourseProject.BLL.DataHandlers.BrandDataHandlers;
 using CourseProject.BLL.DataHandlers.CarDataHandlers;
+using CourseProject.BLL.DataHandlers.CarInStockDataHandlers;
 using CourseProject.BLL.DataHandlers.ModelDataHandlers;
 using CourseProject.BLL.DataHandlers.PurchaseOrderDataHandlers;
 using CourseProject.BLL.DataHandlers.SupplierDataHandlers;
+using CourseProject.BLL.DataHandlers.SupplyOrderDataHandlers;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.PipelineBuilders;
@@ -21,6 +23,7 @@ namespace CourseProject.BLL {
             services.AddAutoMapper(typeof(AutomapperBllProfile));
 
             services.AddScoped<ICarService, CarService>();
+            services.AddScoped<ICarInStockService, CarInStockService>();
             services.AddScoped<IShowroomService, ShowroomService>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IUserService, UserService>();
@@ -33,6 +36,7 @@ namespace CourseProject.BLL {
             services.AddScoped<IEquipmentItemService, EquipmentItemService>();
             services.AddScoped<IEquipmentItemValueService, EquipmentItemValueService>();
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+            services.AddScoped<ISupplyOrderService, SupplyOrderService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
 
             services.AddScoped(typeof(IPipelineBuilder<,>), typeof(SelectionPipelineBuilder<,>));
@@ -42,6 +46,13 @@ namespace CourseProject.BLL {
             services.AddScoped<CarBrandModelFilterDataHandler>();
             services.AddScoped<CarOrderDataHandler>();
             services.AddScoped<CarModelSearchDataHandler>();
+
+            services.AddScoped<IPipelineBuilderDirector<CarInStock, CarInStockFilterModel>, CarInStockSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<CarInStockBrandModelFilterDataHandler>();
+            services.AddScoped<CarInStockShowroomFilterDataHandler>();
+            services.AddScoped<CarInStockOrderDataHandler>();
+            services.AddScoped<CarInStockModelSearchDataHandler>();
 
             services.AddScoped<IPipelineBuilderDirector<Model, ModelFilterModel>, ModelSelectionPipelineBuilderDirector>();
 
@@ -72,6 +83,19 @@ namespace CourseProject.BLL {
             services.AddScoped<PurchaseOrderOrderDataHandler>();
             services.AddScoped<PurchaseOrderOrderIdFilterDataHandler>();
             services.AddScoped<PurchaseOrderStateFilterDataHandler>();
+
+            services.AddScoped<IPipelineBuilderDirector<SupplyOrder, SupplyOrderFilterModel>, SupplyOrderSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<SupplyOrderSupplierEmailSearchDataHandler>();
+            services.AddScoped<SupplyOrderSupplierPhoneSearchDataHandler>();
+            services.AddScoped<SupplyOrderSupplierNameSearchDataHandler>();
+            services.AddScoped<SupplyOrderCreationDateFilterDataHandler>();
+            services.AddScoped<SupplyOrderLastUpdateDateFilterDataHandler>();
+            services.AddScoped<SupplyOrderManagerFilterDataHandler>();
+            services.AddScoped<SupplyOrderOrderDataHandler>();
+            services.AddScoped<SupplyOrderOrderIdFilterDataHandler>();
+            services.AddScoped<SupplyOrderSupplierIdFilterDataHandler>();
+            services.AddScoped<SupplyOrderStateFilterDataHandler>();
 
             services.AddScoped(typeof(SkipObjectsDataHandler<,>));
             services.AddScoped(typeof(TakeObjectsDataHandler<,>));

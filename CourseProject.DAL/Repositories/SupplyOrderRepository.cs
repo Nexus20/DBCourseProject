@@ -13,8 +13,10 @@ public class SupplyOrderRepository : Repository<SupplyOrder> {
         
         return Context.SupplyOrders
             .Include(s => s.Supplier)
+            .AsNoTracking()
             .Include(s => s.Manager)
                 .ThenInclude(m => m.User)
+                .AsNoTracking()
             .Include(s => s.Parts)
                 .ThenInclude(p => p.SupplyOrderPartEquipmentItemsValues)
                     .ThenInclude(pv => pv.EquipmentItemValue)
@@ -22,10 +24,12 @@ public class SupplyOrderRepository : Repository<SupplyOrder> {
                             .ThenInclude(ei => ei.Car)
                                 .ThenInclude(c => c.Model)
                                     .ThenInclude(m => m.Brand)
+                                    .AsNoTracking()
             .Include(s => s.Parts)
                 .ThenInclude(p => p.SupplyOrderPartEquipmentItemsValues)
                     .ThenInclude(pv => pv.EquipmentItemValue)
                         .ThenInclude(ev => ev.EquipmentItem)
-                            .ThenInclude(ei => ei.Category);
+                            .ThenInclude(ei => ei.Category)
+                            .AsNoTracking();
     }
 }

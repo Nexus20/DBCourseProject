@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
@@ -27,6 +28,29 @@ public class ManagerService : IManagerService {
             .Find(null, null, null, null, m => m.User, m => m.Showroom);
 
         return _mapper.Map<IEnumerable<Manager>, IEnumerable<ManagerDto>>(source);
+    }
+
+    public async Task<OperationResult<ManagerDto>> GetManagerByClaimsAsync(ClaimsPrincipal claims) {
+
+        var result = new OperationResult<ManagerDto>();
+
+        var userId = _unitOfWork.UserManager.GetUserId(claims);
+
+        if (string.IsNullOrWhiteSpace(userId)) {
+            result.AddError("claims", "User with claims not found");
+            return result;
+        }
+
+        var manager = await _unitOfWork.GetRepository<IRepository<Manager>, Manager>()
+            .FirstOrDefaultAsync(m => m.UserId == userId);
+
+        if (manager == null) {
+            result.AddError("userId", "Manager with such user id not found");
+            return result;
+        }
+
+        result.Result = _mapper.Map<Manager, ManagerDto>(manager);
+        return result;
     }
 
     public async Task<OperationResult> CreateManagerAsync(ManagerDto managerDto) {

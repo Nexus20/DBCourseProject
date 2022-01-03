@@ -20,4 +20,6 @@ public interface IUnitOfWork {
     Task<int> SaveChangesAsync();
 
     IDbContextTransaction BeginTransaction();
+
+    void DetachEntity<TEntity>(TEntity entity) where TEntity : class;
 }

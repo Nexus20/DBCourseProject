@@ -1,0 +1,35 @@
+﻿@model CarInStockViewModel
+
+@{
+    ViewData["Title"] = "Car details";
+}
+
+<h1>@Model.Car.FullModel</h1>
+<h3>&dollar; @Model.FullPrice</h3>
+<hr />
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.EquipmentItemValues)
+            </dt>
+            <dd class="col-sm-8">
+                @foreach (var item in Model.EquipmentItemValues) {
+                    <div>@item.EquipmentItem.Category.Name: @item.Value @(item.EquipmentItem.Category.UnitsOfMeasure == "none" ? "" : item.EquipmentItem.Category.UnitsOfMeasure)</div>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="col-sm-6 fotorama" data-nav="thumbs">
+        @foreach (var image in Model.Car.Photos) {
+            <img src="@image.Path" alt="">
+        }
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to list</a>
+</div>

@@ -23,6 +23,6 @@ public class ClientRepository : Repository<Client>, IClientRepository {
             .ThenInclude(p => p.PurchaseOrderEquipmentItemsValues)
             .ThenInclude(pe => pe.EquipmentItemValue)
             .ThenInclude(ev => ev.EquipmentItem)
-            .ThenInclude(ei => ei.Category);
+            .ThenInclude(ei => ei.Category).AsNoTracking();
     }
 }

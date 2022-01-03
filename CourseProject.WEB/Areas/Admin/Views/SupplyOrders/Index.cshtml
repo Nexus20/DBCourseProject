@@ -1,0 +1,142 @@
+﻿@using CourseProject.BLL.FilterModels
+@model CourseProject.WEB.Models.PaginatedFilteredViewModels.SupplyOrdersWithFiltersViewModel
+
+@{
+    ViewData["Title"] = "Cars list";
+}
+
+<h1>Cars</h1>
+<hr>
+
+<p>
+    <a asp-action="Create" asp-controller="SupplyOrders" asp-area="Admin" class="btn btn-primary btn-lg">Create new supply order</a>  
+</p>
+
+<div class="row">
+    <div class="col-12">
+        <form method="get" asp-action="Index" id="supply-order-filtering-form">
+            <div class="d-flex gap-2 mb-3">
+                @await Component.InvokeAsync("SuppliersFiltersComponent", new { selectedSupplier = (uint?)Model.SelectedSupplierId })
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.OrderId" class="form-label"></label>
+                <input asp-for="@Model.Filters.OrderId" name="OrderId" class="form-control" value="@Model.SelectedOrderId"/>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <div>
+                    <label asp-for="@Model.Filters.CreationDate" class="form-label"></label>
+                    <input asp-for="@Model.Filters.CreationDate" name="CreationDate" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedCreationDate) ? "" : $"{Model.SelectedCreationDate}")"/>
+                </div>
+                <div>
+                    <label asp-for="@Model.Filters.LastUpdateDate" class="form-label"></label>
+                    <input asp-for="@Model.Filters.LastUpdateDate" name="LastUpdateDate" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedLastUpdateDate) ? "" : $"{Model.SelectedLastUpdateDate}")"/>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.OrderType" class="form-label"></label>
+                <select asp-for="@Model.Filters.OrderType" name="OrderType" class="form-select">
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplyOrderOrderType.None ? "selected = \"selected\" " : "")               + "value=" + (int)SupplyOrderOrderType.None               + ">None</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplyOrderOrderType.OrderIdAsc ? "selected = \"selected\" " : "")         + "value=" + (int)SupplyOrderOrderType.OrderIdAsc         + ">By order id: from earliest to latest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplyOrderOrderType.OrderIdDesc ? "selected = \"selected\" " : "")        + "value=" + (int)SupplyOrderOrderType.OrderIdDesc        + ">By order id: from latest to earliest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplyOrderOrderType.CreationDateAsc ? "selected = \"selected\" " : "")    + "value=" + (int)SupplyOrderOrderType.CreationDateAsc    + ">By creation date: from earliest to latest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplyOrderOrderType.CreationDateDesc ? "selected = \"selected\" " : "")   + "value=" + (int)SupplyOrderOrderType.CreationDateDesc   + ">By creation date: from latest to earliest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplyOrderOrderType.LastUpdateDateAsc ? "selected = \"selected\" " : "")  + "value=" + (int)SupplyOrderOrderType.LastUpdateDateAsc  + ">By last update date: from earliest to latest</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is SupplyOrderOrderType.LastUpdateDateDesc ? "selected = \"selected\" " : "") + "value=" + (int)SupplyOrderOrderType.LastUpdateDateDesc + ">By last update date: from latest to earliest</option>")
+                </select>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <input type="submit" value="Fitler" class="btn btn-primary"/>
+                <a asp-action="Index" asp-controller="SupplyOrders" asp-area="Admin" class="btn btn-secondary">Reset All Filters</a>
+            </div>
+            <div class="mb-3">
+                <div class="form-label">Items per page:</div>
+                <div class="dropdown" id="items-per-page-dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="items-per-page-dropdown-btn-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        @Model.PageViewModel.PageSize
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="items-per-page-dropdown-btn-toggle">
+                        <li>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="10">10</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="20">20</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="50">50</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="100">100</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"supply-order-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model.SupplyOrders.Any()) {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.SupplyOrders[0].Id)</th>
+                <th>@Html.DisplayNameFor(model => model.SupplyOrders[0].ManagerId)</th>
+                <th>@Html.DisplayNameFor(model => model.SupplyOrders[0].Supplier)</th>
+                <th>@Html.DisplayNameFor(model => model.SupplyOrders[0].CreationDate)</th>
+                <th>@Html.DisplayNameFor(model => model.SupplyOrders[0].LastUpdateDate)</th>
+                <th>@Html.DisplayNameFor(model => model.SupplyOrders[0].State)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.SupplyOrders) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.ManagerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Supplier.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.CreationDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.LastUpdateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.State)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-area="Admin" asp-controller="SupplyOrders" asp-route-id="@order.Id" class="btn btn-primary">View order details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else {
+    <h3>No orders found (</h3>
+}
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"supply-order-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

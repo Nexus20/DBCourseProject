@@ -28,6 +28,9 @@ public class AutomapperWebProfile : Profile {
         CreateMap<UserDto, UserViewModel>().ReverseMap();
         CreateMap<ClientDto, ClientViewModel>().ReverseMap();
         CreateMap<ManagerDto, ManagerViewModel>().ReverseMap();
+        CreateMap<SupplyOrderDto, SupplyOrderViewModel>().ReverseMap();
+        CreateMap<SupplyOrderPartDto, SupplyOrderPartViewModel>().ReverseMap();
+        CreateMap<CarInStockDto, CarInStockViewModel>().ReverseMap();
 
         CreateMap<RegisterViewModel, UserDto>().ReverseMap();
         CreateMap<CreateUserViewModel, UserDto>().ReverseMap();
@@ -44,6 +47,7 @@ public class AutomapperWebProfile : Profile {
         CreateMap<SupplierFilterModel, SupplierFilterViewModel>().ReverseMap();
         CreateMap<PurchaseOrderFilterModel, PurchaseOrderFilterViewModel>().ReverseMap();
         CreateMap<SupplyOrderFilterModel, SupplyOrderFilterViewModel>().ReverseMap();
+        CreateMap<CarInStockFilterModel, CarInStockFilterViewModel>().ReverseMap();
 
         CreateMap<MaxOrdersClientDto, MaxOrdersClientViewModel>().ReverseMap();
         CreateMap<MostPurchasedModelDto, MostPurchasedModelViewModel>().ReverseMap();

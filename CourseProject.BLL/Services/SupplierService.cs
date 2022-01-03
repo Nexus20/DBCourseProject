@@ -90,4 +90,11 @@ public class SupplierService : ISupplierService {
 
         return operationResult;
     }
+
+    public IEnumerable<SupplierDto> GetAllSuppliers() {
+
+        var source = _unitOfWork.GetRepository<IRepository<Supplier>, Supplier>().FindAllWithDetails();
+
+        return _mapper.Map<IEnumerable<Supplier>, IEnumerable<SupplierDto>>(source);
+    }
 }

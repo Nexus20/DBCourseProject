@@ -52,9 +52,10 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
     }
 
     public void Update(TEntity entity) {
-        _dbSet.Attach(entity);
-        Context.Entry(entity).State = EntityState.Modified;
-
+        if (Context.Entry(entity).State != EntityState.Modified) {
+            _dbSet.Attach(entity);
+            Context.Entry(entity).State = EntityState.Modified;
+        }
     }
 
     public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>>? filter = null, Expression<Func<TEntity, object>>? orderByExpr = null, int? skipCount = null, int? takeCount = null,
@@ -85,10 +86,10 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
 
     public Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter,
         params Expression<Func<TEntity, object>>[] includeExpressions) {
-        IQueryable<TEntity> query = _dbSet;
+        IQueryable<TEntity> query = _dbSet.AsNoTracking();
 
         foreach (var includeExpression in includeExpressions) {
-            query = query.Include(includeExpression);
+            query = query.Include(includeExpression).AsNoTracking();
         }
 
         return query.AsNoTracking().FirstOrDefaultAsync(filter);
@@ -151,10 +152,10 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class {
     }
 
     public Task<TEntity> FirstOrDefaultWithDetailsAsync(Expression<Func<TEntity, bool>> filter) {
-        return FindAllWithDetailsWithoutFilter().AsNoTracking().FirstOrDefaultAsync(filter);
+        return FindAllWithDetailsWithoutFilter().FirstOrDefaultAsync(filter);
     }
 
     protected virtual IQueryable<TEntity> FindAllWithDetailsWithoutFilter() {
-        return _dbSet;
+        return _dbSet.AsNoTracking();
     }
 }

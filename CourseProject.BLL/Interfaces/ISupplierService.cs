@@ -15,4 +15,6 @@ public interface ISupplierService {
     Task<DtoListWithPossibleEntitiesCount<SupplierDto>> GetAllSuppliersAsync(SupplierFilterModel filterModel);
 
     Task<OperationResult<SupplierDto>> GetSupplierByIdAsync(int id);
+
+    IEnumerable<SupplierDto> GetAllSuppliers();
 }

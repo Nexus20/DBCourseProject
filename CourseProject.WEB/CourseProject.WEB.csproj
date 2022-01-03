@@ -7,9 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewComponents\SuppliersListComponent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Models\SupplyOrders\" />
     <Folder Include="Utils\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
@@ -57,11 +62,16 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Statistics\GetTopClientsWhoMadeMoreOrders.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Statistics\GetTopMostFrequentlyPurchasedCarModels.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Statistics\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\SupplyOrders\CloseSupplyOrder.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\SupplyOrders\ConfigureCarToAddToSupplyOrder.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\SupplyOrders\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\SupplyOrders\PossibleCarsToAddToOrder.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Account\Cabinet.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Error\Error404.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\CreatePurchaseOrder.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Shared\Components\ModelsFilterComponent\ModelsFilterComponent.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\Components\SuppliersFiltersComponent\SuppliersListComponent.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -165,6 +175,26 @@
     <Content Update="Views\Shared\Components\ManagersFilterComponent\ManagersFilterComponent.cshtml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\SupplyOrders\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\SupplyOrders\ConfigureCarToAddToSupplyOrder.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\SupplyOrders\PossibleCarsToAddToOrder.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Shared\Components\SuppliersFiltersComponent\SuppliersListComponent.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\SupplyOrders\CloseSupplyOrder.cshtml" />
   </ItemGroup>
 
 </Project>

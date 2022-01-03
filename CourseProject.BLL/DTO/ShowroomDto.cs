@@ -10,5 +10,7 @@ public class ShowroomDto : BaseDto {
 
     public string Phone { get; set; }
 
-    public virtual ICollection<ManagerDto> Managers { get; set; }
+    public ICollection<ManagerDto> Managers { get; set; }
+
+    public ICollection<CarInStockDto> CarsInStock { get; set; }
 }

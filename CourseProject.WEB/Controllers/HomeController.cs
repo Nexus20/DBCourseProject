@@ -16,21 +16,12 @@ namespace CourseProject.WEB.Controllers {
 
         private readonly ICarService _carService;
 
-        private readonly IModelService _modelService;
-
-        private readonly IBrandService _brandService;
-
-        private readonly IWebHostEnvironment _appEnvironment;
-
         private readonly IMapper _mapper;
 
         private readonly IPurchaseOrderService _purchaseOrderService;
 
-        public HomeController(ICarService carService, IModelService modelService, IBrandService brandService, IWebHostEnvironment appEnvironment, IMapper mapper, IPurchaseOrderService purchaseOrderService) {
+        public HomeController(ICarService carService, IMapper mapper, IPurchaseOrderService purchaseOrderService) {
             _carService = carService;
-            _modelService = modelService;
-            _brandService = brandService;
-            _appEnvironment = appEnvironment;
             _mapper = mapper;
             _purchaseOrderService = purchaseOrderService;
         }
@@ -80,6 +71,7 @@ namespace CourseProject.WEB.Controllers {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [HttpGet]
         public async Task<IActionResult> CreatePurchaseOrder(int carId) {
 
             var result = await _carService.GetCarByIdAsync(carId);

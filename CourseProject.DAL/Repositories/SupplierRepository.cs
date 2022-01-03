@@ -11,7 +11,7 @@ public class SupplierRepository : Repository<Supplier> {
     protected override IQueryable<Supplier> FindAllWithDetailsWithoutFilter() {
 
         return Context.Suppliers
-            .Include(s => s.Brand)
-            .Include(s => s.SupplyOrders);
+            .Include(s => s.Brand).AsNoTracking()
+            .Include(s => s.SupplyOrders).AsNoTracking();
     }
 }

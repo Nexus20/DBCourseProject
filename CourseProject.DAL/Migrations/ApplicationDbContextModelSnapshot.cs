@@ -1353,11 +1353,19 @@ namespace CourseProject.DAL.Migrations
                     b.Property<int>("State")
                         .HasColumnType("int");
 
+                    b.Property<string>("VinCode")
+                        .HasMaxLength(17)
+                        .HasColumnType("nvarchar(17)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
                     b.HasIndex("ManagerId");
+
+                    b.HasIndex("VinCode")
+                        .IsUnique()
+                        .HasFilter("[VinCode] IS NOT NULL");
 
                     b.ToTable("PurchaseOrders");
                 });
@@ -1533,6 +1541,12 @@ namespace CourseProject.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdateDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("ManagerId")
                         .HasColumnType("uniqueidentifier");

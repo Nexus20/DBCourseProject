@@ -1,0 +1,99 @@
+﻿@model SupplyOrderViewModel
+
+@{
+    ViewBag.Title = "Close supply order";
+}
+
+<h2>Close supply order</h2>
+
+<div class="row">
+    <div class="col-12" id="close-supply-order-wrapper">
+        <form method="post" asp-action="CloseSupplyOrder" asp-controller="SupplyOrders" asp-area="Admin" id="close-supply-order-form">
+
+            @foreach (var orderPart in Model.Parts) {
+
+                <div class="mb-5">
+                    
+                    <p>Enter vin codes for car #@orderPart.EquipmentItemsValues.ToList()[0].EquipmentItem.CarId (@orderPart.EquipmentItemsValues.ToList()[0].EquipmentItem.Car.FullModel)</p>
+                    
+                    <input type="hidden" name="carId" value="@orderPart.EquipmentItemsValues.ToList()[0].EquipmentItem.CarId" class="input-car-id" />
+
+                    @for (var i = 0; i < orderPart.Count; i++) {
+                        <div class="mb-3">
+                            <label for="input-vin-@i" class="form-label">Enter VIN code:</label>
+                            <input required type="text" maxlength="17" name="vinCodes" id="input-vin-@i" class="form-control input-vin-code" data-car-id="@orderPart.EquipmentItemsValues.ToList()[0].EquipmentItem.CarId" />
+                        </div>
+                    }
+
+                </div>
+            }
+            <input type="hidden" id="input-supply-order-id" asp-for="@Model.Id" name="supplyOrderId"/>
+            <input type="hidden" id="input-manager-id" asp-for="@Model.ManagerId" name="managerId"/>
+
+            <div class="mb-3">
+                <input type="button" id="btn-close-supply-order" class="btn btn-success" value="Take cars to the showroom"/>
+            </div>
+        </form>
+        <form method="post" id="confirm-close-supply-order-form" style="display: none;" asp-action="ConfirmCloseSupplyOrder" asp-controller="SupplyOrders" asp-area="Admin">
+            <input type="hidden" asp-for="@Model.Id" name="supplyOrderId"/>
+            <input type="submit" value="Close supply order" class="btn btn-success"/>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('#btn-close-supply-order').click(e => {
+
+            const carIdInputs = $('.input-car-id');
+
+            console.log(carIdInputs);
+
+            const carIdsWithVinCodes = [];
+
+            $.each(carIdInputs,
+                (i, el) => {
+
+                    const objToPush = { CarId: +el.value, VinCodes: [] };
+                    const vinCodeInputs = $(`.input-vin-code[data-car-id="${objToPush.CarId}"]`);
+
+                    console.log(objToPush, vinCodeInputs);
+
+                    $.each(vinCodeInputs,
+                        (i2, el2) => {
+                            objToPush.VinCodes.push(el2.value);
+                        });
+
+                    carIdsWithVinCodes.push(objToPush);
+                });
+
+            console.log(carIdsWithVinCodes);
+
+            const formData = new FormData();
+            formData.append('JsonSupplyOrderParts', JSON.stringify(carIdsWithVinCodes));
+            formData.append('ManagerId', $('#input-manager-id').val());
+            formData.append('SupplyOrderId', +$('#input-supply-order-id').val());
+
+            $.ajax({
+                method: 'POST',
+                processData: false,
+                contentType: false,
+                data: formData,
+                url: '@Url.Action("CloseSupplyOrder", "SupplyOrders", new {area = "Admin"})',
+                success: data => {
+                    $('#confirm-close-supply-order-form').css('display', 'block');
+                    $('#close-supply-order-form').css('display', 'none');
+                },
+                error: data => {
+                    window.location.href = '@Url.Action("Error502", "Error")';
+                }
+            });
+
+        });
+
+
+    </script>
+
+}

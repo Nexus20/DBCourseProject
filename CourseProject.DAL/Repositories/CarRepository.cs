@@ -13,12 +13,17 @@ public class CarRepository : Repository<Car>, ICarRepository {
 
     protected override IQueryable<Car> FindAllWithDetailsWithoutFilter() {
 
-        return Context.Cars.Include(c => c.Model)
-            .ThenInclude(m => m.Brand)
+        return Context.Cars
+            .Include(c => c.Model)
+                .ThenInclude(m => m.Brand)
+                .AsNoTracking()
             .Include(c => c.Photos)
+                .AsNoTracking()
             .Include(c => c.EquipmentItems)
-            .ThenInclude(e => e.EquipmentItemValues)
+                .ThenInclude(e => e.EquipmentItemValues)
+                .AsNoTracking()
             .Include(c => c.EquipmentItems)
-            .ThenInclude(e => e.Category);
+                .ThenInclude(e => e.Category)
+                .AsNoTracking();
     }
 }

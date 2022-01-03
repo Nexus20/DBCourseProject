@@ -72,7 +72,12 @@ public class ShowroomService : IShowroomService {
         var operationResult = new OperationResult<ShowroomDto>();
 
         var model = await _unitOfWork.GetRepository<IRepository<Showroom>, Showroom>()
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .FirstOrDefaultWithDetailsAsync(s => s.Id == id);
+
+        if (model == null) {
+            operationResult.AddError(nameof(id), "Such showroom not found");
+            return operationResult;
+        }
 
         operationResult.Result = _mapper.Map<Showroom, ShowroomDto>(model);
 

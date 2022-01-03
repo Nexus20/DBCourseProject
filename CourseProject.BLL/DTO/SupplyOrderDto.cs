@@ -16,4 +16,7 @@ public class SupplyOrderDto : BaseDto {
 
     public virtual ICollection<SupplyOrderPartDto> Parts { get; set; }
 
+    public DateTime CreationDate { get; set; }
+
+    public DateTime LastUpdateDate { get; set; }
 }

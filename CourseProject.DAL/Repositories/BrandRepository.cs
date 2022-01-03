@@ -13,7 +13,9 @@ public class BrandRepository : Repository<Brand>, IBrandRepository {
 
         return Context.Brands
             .Include(b => b.Suppliers)
+            .AsNoTracking()
             .Include(b => b.Models)
-            .ThenInclude(m => m.Cars);
+                .ThenInclude(m => m.Cars)
+                .AsNoTracking();
     }
 }

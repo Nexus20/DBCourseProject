@@ -10,7 +10,7 @@ public class SupplyOrderFilterModel : FilterModel {
 
     public string ManagerId { get; set; }
 
-    public SupplyOrderState State { get; set; }
+    public SupplyOrderState? State { get; set; }
 
     public SupplyOrderOrderType OrderType { get; set; }
 

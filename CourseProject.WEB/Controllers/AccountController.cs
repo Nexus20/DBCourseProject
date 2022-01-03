@@ -14,15 +14,12 @@ namespace CourseProject.WEB.Controllers {
 
         private readonly IUserService _userService;
 
-        private readonly IRoleService _roleService;
-
         private readonly IMapper _mapper;
 
-        public AccountController(ISignInService signInService, IUserService userService, IMapper mapper, IRoleService roleService) {
+        public AccountController(ISignInService signInService, IUserService userService, IMapper mapper) {
             _signInService = signInService;
             _userService = userService;
             _mapper = mapper;
-            _roleService = roleService;
         }
 
         [HttpGet]

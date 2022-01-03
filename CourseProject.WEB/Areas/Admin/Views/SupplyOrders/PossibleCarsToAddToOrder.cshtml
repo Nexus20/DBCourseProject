@@ -1,0 +1,39 @@
+﻿@model List<CarViewModel>
+
+@{
+    ViewBag.Title = "Select cars to add to order";
+}
+
+<h2>Select cars to add to order</h2>
+
+@if (Model.Any()) {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Image</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullModel)
+                    </td>
+                    <td>
+                        @if (item.Photos.Any()) {
+                            <img src="@item.Photos.First().Path" alt="" style="width: 100px">
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="AddCarToSupplyOrder" asp-controller="SupplyOrders" asp-area="Admin" asp-route-carId="@item.Id" asp-route-supplyOrderId="@ViewBag.SupplyOrderId" class="btn btn-primary">Add car to supply order</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else {
+    <h3>No cars found (</h3>
+}

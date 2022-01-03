@@ -6,12 +6,20 @@ namespace CourseProject.BLL.Interfaces;
 
 public interface ISupplyOrderService {
 
-    Task<OperationResult> CreateOrderAsync(string clientId, int[] equipment);
+    Task<OperationResult<int>> CreateOrderAsync(SupplyOrderDto dto);
 
-    Task<OperationResult<SupplyOrderDto>> GetOrderById(int id);
+    Task<OperationResult<SupplyOrderDto>> GetOrderByIdAsync(int id);
 
     IEnumerable<SupplyOrderDto> GetAllOrders();
 
     Task<DtoListWithPossibleEntitiesCount<SupplyOrderDto>> GetAllSupplyOrdersAsync(
         SupplyOrderFilterModel filterModel);
+
+    Task<OperationResult> AddCarToSupplyOrderAsync(int supplyOrderId, int[] equipment, int carsCount, Guid managerId);
+
+    Task<OperationResult> SendSupplyOrderAsync(int supplyOrderId);
+
+    Task<OperationResult<int>> TakeCarsToShowroom(CloseSupplyOrderDto dto);
+
+    Task<OperationResult> CloseSupplyOrderAsync(int supplyOrderId);
 }

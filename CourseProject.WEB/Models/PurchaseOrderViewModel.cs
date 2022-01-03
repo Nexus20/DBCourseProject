@@ -18,5 +18,7 @@ namespace CourseProject.WEB.Models {
         public DateTime CreationDate { get; set; }
 
         public DateTime LastUpdateDate { get; set; }
+
+        public string? VinCode { get; set; }
     }
 }

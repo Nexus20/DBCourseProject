@@ -24,6 +24,6 @@ public class PurchaseOrderRepository : Repository<PurchaseOrder>, IPurchaseOrder
             .Include(p => p.PurchaseOrderEquipmentItemsValues)
             .ThenInclude(pv => pv.EquipmentItemValue)
             .ThenInclude(ev => ev.EquipmentItem)
-            .ThenInclude(ei => ei.Category);
+            .ThenInclude(ei => ei.Category).AsNoTracking();
     }
 }

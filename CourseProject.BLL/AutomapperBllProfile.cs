@@ -25,7 +25,34 @@ public class AutomapperBllProfile : Profile {
         CreateMap<Showroom, ShowroomDto>().ReverseMap();
         CreateMap<IdentityRole, RoleDto>().ReverseMap();
 
+        CreateMap<CarInStock, CarInStockDto>()
+            .ForMember(dto => dto.EquipmentItemValues,
+                options => options.MapFrom(p => p.CarInStockEquipmentItemValues.Select(x => x)))
+            .ReverseMap()
+            .ForMember(entity => entity.CarInStockEquipmentItemValues,
+                options => options.Ignore());
+
         CreateMap<PurchaseOrderEquipmentItemValue, EquipmentItemValueDto>()
+            .ForMember(dto => dto.Id,
+                o => o.MapFrom(x => x.EquipmentItemValue.Id))
+            .ForMember(dto => dto.Value,
+                o => o.MapFrom(x => x.EquipmentItemValue.Value))
+            .ForMember(dto => dto.Price,
+                o => o.MapFrom(x => x.EquipmentItemValue.Price))
+            .ForMember(dto => dto.EquipmentItem,
+                o => o.MapFrom(x => x.EquipmentItemValue.EquipmentItem));
+
+        CreateMap<CarInStockEquipmentItemValue, EquipmentItemValueDto>()
+            .ForMember(dto => dto.Id,
+                o => o.MapFrom(x => x.EquipmentItemValue.Id))
+            .ForMember(dto => dto.Value,
+                o => o.MapFrom(x => x.EquipmentItemValue.Value))
+            .ForMember(dto => dto.Price,
+                o => o.MapFrom(x => x.EquipmentItemValue.Price))
+            .ForMember(dto => dto.EquipmentItem,
+                o => o.MapFrom(x => x.EquipmentItemValue.EquipmentItem));
+
+        CreateMap<SupplyOrderPartEquipmentItemValue, EquipmentItemValueDto>()
             .ForMember(dto => dto.Id,
                 o => o.MapFrom(x => x.EquipmentItemValue.Id))
             .ForMember(dto => dto.Value,
@@ -40,6 +67,14 @@ public class AutomapperBllProfile : Profile {
                 options => options.MapFrom(p => p.PurchaseOrderEquipmentItemsValues.Select(x => x)))
             .ReverseMap()
             .ForMember(entity => entity.PurchaseOrderEquipmentItemsValues,
+                options => options.Ignore());
+
+        CreateMap<SupplyOrder, SupplyOrderDto>().ReverseMap();
+        CreateMap<SupplyOrderPart, SupplyOrderPartDto>()
+            .ForMember(dto => dto.EquipmentItemsValues,
+                options => options.MapFrom(p => p.SupplyOrderPartEquipmentItemsValues.Select(x => x)))
+            .ReverseMap()
+            .ForMember(entity => entity.SupplyOrderPartEquipmentItemsValues,
                 options => options.Ignore());
 
         CreateMap<MaxOrdersClient, MaxOrdersClientDto>().ReverseMap();

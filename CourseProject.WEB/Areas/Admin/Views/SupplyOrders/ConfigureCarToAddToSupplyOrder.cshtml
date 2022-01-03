@@ -1,0 +1,28 @@
+﻿@model CourseProject.WEB.Models.SupplyOrders.CreateSupplyOrderPartViewModel
+
+@{
+    ViewBag.Title = "Add car to order";
+}
+
+<h2>Add car to order</h2>
+
+<form asp-action="AddCarToSupplyOrder" method="post">
+    
+    <input type="hidden" asp-for="SupplyOrderId" name="SupplyOrderId"/>
+
+    @foreach (var item in Model.Items) {
+        <div class="mb-3">
+            <label for="select-@item.EquipmentItemCategoryName.Replace(" ", "-")" class="form-label">Select @item.EquipmentItemCategoryName</label>
+            <select id="select-@item.EquipmentItemCategoryName.Replace(" ", "-")" asp-items="item.SelectList" name="Equipment" class="form-select"></select>
+        </div>
+    }
+    
+    <div class="mb-3">
+        <label asp-for="Count" class="form-label"></label>
+        <input asp-for="Count" class="form-control" name="Count"/>
+    </div>
+
+    <div class="mb-3">
+        <input type="submit" class="btn btn-success" value="Add car to supply order" />
+    </div>
+</form>

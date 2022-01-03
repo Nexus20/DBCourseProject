@@ -1,4 +1,5 @@
-﻿using CourseProject.BLL.FilterModels;
+﻿using System.ComponentModel.DataAnnotations;
+using CourseProject.BLL.FilterModels;
 using CourseProject.Domain;
 
 namespace CourseProject.WEB.Models.FilterViewModels; 
@@ -15,8 +16,10 @@ public class SupplyOrderFilterViewModel : FilterViewModel {
 
     public SupplyOrderOrderType? OrderType { get; set; }
 
+    [DataType(DataType.Date)]
     public DateTime? CreationDate { get; set; }
 
+    [DataType(DataType.Date)]
     public DateTime? LastUpdateDate { get; set; }
 
     public string? SupplierName { get; set; }

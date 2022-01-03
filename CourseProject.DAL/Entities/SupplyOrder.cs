@@ -6,6 +6,7 @@ public class SupplyOrder : BaseEntity {
 
     public SupplyOrder() {
         State = SupplyOrderState.New;
+        CreationDate = LastUpdateDate = DateTime.Now;
     }
 
     public int SupplierId { get; set; }
@@ -20,4 +21,7 @@ public class SupplyOrder : BaseEntity {
 
     public virtual ICollection<SupplyOrderPart> Parts { get; set; }
 
+    public DateTime CreationDate { get; set; }
+
+    public DateTime LastUpdateDate { get; set; }
 }

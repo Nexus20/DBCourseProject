@@ -6,41 +6,73 @@
 
 <h1>Showroom #@Model.Id</h1>
 <hr>
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.City)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Street)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Street)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.House)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.House)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-    </dl>
-    
-    <div class="row">
-        <div class="col-5">
-            <div class="d-flex gap-1">
-                <a asp-action="Index" asp-area="Admin" asp-controller="Showrooms" class="btn btn-primary">Go to list</a>
-                <a asp-action="Edit" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-                <a asp-action="Delete" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
-            </div>
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.City)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.City)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Street)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Street)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.House)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.House)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Phone)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Phone)
+    </dd>
+</dl>
+
+<div class="row">
+    <div class="col-5">
+        <div class="d-flex gap-1">
+            <a asp-action="Index" asp-area="Admin" asp-controller="Showrooms" class="btn btn-primary">Go to list</a>
+            <a asp-action="Edit" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            <a asp-action="Delete" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
         </div>
     </div>
+</div>
+
+<div class="row">
+    
+    @if (Model.CarsInStock.Any()) {
+
+        @foreach (var item in Model.CarsInStock) {
+            <div class="col-sm-12">
+                <div class="card car-card" style="margin: 15px;">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Car.FullModel</h5>
+                        <div class="row">
+                            <div class="col-sm-12 fotorama" data-height="300" data-nav="thumbs" style="display: flex; -o-justify-content: center; -webkit-justify-content: center; justify-content: center;">
+                                @if (item.Car.Photos.Count > 0) {
+
+                                    @foreach (var photo in item.Car.Photos) {
+                                        <img src="@photo.Path" alt="">
+                                    }
+                                }
+                                else {
+                                    <img src="/img/no-image.jpg" alt="" style="height: 300px">
+                                }
+                            </div>
+                        </div>
+
+                        <a asp-action="Details" asp-controller="CarsInStock" asp-area="Admin" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else {
+        <div class="col-12">There are no cars in this showroom</div>
+    }
 </div>

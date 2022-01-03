@@ -13,10 +13,12 @@ public class ModelRepository : Repository<Model>, IModelRepository {
 
         return Context.Models
             .Include(m => m.Brand)
+            .AsNoTracking()
             .Include(m => m.Cars)
-            .ThenInclude(c => c.EquipmentItems)
-            .ThenInclude(ei => ei.EquipmentItemValues)
-            .ThenInclude(ev => ev.PurchaseOrderEquipmentItemsValues)
-            .ThenInclude(pv => pv.PurchaseOrder);
+                .ThenInclude(c => c.EquipmentItems)
+                    .ThenInclude(ei => ei.EquipmentItemValues)
+                        .ThenInclude(ev => ev.PurchaseOrderEquipmentItemsValues)
+                            .ThenInclude(pv => pv.PurchaseOrder)
+                            .AsNoTracking();
     }
 }

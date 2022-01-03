@@ -18,6 +18,8 @@ namespace CourseProject.DAL {
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
             services.AddScoped<IRepository<Supplier>, SupplierRepository>();
             services.AddScoped<IRepository<SupplyOrder>, SupplyOrderRepository>();
+            services.AddScoped<IRepository<Showroom>, ShowroomRepository>();
+            services.AddScoped<IRepository<CarInStock>, CarInStockRepository>();
             services.AddScoped<IStatisticsRepository, StatisticsRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));

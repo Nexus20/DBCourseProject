@@ -93,6 +93,8 @@
                                 <li><a asp-action="Edit" asp-area="Admin" asp-controller="Cars" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
                                 <li><a asp-action="Details" asp-area="Admin" asp-controller="Cars" asp-route-id="@item.Id" class="dropdown-item">Details</a></li>
                                 <li class="dropdown-divider"></li>
+                                <li><a asp-action="AddCarToSupplyOrder" asp-controller="SupplyOrders" asp-area="Admin" asp-route-carId="@item.Id" class="dropdown-item">Add car to supply order</a></li>
+                                <li class="dropdown-divider"></li>
                                 <li><a asp-action="Delete" asp-area="Admin" asp-controller="Cars" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
                             </ul>
                         </div>
@@ -115,3 +117,9 @@ else {
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

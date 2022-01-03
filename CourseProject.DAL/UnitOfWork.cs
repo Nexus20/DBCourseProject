@@ -1,6 +1,7 @@
 ﻿using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,5 +37,9 @@ public class UnitOfWork : IUnitOfWork {
 
     public IDbContextTransaction BeginTransaction() {
         return _context.Database.BeginTransaction();
+    }
+
+    public void DetachEntity<TEntity>(TEntity entity) where TEntity : class {
+        _context.Entry(entity).State = EntityState.Detached;
     }
 }
