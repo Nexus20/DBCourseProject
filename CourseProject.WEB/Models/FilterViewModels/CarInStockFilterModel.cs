@@ -11,5 +11,5 @@ public class CarInStockFilterViewModel : FilterViewModel {
 
     public CarOrderType OrderType { get; set; }
 
-    public string Model { get; set; }
+    public string? Model { get; set; }
 }

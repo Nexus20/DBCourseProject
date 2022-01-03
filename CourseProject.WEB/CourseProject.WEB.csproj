@@ -45,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\CarsInStock\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\PurchaseOrders\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\PurchaseOrders\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Showrooms\Details.cshtml" />
@@ -195,6 +196,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Areas\Admin\Views\SupplyOrders\CloseSupplyOrder.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Admin\Views\CarsInStock\Index.cshtml" />
   </ItemGroup>
 
 </Project>
