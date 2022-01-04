@@ -13,4 +13,6 @@ public class ShowroomDto : BaseDto {
     public ICollection<ManagerDto> Managers { get; set; }
 
     public ICollection<CarInStockDto> CarsInStock { get; set; }
+
+    public ICollection<PurchaseOrderDto> PurchaseOrders { get; set; }
 }

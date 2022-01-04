@@ -27,9 +27,17 @@ public class PurchaseOrderService : IPurchaseOrderService {
     }
 
 
-    public async Task<OperationResult<int>> CreateOrderAsync(string clientId, int[] equipment, ClientPersonalDataDto clientPersonalData) {
+    public async Task<OperationResult<int>> CreateOrderAsync(string clientId, int[] equipment, int showroomId, ClientPersonalDataDto clientPersonalData) {
 
         var operationResult = new OperationResult<int>();
+
+        var showroom = _unitOfWork.GetRepository<IRepository<Showroom>, Showroom>()
+            .FirstOrDefaultAsync(s => s.Id == showroomId);
+
+        if (showroom == null) {
+            operationResult.AddError(nameof(showroomId), "Such showroom not found");
+            return operationResult;
+        }
 
         await using var transaction = _unitOfWork.BeginTransaction();
 
@@ -71,6 +79,7 @@ public class PurchaseOrderService : IPurchaseOrderService {
             }
 
             var purchaseOrder = new PurchaseOrder() {
+                ShowroomId = showroomId,
                 ClientId = clientId,
                 State = PurchaseOrderState.New,
                 CreationDate = DateTime.Now,
@@ -179,6 +188,46 @@ public class PurchaseOrderService : IPurchaseOrderService {
         purchaseOrder.State = PurchaseOrderState.Processing;
         purchaseOrder.ManagerId = manager.Id;
         purchaseOrder.LastUpdateDate = DateTime.Now;
+
+        _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().Update(purchaseOrder);
+        await _unitOfWork.SaveChangesAsync();
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> CloseOrderAsync(int purchaseOrderId) {
+
+        var operationResult = new OperationResult();
+
+        var purchaseOrder = await _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>()
+            .FirstOrDefaultAsync(po => po.Id == purchaseOrderId);
+
+        if (purchaseOrder == null) {
+            operationResult.AddError(nameof(purchaseOrderId), "Such purchase order not found");
+            return operationResult;
+        }
+
+        purchaseOrder.State = PurchaseOrderState.Closed;
+
+        _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().Update(purchaseOrder);
+        await _unitOfWork.SaveChangesAsync();
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> CancelOrderAsync(int purchaseOrderId) {
+
+        var operationResult = new OperationResult();
+
+        var purchaseOrder = await _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>()
+            .FirstOrDefaultAsync(po => po.Id == purchaseOrderId);
+
+        if (purchaseOrder == null) {
+            operationResult.AddError(nameof(purchaseOrderId), "Such purchase order not found");
+            return operationResult;
+        }
+
+        purchaseOrder.State = PurchaseOrderState.Canceled;
 
         _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().Update(purchaseOrder);
         await _unitOfWork.SaveChangesAsync();

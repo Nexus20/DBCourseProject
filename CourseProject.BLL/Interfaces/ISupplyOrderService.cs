@@ -24,4 +24,6 @@ public interface ISupplyOrderService {
     Task<OperationResult> CloseSupplyOrderAsync(int supplyOrderId);
 
     Task<OperationResult> CancelSupplyOrderAsync(int supplyOrderId);
+
+    Task<OperationResult<int>> CreateSupplyOrderByPurchaseOrderIdAsync(int purchaseOrderId, string managerId, int supplierId);
 }

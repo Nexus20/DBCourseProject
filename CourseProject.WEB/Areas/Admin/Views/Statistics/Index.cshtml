@@ -4,9 +4,19 @@
 
 <h2>Statistics</h2>
 
-<div class="d-flex gap-0">
-    <a asp-area="Admin" asp-controller="Statistics" asp-action="GetTopClientsWhoMadeMoreOrders" class="btn btn-primary btn-lg">Get top clients who made more orders</a>
-    <a asp-area="Admin" asp-controller="Statistics" asp-action="GetTopMostFrequentlyPurchasedCarModels" class="btn btn-primary btn-lg">Get top most frequently purchased car models</a>
+<div class="row">
+    <div class="col-3">
+        <a asp-area="Admin" asp-controller="Statistics" asp-action="GetTopClientsWhoMadeMoreOrders" class="btn btn-primary btn-lg w-100">Get top clients who made more orders</a>
+    </div>
+    <div class="col-3">
+        <a asp-area="Admin" asp-controller="Statistics" asp-action="GetTopMostFrequentlyPurchasedCarModels" class="btn btn-primary btn-lg w-100">Get top most frequently purchased car models</a>
+    </div>
+    <div class="col-3">
+        <a asp-area="Admin" asp-controller="Statistics" asp-action="GetTopManagersWhoHandleMoreOrders" class="btn btn-primary btn-lg w-100">Get top managers who handled more orders</a>
+    </div>
+    <div class="col-3">
+        <a asp-area="Admin" asp-controller="Statistics" asp-action="GetProfit" class="btn btn-primary btn-lg w-100">Get profit</a>
+    </div>
 </div>
 
 

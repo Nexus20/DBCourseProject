@@ -1,4 +1,5 @@
 ﻿using CourseProject.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CourseProject.DAL.EntityExtensions; 
@@ -6,6 +7,11 @@ namespace CourseProject.DAL.EntityExtensions;
 public static class ShowroomEntityExtensions {
 
     public static void Configure(this EntityTypeBuilder<Showroom> builder) {
+
+        builder.HasMany(s => s.PurchaseOrders)
+            .WithOne(p => p.Showroom)
+            .HasForeignKey(p => p.ShowroomId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(s => new {s.City, s.Street, s.House}).IsUnique();
 

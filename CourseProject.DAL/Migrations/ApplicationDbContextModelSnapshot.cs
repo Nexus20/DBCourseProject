@@ -1350,6 +1350,9 @@ namespace CourseProject.DAL.Migrations
                     b.Property<Guid?>("ManagerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("ShowroomId")
+                        .HasColumnType("int");
+
                     b.Property<int>("State")
                         .HasColumnType("int");
 
@@ -1362,6 +1365,8 @@ namespace CourseProject.DAL.Migrations
                     b.HasIndex("ClientId");
 
                     b.HasIndex("ManagerId");
+
+                    b.HasIndex("ShowroomId");
 
                     b.HasIndex("VinCode")
                         .IsUnique()
@@ -1846,7 +1851,7 @@ namespace CourseProject.DAL.Migrations
                         .IsRequired();
 
                     b.HasOne("CourseProject.DAL.Entities.Showroom", "Showroom")
-                        .WithMany()
+                        .WithMany("CarsInStock")
                         .HasForeignKey("ShowroomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1959,9 +1964,17 @@ namespace CourseProject.DAL.Migrations
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("CourseProject.DAL.Entities.Showroom", "Showroom")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("ShowroomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Client");
 
                     b.Navigation("Manager");
+
+                    b.Navigation("Showroom");
                 });
 
             modelBuilder.Entity("CourseProject.DAL.Entities.PurchaseOrderEquipmentItemValue", b =>
@@ -2151,7 +2164,11 @@ namespace CourseProject.DAL.Migrations
 
             modelBuilder.Entity("CourseProject.DAL.Entities.Showroom", b =>
                 {
+                    b.Navigation("CarsInStock");
+
                     b.Navigation("Managers");
+
+                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("CourseProject.DAL.Entities.Supplier", b =>

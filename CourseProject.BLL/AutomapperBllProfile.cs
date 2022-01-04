@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.DTO.StatisticsDtos;
+using CourseProject.BLL.ReportDtos;
 using CourseProject.DAL.Entities;
+using CourseProject.DAL.ReportModels;
 using CourseProject.DAL.StatisticsModels;
 using Microsoft.AspNetCore.Identity;
+using SupplyOrdersReportDto = CourseProject.BLL.ReportDtos.SupplyOrdersReportDto;
 
 namespace CourseProject.BLL;
 
@@ -83,6 +87,15 @@ public class AutomapperBllProfile : Profile {
         CreateMap<MaxOrdersClient, MaxOrdersClientDto>().ReverseMap();
         CreateMap<MostPurchasedModel, MostPurchasedModelDto>().ReverseMap();
         CreateMap<MaxPurchaseOrdersManager, MaxPurchaseOrdersManagerDto>().ReverseMap();
+        CreateMap<OrdersProfit, OrdersProfitDto>().ReverseMap();
+
+        CreateMap<PurchaseOrdersReport, PurchaseOrdersReportDto>().ReverseMap();
+        CreateMap<PurchaseOrdersReportPart, PurchaseOrdersReportPartDto>().ReverseMap();
+        CreateMap<SupplyOrdersReport, SupplyOrdersReportDto>().ReverseMap();
+        CreateMap<SupplyOrdersReportPart, SupplyOrdersReportPartDto>().ReverseMap();
+
+
+        CreateMap<TopManagersWhoHandleMoreOrdersSettings, TopManagersWhoHandleMoreOrdersSettingsDto>().ReverseMap();
     }
 
 }

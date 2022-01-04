@@ -1,0 +1,62 @@
+﻿@model CourseProject.WEB.Models.ReportViewModels.SupplyOrdersReportViewModel
+
+@{
+    Layout = "";
+}
+
+<html>
+<head>
+</head>
+<body>
+
+<h2>Supply orders report</h2>
+
+<hr/>
+
+@if(Model.Parts.Any()) {
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].OrderId)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].CarsCount)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].Showroom)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].CreationDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].LastUpdateDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].Car)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].SupplierName)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].SupplierEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].SupplierPhone)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].Manager)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].ManagerEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].ManagerPhone)</th>
+            <th>@Html.DisplayNameFor(model => model.Parts[0].Price)</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Parts) {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.OrderId)</td>
+                <td>@Html.DisplayFor(modelItem => item.CarsCount)</td>
+                <td>@Html.DisplayFor(modelItem => item.Showroom)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreationDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.LastUpdateDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Car)</td>
+                <td>@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                <td>@Html.DisplayFor(modelItem => item.SupplierEmail)</td>
+                <td>@Html.DisplayFor(modelItem => item.SupplierPhone)</td>
+                <td>@Html.DisplayFor(modelItem => item.Manager)</td>
+                <td>@Html.DisplayFor(modelItem => item.ManagerEmail)</td>
+                <td>@Html.DisplayFor(modelItem => item.ManagerPhone)</td>
+                <td>&dollar; @Html.DisplayFor(modelItem => item.Price)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else {
+    <h3>No orders found (</h3>
+}
+
+</body>
+</html>

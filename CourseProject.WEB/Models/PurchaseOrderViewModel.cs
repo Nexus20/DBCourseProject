@@ -17,11 +17,17 @@ namespace CourseProject.WEB.Models {
 
         public ICollection<EquipmentItemValueViewModel> EquipmentItemsValues { get; set; }
 
+        [Display(Name = "Creation date")]
         public DateTime CreationDate { get; set; }
 
+        [Display(Name = "Last update date")]
         public DateTime LastUpdateDate { get; set; }
 
         public string? VinCode { get; set; }
+
+        public int ShowroomId { get; set; }
+
+        public ShowroomViewModel Showroom { get; set; }
 
         [Display(Name = "Full price")]
         public string FullPrice => "$ " + EquipmentItemsValues.Sum(x => x.Price).ToString(CultureInfo.InvariantCulture);

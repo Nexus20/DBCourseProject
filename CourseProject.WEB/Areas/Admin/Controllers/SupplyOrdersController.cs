@@ -33,7 +33,9 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
         private readonly ISupplierService _supplierService;
 
-        public SupplyOrdersController(ISupplyOrderService supplyOrderService, IMapper mapper, IViewRenderService viewRenderService, IConverter converter, ICarService carService, IManagerService managerService, ISupplierService supplierService) {
+        private readonly IPurchaseOrderService _purchaseOrderService;
+
+        public SupplyOrdersController(ISupplyOrderService supplyOrderService, IMapper mapper, IViewRenderService viewRenderService, IConverter converter, ICarService carService, IManagerService managerService, ISupplierService supplierService, IPurchaseOrderService purchaseOrderService) {
             _supplyOrderService = supplyOrderService;
             _mapper = mapper;
             _viewRenderService = viewRenderService;
@@ -41,6 +43,7 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             _carService = carService;
             _managerService = managerService;
             _supplierService = supplierService;
+            _purchaseOrderService = purchaseOrderService;
         }
 
         [HttpGet]
@@ -340,6 +343,51 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> OrderCarByPurchaseOrderId(int purchaseOrderId) {
+
+            var managerResult = await _managerService.GetManagerByClaimsAsync(User);
+
+            if (managerResult.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(managerResult.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            var purchaseOrderResult = await _purchaseOrderService.GetOrderByIdAsync(purchaseOrderId);
+
+            if (purchaseOrderResult.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(purchaseOrderResult.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            var filterModel = new SupplierFilterModel() {
+                BrandId = (uint?)purchaseOrderResult.Result.EquipmentItemsValues.ToArray()[0].EquipmentItem.Car.Model.BrandId,
+            };
+
+            var source = await _supplierService.GetAllSuppliersAsync(filterModel);
+            ViewBag.Suppliers = new SelectList(_mapper.Map<IEnumerable<SupplierDto>, IEnumerable<SupplierViewModel>>(source.Dtos), "Id", "Name");
+            ViewBag.PurchaseOrderId = purchaseOrderId;
+
+            var model = new SupplyOrderViewModel {
+                ManagerId = managerResult.Result.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmOrderCarByPurchaseOrderId(int purchaseOrderId, string managerId, int supplierId) {
+
+            var result = await _supplyOrderService.CreateSupplyOrderByPurchaseOrderIdAsync(purchaseOrderId, managerId, supplierId);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            return RedirectToAction(nameof(Details), new { id = result.Result });
+        }
 
         //public IActionResult CreateSalesReport() {
 

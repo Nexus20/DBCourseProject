@@ -40,6 +40,80 @@ public class SupplyOrderService : ISupplyOrderService {
         return operationResult;
     }
 
+    public async Task<OperationResult<int>> CreateSupplyOrderByPurchaseOrderIdAsync(int purchaseOrderId, string managerId, int supplierId) {
+
+        var operationResult = new OperationResult<int>();
+
+        var manager = await _unitOfWork.GetRepository<IRepository<Manager>, Manager>()
+            .FirstOrDefaultAsync(m => m.Id.ToString() == managerId);
+
+        if (manager == null) {
+            operationResult.AddError(nameof(managerId), "Manager with such id not found");
+            return operationResult;
+        }
+
+        var supplier = await _unitOfWork.GetRepository<IRepository<Supplier>, Supplier>()
+            .FirstOrDefaultAsync(s => s.Id == supplierId);
+
+        if (supplier == null) {
+            operationResult.AddError(nameof(supplierId), "Supplier with such id not found");
+            return operationResult;
+        }
+
+        var purchaseOrder = await _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>()
+            .FirstOrDefaultWithDetailsAsync(po => po.Id == purchaseOrderId);
+
+        if (purchaseOrder == null) {
+            operationResult.AddError(nameof(purchaseOrderId), "Purchase order with such id not found");
+            return operationResult;
+        }
+
+        await using var transaction = _unitOfWork.BeginTransaction();
+
+        try {
+
+            var supplyOrder = new SupplyOrder() {
+                State = SupplyOrderState.New,
+                CreationDate = DateTime.Now,
+                LastUpdateDate = DateTime.Now,
+                ManagerId = manager.Id,
+                SupplierId = supplierId,
+            };
+
+            await _unitOfWork.GetRepository<IRepository<SupplyOrder>, SupplyOrder>().CreateAsync(supplyOrder);
+            await _unitOfWork.SaveChangesAsync();
+
+            var supplyOrderPart = new SupplyOrderPart() {
+                Count = 1,
+                SupplyOrderId = supplyOrder.Id
+            };
+
+            await _unitOfWork.GetRepository<IRepository<SupplyOrderPart>, SupplyOrderPart>().CreateAsync(supplyOrderPart);
+            await _unitOfWork.SaveChangesAsync();
+
+            foreach (var equipmentItemValue in purchaseOrder.PurchaseOrderEquipmentItemsValues) {
+
+                var supplyOrderPartEquipmentItemValue = new SupplyOrderPartEquipmentItemValue() {
+                    EquipmentItemValueId = equipmentItemValue.EquipmentItemValueId,
+                    SupplyOrderPartId = supplyOrderPart.Id,
+                };
+
+                await _unitOfWork
+                    .GetRepository<IRepository<SupplyOrderPartEquipmentItemValue>, SupplyOrderPartEquipmentItemValue>()
+                    .CreateAsync(supplyOrderPartEquipmentItemValue);
+            }
+            await _unitOfWork.SaveChangesAsync();
+            await transaction.CommitAsync();
+            operationResult.Result = supplyOrder.Id;
+        }
+        catch (Exception ex) {
+            await transaction.RollbackAsync();
+            operationResult.AddError("Unexpected", $"There is an error: {ex.Message}");
+        }
+
+        return operationResult;
+    }
+
     public async Task<OperationResult<SupplyOrderDto>> GetOrderByIdAsync(int id) {
 
         var operationResult = new OperationResult<SupplyOrderDto>();

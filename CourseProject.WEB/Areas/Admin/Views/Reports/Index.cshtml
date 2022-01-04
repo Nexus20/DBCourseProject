@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Get reports";
+}
+
+<h2>Get reports</h2>
+
+<div class="d-flex gap-2">
+    <a asp-action="GetPurchaseOrdersReport" asp-controller="Reports" asp-area="Admin" class="btn btn-primary">Get purchase orders report</a>
+    <a asp-action="GetSupplyOrdersReport" asp-controller="Reports" asp-area="Admin" class="btn btn-primary">Get supply orders report</a>
+</div>

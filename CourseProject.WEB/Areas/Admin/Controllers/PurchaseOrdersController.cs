@@ -25,15 +25,27 @@ public class PurchaseOrdersController : Controller {
 
     private readonly IConverter _converter;
 
-    public PurchaseOrdersController(IPurchaseOrderService purchaseOrderService, IMapper mapper, IViewRenderService viewRenderService, IConverter converter) {
+    private readonly IManagerService _managerService;
+
+    public PurchaseOrdersController(IPurchaseOrderService purchaseOrderService, IMapper mapper, IViewRenderService viewRenderService, IConverter converter, IManagerService managerService) {
         _purchaseOrderService = purchaseOrderService;
         _mapper = mapper;
         _viewRenderService = viewRenderService;
         _converter = converter;
+        _managerService = managerService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery] PurchaseOrderFilterViewModel filterModel) {
+
+        var managerResult = await _managerService.GetManagerByClaimsAsync(User);
+
+        if (managerResult.HasErrors) {
+            TempData["Errors"] = JsonSerializer.Serialize(managerResult.Errors);
+            return RedirectToAction(nameof(ErrorController.Error502), "Error");
+        }
+
+        filterModel.ShowroomId ??= managerResult.Result.ShowroomId;
 
         var source = await _purchaseOrderService.GetAllPurchaseOrdersAsync(_mapper.Map<PurchaseOrderFilterViewModel, PurchaseOrderFilterModel>(filterModel));
 
@@ -109,6 +121,64 @@ public class PurchaseOrdersController : Controller {
         return RedirectToAction(nameof(Details), new { id = purchaseOrderId });
     }
 
+    [HttpGet]
+    public async Task<IActionResult> ClosePurchaseOrder(int purchaseOrderId) {
+
+        var result = await _purchaseOrderService.GetOrderByIdAsync(purchaseOrderId);
+
+        if (result.HasErrors) {
+            TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+            return RedirectToAction(nameof(ErrorController.Error502), "Error");
+        }
+
+        var model = _mapper.Map<PurchaseOrderDto, PurchaseOrderViewModel>(result.Result);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ConfirmClosePurchaseOrder(int purchaseOrderId) {
+
+        var result = await _purchaseOrderService.CloseOrderAsync(purchaseOrderId);
+
+        if (result.HasErrors) {
+            TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+            return RedirectToAction(nameof(ErrorController.Error502), "Error");
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> CancelPurchaseOrder(int purchaseOrderId) {
+
+        var result = await _purchaseOrderService.GetOrderByIdAsync(purchaseOrderId);
+
+        if (result.HasErrors) {
+            TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+            return RedirectToAction(nameof(ErrorController.Error502), "Error");
+        }
+
+        var model = _mapper.Map<PurchaseOrderDto, PurchaseOrderViewModel>(result.Result);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ConfirmCancelPurchaseOrder(int purchaseOrderId) {
+
+        var result = await _purchaseOrderService.CancelOrderAsync(purchaseOrderId);
+
+        if (result.HasErrors) {
+            TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+            return RedirectToAction(nameof(ErrorController.Error502), "Error");
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
     public async Task<IActionResult> CreateSalesReport() {
 
         var dto = _purchaseOrderService.GetAllOrders();
@@ -127,7 +197,7 @@ public class PurchaseOrdersController : Controller {
             Orientation = Orientation.Portrait,
             PaperSize = PaperKind.A4,
             Margins = new MarginSettings { Top = 10 },
-            DocumentTitle = "Invoice"
+            DocumentTitle = "Purchase orders report"
         };
 
         var objectSettings = new ObjectSettings {

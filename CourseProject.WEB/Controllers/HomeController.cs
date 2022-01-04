@@ -25,17 +25,20 @@ namespace CourseProject.WEB.Controllers {
 
         private readonly IUserService _userService;
 
+        private readonly IShowroomService _showroomService;
+
         private readonly IViewRenderService _viewRenderService;
 
         private readonly IConverter _converter;
 
-        public HomeController(ICarService carService, IMapper mapper, IPurchaseOrderService purchaseOrderService, IUserService userService, IViewRenderService viewRenderService, IConverter converter) {
+        public HomeController(ICarService carService, IMapper mapper, IPurchaseOrderService purchaseOrderService, IUserService userService, IViewRenderService viewRenderService, IConverter converter, IShowroomService showroomService) {
             _carService = carService;
             _mapper = mapper;
             _purchaseOrderService = purchaseOrderService;
             _userService = userService;
             _viewRenderService = viewRenderService;
             _converter = converter;
+            _showroomService = showroomService;
         }
 
         [HttpGet]
@@ -119,14 +122,19 @@ namespace CourseProject.WEB.Controllers {
                     EquipmentItemCategoryName = equipmentItem.Category.Name
                 });
             }
-            
+
+            ViewBag.Showrooms =
+                new SelectList(
+                    _mapper.Map<IEnumerable<ShowroomDto>, IEnumerable<ShowroomViewModel>>(_showroomService
+                        .GetAllShowrooms()), "Id", "Address");
+
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePurchaseOrder(string clientId, int[] equipment, ClientPersonalDataViewModel clientPersonalDataViewModel) {
+        public async Task<IActionResult> CreatePurchaseOrder(string clientId, int[] equipment, int showroomId, ClientPersonalDataViewModel clientPersonalDataViewModel) {
 
-            var result = await _purchaseOrderService.CreateOrderAsync(clientId, equipment, _mapper.Map<ClientPersonalDataViewModel, ClientPersonalDataDto>(clientPersonalDataViewModel));
+            var result = await _purchaseOrderService.CreateOrderAsync(clientId, equipment, showroomId, _mapper.Map<ClientPersonalDataViewModel, ClientPersonalDataDto>(clientPersonalDataViewModel));
 
             if (result.HasErrors) {
                 TempData["Errors"] = JsonSerializer.Serialize(result.Errors);

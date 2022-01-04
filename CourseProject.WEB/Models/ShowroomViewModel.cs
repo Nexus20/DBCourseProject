@@ -1,4 +1,6 @@
-﻿namespace CourseProject.WEB.Models; 
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CourseProject.WEB.Models; 
 
 public class ShowroomViewModel : BaseViewModel {
 
@@ -10,6 +12,7 @@ public class ShowroomViewModel : BaseViewModel {
 
     public string Phone { get; set; }
 
+    [Display(Name = "Showroom")]
     public string FullAddress => $"Showroom #{Id} {City} {Street} {House}";
 
     public string Address => $"{City}, {Street}, {House}";
@@ -17,4 +20,6 @@ public class ShowroomViewModel : BaseViewModel {
     public ICollection<ManagerViewModel> Managers { get; set; }
 
     public ICollection<CarInStockViewModel> CarsInStock { get; set; }
+
+    public ICollection<PurchaseOrderViewModel> PurchaseOrders { get; set; }
 }

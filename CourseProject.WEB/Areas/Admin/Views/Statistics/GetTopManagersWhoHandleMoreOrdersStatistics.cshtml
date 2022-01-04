@@ -1,0 +1,24 @@
+﻿@model List<MaxPurchaseOrdersManagerViewModel>
+
+@{
+    ViewBag.Title = "Top managers who handle more orders";
+}
+
+<h2>Top managers who handle more orders</h2>
+
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model[0].Id)</th>
+        <th>@Html.DisplayNameFor(model => model[0].Name)</th>
+        <th>@Html.DisplayNameFor(model => model[0].Email)</th>
+        <th>Orders count</th>
+    </tr>
+    @foreach (var item in Model) {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Surname @item.Name @item.Patronymic</td>
+            <td>@item.Email</td>
+            <td>@item.OrdersCount</td>
+        </tr>
+    }
+</table>

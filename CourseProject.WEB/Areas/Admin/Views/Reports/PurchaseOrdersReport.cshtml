@@ -1,0 +1,55 @@
+﻿@model CourseProject.WEB.Models.ReportViewModels.PurchaseOrdersReportViewModel
+
+@{
+    ViewBag.Title = "Purchase orders report";
+    Layout = "_Layout";
+}
+
+<h2>Purchase orders report</h2>
+
+<hr/>
+
+@if(Model.Parts.Any()) {
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].OrderId)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].Showroom)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].CreationDate)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].LastUpdateDate)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].Car)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].VinCode)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].Client)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].ClientEmail)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].ClientPhone)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].Manager)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].ManagerEmail)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].ManagerPhone)</th>
+        <th>@Html.DisplayNameFor(model => model.Parts[0].Profit)</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Parts) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.OrderId)</td>
+            <td>@Html.DisplayFor(modelItem => item.Showroom)</td>
+            <td>@Html.DisplayFor(modelItem => item.CreationDate)</td>
+            <td>@Html.DisplayFor(modelItem => item.LastUpdateDate)</td>
+            <td>@Html.DisplayFor(modelItem => item.Car)</td>
+            <td>@Html.DisplayFor(modelItem => item.VinCode)</td>
+            <td>@Html.DisplayFor(modelItem => item.Client)</td>
+            <td>@Html.DisplayFor(modelItem => item.ClientEmail)</td>
+            <td>@Html.DisplayFor(modelItem => item.ClientPhone)</td>
+            <td>@Html.DisplayFor(modelItem => item.Manager)</td>
+            <td>@Html.DisplayFor(modelItem => item.ManagerEmail)</td>
+            <td>@Html.DisplayFor(modelItem => item.ManagerPhone)</td>
+            <td>@Html.DisplayFor(modelItem => item.Profit)</td>
+        </tr>
+    }
+    </tbody>
+</table>
+}
+else {
+    <h3>No orders found (</h3>
+}

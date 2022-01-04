@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.DTO.StatisticsDtos;
 using CourseProject.BLL.FilterModels;
+using CourseProject.BLL.ReportDtos;
 using CourseProject.WEB.Models;
 using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.ReportViewModels;
+using CourseProject.WEB.Models.StatisticsViewModels;
 
 namespace CourseProject.WEB; 
 
@@ -56,6 +60,14 @@ public class AutomapperWebProfile : Profile {
         CreateMap<MaxOrdersClientDto, MaxOrdersClientViewModel>().ReverseMap();
         CreateMap<MostPurchasedModelDto, MostPurchasedModelViewModel>().ReverseMap();
         CreateMap<MaxPurchaseOrdersManagerDto, MaxPurchaseOrdersManagerViewModel>().ReverseMap();
+        CreateMap<OrdersProfitDto, OrdersProfitViewModel>().ReverseMap();
+
+        CreateMap<PurchaseOrdersReportDto, PurchaseOrdersReportViewModel>().ReverseMap();
+        CreateMap<PurchaseOrdersReportPartDto, PurchaseOrdersReportPartViewModel>().ReverseMap();
+        CreateMap<SupplyOrdersReportDto, SupplyOrdersReportViewModel>().ReverseMap();
+        CreateMap<SupplyOrdersReportPartDto, SupplyOrdersReportPartViewModel>().ReverseMap();
+
+        CreateMap<TopManagersWhoHandleMoreOrdersSettingsDto, TopManagersWhoHandleMoreOrdersSettingsViewModel>().ReverseMap();
     }
 
 }

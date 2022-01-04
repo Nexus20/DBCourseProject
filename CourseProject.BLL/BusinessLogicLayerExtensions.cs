@@ -40,6 +40,7 @@ namespace CourseProject.BLL {
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             services.AddScoped<ISupplyOrderService, SupplyOrderService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IReportService, ReportService>();
 
             services.AddScoped(typeof(IPipelineBuilder<,>), typeof(SelectionPipelineBuilder<,>));
 
@@ -77,6 +78,7 @@ namespace CourseProject.BLL {
 
             services.AddScoped<IPipelineBuilderDirector<PurchaseOrder, PurchaseOrderFilterModel>, PurchaseOrderSelectionPipelineBuilderDirector>();
 
+            services.AddScoped<PurchaseOrderShowroomIdFilterDataHandler>();
             services.AddScoped<PurchaseOrderClientEmailSearchDataHandler>();
             services.AddScoped<PurchaseOrderClientPhoneSearchDataHandler>();
             services.AddScoped<PurchaseOrderCreationDateFilterDataHandler>();

@@ -35,6 +35,10 @@
         @Html.DisplayFor(model => model.Client.PhoneNumber)
     </div>
     <div class="col-12">
+        @Html.DisplayNameFor(model => model.Showroom): 
+        @Html.DisplayFor(model => model.Showroom.FullAddress)
+    </div>
+    <div class="col-12 mb-3">
         <div class="mb-3">Car info:</div>
         <div class="mb-3">@Model.EquipmentItemsValues.ToList()[0].EquipmentItem.Car.FullModel</div>
         <ul class="list-group">
@@ -55,7 +59,7 @@
             }
         </ul>
     </div>
-    <div class="col-12">
+    <div class="col-12 mb-3">
         @Html.DisplayNameFor(model => model.FullPrice):
         @Html.DisplayFor(model => model.FullPrice)
     </div>

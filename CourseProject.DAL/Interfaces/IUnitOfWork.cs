@@ -14,6 +14,8 @@ public interface IUnitOfWork {
 
     IStatisticsRepository StatisticsRepository { get; }
 
+    IReportRepository ReportRepository { get; }
+
     TRepository GetRepository<TRepository, TEntity>()
         where TRepository : IRepository<TEntity> where TEntity : class;
 

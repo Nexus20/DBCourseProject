@@ -1,0 +1,16 @@
+﻿@model PurchaseOrderViewModel
+
+@{
+    ViewBag.Title = "Close purchase order";
+}
+
+<h2>Close purchase order #@Model.Id</h2>
+
+<div class="row">
+    <div class="col-12">
+        <form method="post" asp-action="ConfirmClosePurchaseOrder" asp-controller="PurchaseOrders" asp-area="Admin">
+            <input type="hidden" asp-for="Id" name="purchaseOrderId"/>
+            <input type="submit" class="btn btn-success" value="Close this order"/>
+        </form>
+    </div>
+</div>

@@ -16,6 +16,7 @@ namespace CourseProject.BLL.PipelineBuilders {
         public IDataHandler<PurchaseOrder, PurchaseOrderFilterModel> Construct() {
 
             _selectionPipelineBuilder.SetFirstChainPart<PurchaseOrderOrderIdFilterDataHandler>()
+                .SetNextChainPart<PurchaseOrderShowroomIdFilterDataHandler>()
                 .SetNextChainPart<PurchaseOrderClientEmailSearchDataHandler>()
                 .SetNextChainPart<PurchaseOrderClientPhoneSearchDataHandler>()
                 .SetNextChainPart<PurchaseOrderCreationDateFilterDataHandler>()

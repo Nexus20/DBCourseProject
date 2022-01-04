@@ -7,7 +7,7 @@ namespace CourseProject.BLL.Interfaces;
 
 public interface IPurchaseOrderService {
 
-    Task<OperationResult<int>> CreateOrderAsync(string clientId, int[] equipment, ClientPersonalDataDto clientPersonalData);
+    Task<OperationResult<int>> CreateOrderAsync(string clientId, int[] equipment, int showroomId, ClientPersonalDataDto clientPersonalData);
 
     Task<OperationResult<PurchaseOrderDto>> GetOrderByIdAsync(int id);
 
@@ -17,4 +17,8 @@ public interface IPurchaseOrderService {
         PurchaseOrderFilterModel filterModel);
 
     Task<OperationResult> AcceptOrderAsync(int purchaseOrderId, ClaimsPrincipal user);
+
+    Task<OperationResult> CloseOrderAsync(int purchaseOrderId);
+
+    Task<OperationResult> CancelOrderAsync(int purchaseOrderId);
 }

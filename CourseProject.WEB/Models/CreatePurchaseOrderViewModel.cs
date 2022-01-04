@@ -7,6 +7,7 @@ public class CreatePurchaseOrderViewModel {
     
     public string ClientId { get; set; }
 
+    [Display(Name = "Showroom")]
     public int ShowroomId { get; set; }
 
     public ClientPersonalDataViewModel ClientPersonalDataViewModel { get; set; }

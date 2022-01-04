@@ -13,4 +13,6 @@ public class Showroom : BaseEntity {
     public virtual ICollection<Manager> Managers { get; set; }
 
     public virtual ICollection<CarInStock> CarsInStock { get; set; }
+
+    public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
 }

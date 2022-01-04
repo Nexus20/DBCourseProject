@@ -11,26 +11,37 @@
     <div class="mb-3">
         <label asp-for="ClientPersonalDataViewModel.Name" class="form-label"></label>
         <input asp-for="ClientPersonalDataViewModel.Name" class="form-control"/>
+        <span asp-validation-for="ClientPersonalDataViewModel.Name" class="text-danger"></span>
     </div>
     
     <div class="mb-3">
         <label asp-for="ClientPersonalDataViewModel.Surname" class="form-label"></label>
         <input asp-for="ClientPersonalDataViewModel.Surname" class="form-control"/>
+        <span asp-validation-for="ClientPersonalDataViewModel.Surname" class="text-danger"></span>
     </div>
     
     <div class="mb-3">
         <label asp-for="ClientPersonalDataViewModel.Patronymic" class="form-label"></label>
         <input asp-for="ClientPersonalDataViewModel.Patronymic" class="form-control"/>
+        <span asp-validation-for="ClientPersonalDataViewModel.Patronymic" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="ClientPersonalDataViewModel.Email" class="form-label"></label>
         <input asp-for="ClientPersonalDataViewModel.Email" class="form-control"/>
+        <span asp-validation-for="ClientPersonalDataViewModel.Email" class="text-danger"></span>
     </div>
     
     <div class="mb-3">
         <label asp-for="ClientPersonalDataViewModel.Phone" class="form-label"></label>
         <input asp-for="ClientPersonalDataViewModel.Phone" class="form-control"/>
+        <span asp-validation-for="ClientPersonalDataViewModel.Phone" class="text-danger"></span>
+    </div>
+    
+    <div class="mb-3">
+        <label asp-for="ShowroomId" class="form-label"></label>
+        <select asp-for="ShowroomId" class="form-select" asp-items="ViewBag.Showrooms"></select>
+        <span asp-validation-for="ShowroomId" class="text-danger"></span>
     </div>
 
     @foreach (var item in Model.Items) {

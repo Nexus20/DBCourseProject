@@ -67,8 +67,11 @@
                             <li class="list-group-item">@equipmentItemValue.EquipmentItem.Category.Name: @equipmentItemValue.Value (&dollar; @equipmentItemValue.Price)</li>
                         }
                     </ul>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a asp-controller="Cars" asp-action="Details" asp-area="" class="card-link btn btn-outline-info" asp-route-id="@Model.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.Id">Details</a>
+                    @*<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>*@
+                    @*<a asp-controller="Cars" asp-action="Details" asp-area="" class="card-link btn btn-outline-info" asp-route-id="@Model.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.Id">Details</a>*@
+                </div>
+                <div class="card-footer">
+                    <p>Price: @Model.FullPrice</p>
                 </div>
             </div>
         </div>
@@ -89,6 +92,7 @@
 
                 break;
             case PurchaseOrderState.Processing:
+                <a asp-action="OrderCarByPurchaseOrderId" target="_blank" asp-area="Admin" asp-controller="SupplyOrders" asp-route-purchaseOrderId="@Model.Id" class="btn btn-primary">Order a car</a>
                 <a asp-action="ClosePurchaseOrder" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-purchaseOrderId="@Model.Id" class="btn btn-primary">Close this order</a>
                 <a asp-action="CancelPurchaseOrder" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-purchaseOrderId="@Model.Id" class="btn btn-primary">Cancel this order</a>
                 break;

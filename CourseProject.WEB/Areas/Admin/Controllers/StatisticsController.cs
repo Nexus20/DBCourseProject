@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.DTO.StatisticsDtos;
 using CourseProject.BLL.Interfaces;
+using CourseProject.Domain;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.StatisticsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseProject.WEB.Areas.Admin.Controllers {
@@ -23,9 +26,33 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTopClientsWhoMadeMoreOrders() {
+        public IActionResult GetTopManagersWhoHandleMoreOrders() {
+            return View();
+        }
 
-            var source = await _statisticsService.GetTopClientsWhoMadeMoreOrdersAsync();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetTopManagersWhoHandleMoreOrders(TopManagersWhoHandleMoreOrdersSettingsViewModel settingsViewModel) {
+
+            var source = await _statisticsService.GetTopManagersWhoCompletedMorePurchaseOrdersAsync(
+                _mapper
+                    .Map<TopManagersWhoHandleMoreOrdersSettingsViewModel, TopManagersWhoHandleMoreOrdersSettingsDto>(settingsViewModel));
+
+            var model = _mapper.Map<IEnumerable<MaxPurchaseOrdersManagerDto>, List<MaxPurchaseOrdersManagerViewModel>>(source);
+
+            return View("GetTopManagersWhoHandleMoreOrdersStatistics", model);
+        }
+
+        [HttpGet]
+        public IActionResult GetTopClientsWhoMadeMoreOrders() {
+            return View("MaxOrdersClientsTopSettings");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetTopClientsWhoMadeMoreOrders(int top) {
+
+            var source = await _statisticsService.GetTopClientsWhoMadeMoreOrdersAsync(top);
 
             var model = _mapper.Map<IEnumerable<MaxOrdersClientDto>, List<MaxOrdersClientViewModel>>(source);
 
@@ -33,13 +60,35 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTopMostFrequentlyPurchasedCarModels() {
+        public IActionResult GetTopMostFrequentlyPurchasedCarModels() {
+            return View("MaxOrdersCarModelsTopSettings");
+        }
 
-            var source = await _statisticsService.GetTopMostPurchasedCarModelsAsync();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetTopMostFrequentlyPurchasedCarModels(int top) {
+
+            var source = await _statisticsService.GetTopMostPurchasedCarModelsAsync(top);
 
             var model = _mapper.Map<IEnumerable<MostPurchasedModelDto>, List<MostPurchasedModelViewModel>>(source);
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetProfit() {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetProfit(DateRangeSettings settings) {
+
+            var source = await _statisticsService.GetProfitAsync(settings);
+
+            var model = _mapper.Map<OrdersProfitDto, OrdersProfitViewModel>(source);
+
+            return View("ProfitStatistics", model);
         }
     }
 }

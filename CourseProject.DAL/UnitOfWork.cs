@@ -26,6 +26,8 @@ public class UnitOfWork : IUnitOfWork {
 
     public IStatisticsRepository StatisticsRepository => _services.GetRequiredService<IStatisticsRepository>();
 
+    public IReportRepository ReportRepository => _services.GetRequiredService<IReportRepository>();
+
     public TRepository GetRepository<TRepository, TEntity>()
         where TRepository : IRepository<TEntity> where TEntity : class {
         return _services.GetRequiredService<TRepository>();

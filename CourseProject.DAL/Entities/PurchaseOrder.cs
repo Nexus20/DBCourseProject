@@ -25,5 +25,9 @@ namespace CourseProject.DAL.Entities {
         public DateTime LastUpdateDate { get; set; }
 
         public string? VinCode { get; set; }
+
+        public int ShowroomId { get; set; }
+
+        public virtual Showroom Showroom { get; set; }
     }
 }

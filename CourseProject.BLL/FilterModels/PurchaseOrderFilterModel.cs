@@ -6,6 +6,8 @@ public class PurchaseOrderFilterModel : FilterModel {
 
     public int OrderId { get; set; }
 
+    public int ShowroomId { get; set; }
+
     public string ManagerId { get; set; }
 
     public PurchaseOrderState? State { get; set; }

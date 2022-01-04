@@ -20,5 +20,9 @@ namespace CourseProject.BLL.DTO {
         public DateTime LastUpdateDate { get; set; }
 
         public string? VinCode { get; set; }
+
+        public int ShowroomId { get; set; }
+
+        public ShowroomDto Showroom { get; set; }
     }
 }
