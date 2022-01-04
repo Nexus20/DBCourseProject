@@ -164,6 +164,11 @@ public class CarService : ICarService {
 
         await using var transaction = _unitOfWork.BeginTransaction();
 
+        if (!Directory.Exists(directoryPath)) {
+            var dirInfo = new DirectoryInfo(directoryPath);
+            dirInfo.Create();
+        }
+
         try {
 
             var excelFilePath = Path.Combine(directoryPath, carFile.FileName);
