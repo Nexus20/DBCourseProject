@@ -1,4 +1,5 @@
-﻿using CourseProject.BLL.DTO;
+﻿using System.Security.Claims;
+using CourseProject.BLL.DTO;
 using CourseProject.BLL.Validation;
 
 namespace CourseProject.BLL.Interfaces;
@@ -24,4 +25,6 @@ public interface IUserService {
     Task<OperationResult<ClientDto>> GetClientByIdAsync(string userId);
 
     Task<OperationResult> CreateClientAsync(UserDto userDto);
+
+    Task<OperationResult> UpdateUserPersonalDataAsync(UserDto model, ClaimsPrincipal claims);
 }

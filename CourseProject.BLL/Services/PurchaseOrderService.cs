@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
@@ -9,7 +10,7 @@ using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
 using CourseProject.Domain;
 
-namespace CourseProject.BLL.Services; 
+namespace CourseProject.BLL.Services;
 
 public class PurchaseOrderService : IPurchaseOrderService {
 
@@ -26,27 +27,49 @@ public class PurchaseOrderService : IPurchaseOrderService {
     }
 
 
-    public async Task<OperationResult> CreateOrderAsync(string clientId, int[] equipment) {
+    public async Task<OperationResult<int>> CreateOrderAsync(string clientId, int[] equipment, ClientPersonalDataDto clientPersonalData) {
 
-        var operationResult = new OperationResult();
-
-        var user = await _unitOfWork.UserManager.FindByIdAsync(clientId);
-
-        if (user == null) {
-            operationResult.AddError(nameof(clientId), "Such user not found");
-            return operationResult;
-        }
-
-        foreach (var equipmentItemValueId in equipment) {
-            if (!await _unitOfWork.GetRepository<IRepository<EquipmentItemValue>, EquipmentItemValue>().ContainsAsync(e => e.Id == equipmentItemValueId)) {
-                operationResult.AddError(nameof(equipmentItemValueId), "Such equipment not found");
-                return operationResult;
-            }
-        }
+        var operationResult = new OperationResult<int>();
 
         await using var transaction = _unitOfWork.BeginTransaction();
 
         try {
+
+            var user = await _unitOfWork.UserManager.FindByIdAsync(clientId);
+
+            if (user == null && !string.IsNullOrWhiteSpace(clientPersonalData.Surname) &&
+                !string.IsNullOrWhiteSpace(clientPersonalData.Name) &&
+                !string.IsNullOrWhiteSpace(clientPersonalData.Email) &&
+                !string.IsNullOrWhiteSpace(clientPersonalData.Phone) &&
+                !string.IsNullOrWhiteSpace(clientPersonalData.Patronymic)) {
+
+                var client = new Client() {
+                    Email = clientPersonalData.Email,
+                    Name = clientPersonalData.Name,
+                    Surname = clientPersonalData.Surname,
+                    Patronymic = clientPersonalData.Patronymic,
+                    PhoneNumber = clientPersonalData.Phone,
+                };
+
+                await _unitOfWork.GetRepository<IClientRepository, Client>().CreateAsync(client);
+                await _unitOfWork.SaveChangesAsync();
+
+                user = client;
+                clientId = user.Id;
+            }
+
+            if (user == null) {
+                operationResult.AddError(nameof(clientId), "Such user not found");
+                return operationResult;
+            }
+
+            foreach (var equipmentItemValueId in equipment) {
+                if (!await _unitOfWork.GetRepository<IRepository<EquipmentItemValue>, EquipmentItemValue>().ContainsAsync(e => e.Id == equipmentItemValueId)) {
+                    operationResult.AddError(nameof(equipmentItemValueId), "Such equipment not found");
+                    return operationResult;
+                }
+            }
+
             var purchaseOrder = new PurchaseOrder() {
                 ClientId = clientId,
                 State = PurchaseOrderState.New,
@@ -70,6 +93,7 @@ public class PurchaseOrderService : IPurchaseOrderService {
             }
             await _unitOfWork.SaveChangesAsync();
             await transaction.CommitAsync();
+            operationResult.Result = purchaseOrder.Id;
         }
         catch (Exception ex) {
             await transaction.RollbackAsync();
@@ -79,7 +103,7 @@ public class PurchaseOrderService : IPurchaseOrderService {
         return operationResult;
     }
 
-    public async Task<OperationResult<PurchaseOrderDto>> GetOrderById(int id) {
+    public async Task<OperationResult<PurchaseOrderDto>> GetOrderByIdAsync(int id) {
 
         var operationResult = new OperationResult<PurchaseOrderDto>();
 
@@ -120,5 +144,45 @@ public class PurchaseOrderService : IPurchaseOrderService {
             Dtos = _mapper.Map<IEnumerable<PurchaseOrder>, IEnumerable<PurchaseOrderDto>>(source),
             PossibleDtosCount = possibleCarsCount
         };
+    }
+
+    public async Task<OperationResult> AcceptOrderAsync(int purchaseOrderId, ClaimsPrincipal user) {
+
+        var operationResult = new OperationResult();
+
+        var userId = _unitOfWork.UserManager.GetUserId(user);
+
+        if (string.IsNullOrWhiteSpace(userId)) {
+            operationResult.AddError(nameof(user), "User with such claims not found");
+            return operationResult;
+        }
+
+        var manager = await _unitOfWork.GetRepository<IRepository<Manager>, Manager>().FirstOrDefaultAsync(x => x.UserId == userId);
+
+        if (manager == null) {
+            operationResult.AddError(nameof(userId), "Manager with such user id not found");
+            return operationResult;
+        }
+
+        var purchaseOrder = await _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().FirstOrDefaultAsync(x => x.Id == purchaseOrderId);
+
+        if (purchaseOrder == null) {
+            operationResult.AddError(nameof(purchaseOrderId), "Order with such id not found");
+            return operationResult;
+        }
+
+        if (purchaseOrder.State != PurchaseOrderState.New) {
+            operationResult.AddError(nameof(purchaseOrderId), "This order is already being processed. Please go back and refresh the page.");
+            return operationResult;
+        }
+
+        purchaseOrder.State = PurchaseOrderState.Processing;
+        purchaseOrder.ManagerId = manager.Id;
+        purchaseOrder.LastUpdateDate = DateTime.Now;
+
+        _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().Update(purchaseOrder);
+        await _unitOfWork.SaveChangesAsync();
+
+        return operationResult;
     }
 }

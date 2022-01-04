@@ -148,13 +148,29 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         // POST: CarsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, IFormCollection collection) {
-            try {
-                return RedirectToAction(nameof(Index));
+        public async Task<IActionResult> Edit(CreateEditCarViewModel model) {
+
+            var carDto = _mapper.Map<CreateEditCarViewModel, CarDto>(model);
+
+            var directoryPath = Path.Combine(_appEnvironment.WebRootPath, "img", "cars");
+            var result = await _carService.EditCarAsync(carDto, model.Images, directoryPath);
+
+            if (result.HasErrors) {
+                ModelState.AddErrorsFromOperationResult(result);
+                GetInformationToCreateEditCar();
+
+                var carGetResult = await _carService.GetCarByIdAsync(model.Id);
+
+                var editModel = _mapper.Map<CarDto, CreateEditCarViewModel>(carGetResult.Result);
+                var viewModel = _mapper.Map<CarDto, CarViewModel>(carGetResult.Result);
+
+                GetInformationToCreateEditCar();
+                ViewBag.EquipmentCategories = _mapper.Map<IEnumerable<EquipmentItemCategoryDto>, IEnumerable<EquipmentItemCategoryViewModel>>(_equipmentItemCategoryService.GetAllCategories());
+
+                return View("Edit", new EditCarViewModel() { EditModel = editModel, ViewModel = viewModel });
             }
-            catch {
-                return View();
-            }
+
+            return RedirectToAction(nameof(Details), new { id = model.Id });
         }
 
         // GET: CarsController/Delete/5

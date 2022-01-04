@@ -153,6 +153,26 @@ public class SupplyOrderService : ISupplyOrderService {
         return operationResult;
     }
 
+    public async Task<OperationResult> CancelSupplyOrderAsync(int supplyOrderId) {
+
+        var operationResult = new OperationResult();
+
+        var supplyOrder = await _unitOfWork.GetRepository<IRepository<SupplyOrder>, SupplyOrder>()
+            .FirstOrDefaultAsync(so => so.Id == supplyOrderId);
+
+        if (supplyOrder == null) {
+            operationResult.AddError(nameof(supplyOrderId), "Such supply order not found");
+            return operationResult;
+        }
+
+        supplyOrder.State = SupplyOrderState.Canceled;
+
+        _unitOfWork.GetRepository<IRepository<SupplyOrder>, SupplyOrder>().Update(supplyOrder);
+        await _unitOfWork.SaveChangesAsync();
+
+        return operationResult;
+    }
+
     public async Task<OperationResult> CloseSupplyOrderAsync(int supplyOrderId) {
 
         var operationResult = new OperationResult();

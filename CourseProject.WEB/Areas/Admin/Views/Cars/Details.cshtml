@@ -7,32 +7,49 @@
 <h1>@Model.FullModel</h1>
 <hr />
 
-<div>
-    <div class="row">
-        <div class="col-sm-6">
-            <dl class="row">
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.EquipmentItems)
-                </dt>
-                <dd class="col-sm-8">
-                    @foreach (var item in Model.EquipmentItems) {
-                        @item.Category.Name
+<div class="row">
+    <div class="col-sm-6">
+        <div class="mb-3">@Html.DisplayNameFor(model => model.EquipmentItems)</div>
+        <ul class="list-group mb-3" id="equipment-list">
+            @foreach (var item in Model.EquipmentItems) {
+                <li class="list-group-item equipment-item">
+                    <div class="d-flex justify-content-between">
+                        <div class="equipment-item-category-name">@item.Category.Name</div>
+                    </div>
+                    <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="@item.Id">
                         @foreach (var value in item.EquipmentItemValues) {
-                            @value.Value
+                            <li class="list-group-item equipment-item-value">
+                                <div class="d-flex justify-content-between">
+                                    <div class="equipment-item-value-name">
+                                        @value.Value
+
+                                        @if (value.Price > 0) {
+                                            @Html.Raw($"(&dollar; {value.Price})")
+                                        }
+                                        else {
+                                            @Html.Raw("(Standard)")
+                                        }
+                                    </div>
+                                </div>
+                            </li>
                         }
-                    }
-                </dd>
-            </dl>
-        </div>
-        <div class="col-sm-6 fotorama" data-nav="thumbs">
-            @foreach (var image in Model.Photos) {
-                <img src="@image.Path" alt="">
+                    </ul>
+                </li>
             }
-        </div>
+        </ul>
     </div>
-    
+    <div class="col-sm-6 fotorama" data-nav="thumbs">
+        @foreach (var image in Model.Photos) {
+            <img src="@image.Path" alt="">
+        }
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a> 
-    <a asp-action="Index" class="btn btn-primary">Back to list</a>
+<div class="row">
+    <div class="col-12 mb-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    </div>
+    <div class="col-12">
+        <a asp-action="Index" class="btn btn-primary">Back to list</a>
+    </div>
 </div>

@@ -155,21 +155,10 @@
                 @Html.DisplayFor(modelItem => item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.FullModel)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Manager.User.Name)
+                @Html.DisplayFor(modelItem => item.ManagerId)
             </td>
             <td>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="@($"dropdownMenuButton{item.Id}")" data-bs-toggle="dropdown" aria-expanded="false">
-                        Actions
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
-                        <li><a asp-action="Details" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">View order</a></li>
-                        <li class="dropdown-divider"></li>
-                        <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Process order</a></li>
-                        <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Cancel order</a></li>
-                        <li><a asp-action="ChangeOrderState" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="dropdown-item">Close order</a></li>
-                    </ul>
-                </div>
+                <a asp-action="Details" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-id="@item.Id" class="btn btn-primary">View order details</a>
             </td>
         </tr>
     }

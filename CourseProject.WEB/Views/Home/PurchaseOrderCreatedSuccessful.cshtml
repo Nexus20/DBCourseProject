@@ -1,0 +1,60 @@
+﻿@model PurchaseOrderViewModel
+
+@{
+    ViewBag.Title = "Purchase order created successful";
+}
+
+<h2>Purchase order created successful</h2>
+<h3>Order info </h3>  
+<hr />
+
+<div class="row">
+    <div class="col-12">
+        @Html.DisplayNameFor(model => model.Id): 
+        @Html.DisplayFor(model => model.Id)
+    </div>
+    <div class="col-12">
+        @Html.DisplayNameFor(model => model.State): 
+        @Html.DisplayFor(model => model.State)
+    </div>
+    <div class="col-12">
+        @Html.DisplayNameFor(model => model.Client): 
+        @Html.DisplayFor(model => model.Client.FullName)
+    </div>
+    <div class="col-12">
+        @Html.DisplayNameFor(model => model.Client.Email): 
+        @Html.DisplayFor(model => model.Client.Email)
+    </div>
+    <div class="col-12">
+        @Html.DisplayNameFor(model => model.Client.PhoneNumber): 
+        @Html.DisplayFor(model => model.Client.PhoneNumber)
+    </div>
+    <div class="col-12">
+        <div class="mb-3">Car info:</div>
+        <div class="mb-3">@Model.EquipmentItemsValues.ToList()[0].EquipmentItem.Car.FullModel</div>
+        <ul class="list-group">
+            @foreach (var value in Model.EquipmentItemsValues) {
+                <li class="list-group-item equipment-item-value">
+                    <div class="d-flex justify-content-between">
+                        <div class="equipment-item-value-name">@value.Value
+
+                            @if (value.Price > 0) {
+                                @Html.Raw($"(&dollar; {value.Price})")
+                            }
+                            else {
+                                @Html.Raw("(Standard)")
+                            }
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-12">
+        @Html.DisplayNameFor(model => model.FullPrice): 
+        @Html.DisplayFor(model => model.FullPrice)
+    </div>
+    <div class="col-12">
+        <a asp-action="CreatePurchaseOrderPdf" asp-controller="Home" asp-area="" asp-route-id="@Model.Id" class="btn btn-primary">Create pdf</a>
+    </div>
+</div>

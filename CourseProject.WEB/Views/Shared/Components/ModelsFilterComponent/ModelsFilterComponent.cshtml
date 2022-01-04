@@ -1,5 +1,8 @@
 ﻿@model SelectList
 
-<select name="ModelId" asp-items="Model" class="form-select">
-    <option value="0">All</option>
-</select>
+<div>
+    <label for="select-model" class="form-label">Select model:</label>
+    <select name="ModelId" asp-items="Model" class="form-select" id="select-model">
+        <option value="0">All</option>
+    </select>
+</div>

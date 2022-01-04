@@ -4,23 +4,39 @@
     ViewData["Title"] = $"Delete car {Model.FullModel}";
 }
 
-<h4 class="alert alert-warning alert-heading">Are you sure you want to delete this car brand?</h4>
+<h4 class="alert alert-warning alert-heading">Are you sure you want to delete this car?</h4>
 <div>
     <div class="row">
         <div class="col-sm-6">
-            <dl class="row">
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.EquipmentItems)
-                </dt>
-                <dd class="col-sm-8">
-                    @foreach (var item in Model.EquipmentItems) {
-                        @item.Category.Name
-                        @foreach (var value in item.EquipmentItemValues) {
-                            @value.Value
-                        }
-                    }
-                </dd>
-            </dl>
+            <div class="mb-3">@Html.DisplayNameFor(model => model.EquipmentItems)</div>
+            <ul class="list-group mb-3" id="equipment-list">
+                @foreach (var item in Model.EquipmentItems) {
+                    <li class="list-group-item equipment-item">
+                        <div class="d-flex justify-content-between">
+                            <div class="equipment-item-category-name">@item.Category.Name</div>
+                        </div>
+                        <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="@item.Id">
+                            @foreach (var value in item.EquipmentItemValues) {
+                                <li class="list-group-item equipment-item-value">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="equipment-item-value-name">@value.Value 
+                                            
+                                            @if (value.Price > 0) {
+                                                @Html.Raw($"(&dollar; {value.Price})")
+                                            }
+                                            else {
+                                                @Html.Raw("(Standard)")
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
         </div>
         <div class="col-sm-6 fotorama" data-nav="thumbs">
             @foreach (var image in Model.Photos) {

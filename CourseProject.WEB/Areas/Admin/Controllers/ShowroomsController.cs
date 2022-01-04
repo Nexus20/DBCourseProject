@@ -1,10 +1,13 @@
 ﻿using System.Text.Json;
 using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.PaginatedFilteredViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseProject.WEB.Areas.Admin.Controllers {
@@ -22,12 +25,21 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         }
 
         [HttpGet]
-        [Route("/showrooms")]
-        public IActionResult Index() {
+        public async Task<IActionResult> Index([FromQuery] ShowroomFilterViewModel filterModel) {
 
-            var source = _showroomService.GetAllShowrooms();
+            var source = await _showroomService.GetAllShowroomsAsync(_mapper.Map<ShowroomFilterViewModel, ShowroomFilterModel>(filterModel));
 
-            var model = _mapper.Map<IEnumerable<ShowroomDto>, List<ShowroomViewModel>>(source);
+            var model = new ShowroomsWithFiltersViewModel() {
+                Showrooms = _mapper.Map<IEnumerable<ShowroomDto>, List<ShowroomViewModel>>(source.Dtos),
+                Filters = new ShowroomFilterViewModel(),
+                PageViewModel = new PageViewModel(source.PossibleDtosCount, filterModel.PageNumber, filterModel.TakeCount)
+            };
+
+            if (ModelState.IsValid) {
+                model.SelectedAddress = filterModel.Address;
+                model.SelectedPhone = filterModel.Phone;
+                model.SelectedOrderType = filterModel.OrderType;
+            }
 
             return View(model);
         }

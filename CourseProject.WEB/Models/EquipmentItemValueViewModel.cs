@@ -10,9 +10,11 @@ public class EquipmentItemValueViewModel : BaseViewModel {
 
     public decimal Price { get; set; }
 
+    public string ValueWithPrice => $"{Value} ($ {Price})";
+
     public ICollection<CarInStockViewModel> CarsInStock { get; set; }
 
-    public virtual ICollection<PurchaseOrderViewModel> PurchaseOrders { get; set; }
+    public ICollection<PurchaseOrderViewModel> PurchaseOrders { get; set; }
 
-    public virtual ICollection<SupplyOrderPartViewModel> SupplyOrderParts { get; set; }
+    public ICollection<SupplyOrderPartViewModel> SupplyOrderParts { get; set; }
 }

@@ -10,7 +10,8 @@ public interface ICarService {
     Task<OperationResult> CreateCarAsync(CarDto carDto, IFormFileCollection formFileCollection = null,
         string directoryPath = null);
 
-    Task<OperationResult> EditCarAsync(CarDto carDto);
+    Task<OperationResult> EditCarAsync(CarDto carDto, IFormFileCollection formFileCollection = null,
+        string directoryPath = null);
 
     Task<OperationResult> DeleteCarAsync(int id, string directoryPath = null);
 

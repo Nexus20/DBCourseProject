@@ -12,6 +12,8 @@ public class ShowroomViewModel : BaseViewModel {
 
     public string FullAddress => $"Showroom #{Id} {City} {Street} {House}";
 
+    public string Address => $"{City}, {Street}, {House}";
+
     public ICollection<ManagerViewModel> Managers { get; set; }
 
     public ICollection<CarInStockViewModel> CarsInStock { get; set; }

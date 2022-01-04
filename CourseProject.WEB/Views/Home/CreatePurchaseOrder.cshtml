@@ -1,19 +1,43 @@
 ﻿@model CreatePurchaseOrderViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = "Create purchase order";
 }
 
-<h2>title</h2>
+<h2>Create purchase order</h2>
 
 <form asp-action="CreatePurchaseOrder" method="post">
+    
+    <div class="mb-3">
+        <label asp-for="ClientPersonalDataViewModel.Name" class="form-label"></label>
+        <input asp-for="ClientPersonalDataViewModel.Name" class="form-control"/>
+    </div>
+    
+    <div class="mb-3">
+        <label asp-for="ClientPersonalDataViewModel.Surname" class="form-label"></label>
+        <input asp-for="ClientPersonalDataViewModel.Surname" class="form-control"/>
+    </div>
+    
+    <div class="mb-3">
+        <label asp-for="ClientPersonalDataViewModel.Patronymic" class="form-label"></label>
+        <input asp-for="ClientPersonalDataViewModel.Patronymic" class="form-control"/>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ClientPersonalDataViewModel.Email" class="form-label"></label>
+        <input asp-for="ClientPersonalDataViewModel.Email" class="form-control"/>
+    </div>
+    
+    <div class="mb-3">
+        <label asp-for="ClientPersonalDataViewModel.Phone" class="form-label"></label>
+        <input asp-for="ClientPersonalDataViewModel.Phone" class="form-control"/>
+    </div>
 
     @foreach (var item in Model.Items) {
         <input type="hidden" asp-for="ClientId"/>
         <div class="mb-3">
             <label for="select-@item.EquipmentItemCategoryName.Replace(" ", "-")" class="form-label">Select @item.EquipmentItemCategoryName</label>
-            <select id="select-@item.EquipmentItemCategoryName.Replace(" ", "-")" asp-items="item.SelectList" name="Equipment" class="form-control"></select>
+            <select id="select-@item.EquipmentItemCategoryName.Replace(" ", "-")" asp-items="item.SelectList" name="Equipment" class="form-select"></select>
         </div>
     }
 

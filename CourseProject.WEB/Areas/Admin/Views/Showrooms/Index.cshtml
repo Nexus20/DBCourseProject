@@ -1,4 +1,5 @@
-﻿@model System.Collections.Generic.List<CourseProject.WEB.Models.ShowroomViewModel>
+﻿@using CourseProject.BLL.FilterModels
+@model CourseProject.WEB.Models.PaginatedFilteredViewModels.ShowroomsWithFiltersViewModel
 
 @{
     ViewData["Title"] = "Showrooms list";
@@ -11,35 +12,83 @@
     <a asp-action="Create" asp-area="Admin" asp-controller="Showrooms" class="btn btn-primary btn-lg">Add a new showroom</a>
 </p>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model[0].City)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].Street)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].House)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].Phone)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
+<div class="row">
+    <div class="col-12">
+        <form method="get" asp-action="Index" id="showroom-filtering-form">
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.Address" class="form-label"></label>
+                <input asp-for="@Model.Filters.Address" name="Address" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedAddress)?"":$"{Model.SelectedAddress}")" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.Phone" class="form-label"></label>
+                <input asp-for="@Model.Filters.Phone" name="Phone" class="form-control" value="@(string.IsNullOrWhiteSpace(Model.SelectedPhone)?"":$"{Model.SelectedPhone}")" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Filters.OrderType" class="form-label"></label>
+                <select asp-for="@Model.Filters.OrderType" name="OrderType" class="form-select">
+                    @Html.Raw("<option " + (Model.SelectedOrderType is ShowroomOrderType.None ? "selected = \"selected\" " : "")         + "value=" + (int)ShowroomOrderType.None + ">None</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is ShowroomOrderType.AlphabetAsc ? "selected = \"selected\" " : "")  + "value=" + (int)ShowroomOrderType.AlphabetAsc + ">Alphabetically</option>")
+                    @Html.Raw("<option " + (Model.SelectedOrderType is ShowroomOrderType.AlphabetDesc ? "selected = \"selected\" " : "") + "value=" + (int)ShowroomOrderType.AlphabetDesc + ">Reverse alphabetically</option>")
+                </select>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <input type="submit" value="Fitler" class="btn btn-primary" />
+                <a asp-action="Index" asp-controller="Showrooms" asp-area="Admin" class="btn btn-secondary">Reset All Filters</a>
+            </div>
+            <div class="mb-3">
+                <div class="form-label">Items per page:</div>
+                <div class="dropdown" id="items-per-page-dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="items-per-page-dropdown-btn-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        @Model.PageViewModel.PageSize
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="items-per-page-dropdown-btn-toggle">
+                        <li>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="10">10</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="20">20</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="50">50</button>
+                            <button type="submit" class="dropdown-item" name="TakeCount" value="100">100</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"showroom-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model.Showrooms.Any()) {
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Showrooms[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Showrooms[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Showrooms[0].Phone)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Showrooms) {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.City)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Street)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.House)
+                    @Html.DisplayFor(modelItem => item.Address)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Phone)
@@ -52,13 +101,34 @@
                         <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
                             <li><a asp-action="Edit" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
                             <li><a asp-action="Details" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@item.Id" class="dropdown-item">Details</a></li>
-                            <li class="dropdown-divider"></li>
-                            <li><a asp-action="Delete" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
+                            @if (!item.CarsInStock.Any()) {
+                                <li class="dropdown-divider"></li>
+                                <li><a asp-action="Delete" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
+                            }
                         </ul>
                     </div>
                 </td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+else {
+    <h3>No showrooms found (</h3>
+}
 
+<div class="row">
+    <div class="col-12 pagination">
+        <div class="d-flex gap-1">
+            @for (var i = 1; i <= Model.PageViewModel.TotalPages; i++) {
+                @Html.Raw($"<button form=\"showroom-filtering-form\" type=\"submit\" name=\"PageNumber\" {(i == Model.PageViewModel.PageNumber ? "disabled" : "")} value=\"{i}\" class=\"btn btn-primary\">{i}</button>")
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Validation;
 
 namespace CourseProject.BLL.Interfaces; 
@@ -14,4 +15,6 @@ public interface IShowroomService {
     IEnumerable<ShowroomDto> GetAllShowrooms();
 
     Task<OperationResult<ShowroomDto>> GetShowroomByIdAsync(int id);
+
+    Task<DtoListWithPossibleEntitiesCount<ShowroomDto>> GetAllShowroomsAsync(ShowroomFilterModel filterModel);
 }

@@ -8,22 +8,10 @@
 <hr>
 <dl class="row">
     <dt class="col-sm-2">
-        @Html.DisplayNameFor(model => model.City)
+        @Html.DisplayNameFor(model => model.Address)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.City)
-    </dd>
-    <dt class="col-sm-2">
-        @Html.DisplayNameFor(model => model.Street)
-    </dt>
-    <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Street)
-    </dd>
-    <dt class="col-sm-2">
-        @Html.DisplayNameFor(model => model.House)
-    </dt>
-    <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.House)
+        @Html.DisplayFor(model => model.Address)
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Phone)
@@ -36,9 +24,11 @@
 <div class="row">
     <div class="col-5">
         <div class="d-flex gap-1">
-            <a asp-action="Index" asp-area="Admin" asp-controller="Showrooms" class="btn btn-primary">Go to list</a>
+            <a asp-action="Index" asp-area="Admin" asp-controller="Showrooms" class="btn btn-primary">Back to list</a>
             <a asp-action="Edit" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-            <a asp-action="Delete" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            @if (!Model.CarsInStock.Any()) {
+                <a asp-action="Delete" asp-area="Admin" asp-controller="Showrooms" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            }
         </div>
     </div>
 </div>

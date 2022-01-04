@@ -1,10 +1,13 @@
 ﻿using System.Text.Json;
 using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
 using CourseProject.WEB.Controllers;
 using CourseProject.WEB.Extensions;
 using CourseProject.WEB.Models;
+using CourseProject.WEB.Models.FilterViewModels;
+using CourseProject.WEB.Models.PaginatedFilteredViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseProject.WEB.Areas.Admin.Controllers {
@@ -20,13 +23,22 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             _mapper = mapper;
         }
 
-
         [HttpGet]
-        public IActionResult Index() {
+        public async Task<IActionResult> Index([FromQuery] EquipmentItemCategoryFilterViewModel filterModel) {
 
-            var source = _equipmentItemCategoryService.GetAllCategories();
+            var source = await _equipmentItemCategoryService.GetAllCategoriesAsync(_mapper.Map<EquipmentItemCategoryFilterViewModel, EquipmentItemCategoryFilterModel>(filterModel));
 
-            var model = _mapper.Map<IEnumerable<EquipmentItemCategoryDto>, List<EquipmentItemCategoryViewModel>>(source);
+            var model = new EquipmentItemCategoriesWithFiltersViewModel() {
+                EquipmentItemCategories = _mapper.Map<IEnumerable<EquipmentItemCategoryDto>, List<EquipmentItemCategoryViewModel>>(source.Dtos),
+                Filters = new EquipmentItemCategoryFilterViewModel(),
+                PageViewModel = new PageViewModel(source.PossibleDtosCount, filterModel.PageNumber, filterModel.TakeCount)
+            };
+
+            if (ModelState.IsValid) {
+                model.SelectedName = filterModel.Name;
+                model.SelectedUnitsOfMeasure = filterModel.UnitsOfMeasure;
+                model.SelectedOrderType = filterModel.OrderType;
+            }
 
             return View(model);
         }

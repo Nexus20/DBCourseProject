@@ -6,6 +6,7 @@ namespace CourseProject.WEB.Models.FilterViewModels;
 
 public class SupplyOrderFilterViewModel : FilterViewModel {
 
+    [Display(Name = "Order id")]
     public int? OrderId { get; set; }
 
     public int? SupplierId { get; set; }
@@ -14,11 +15,14 @@ public class SupplyOrderFilterViewModel : FilterViewModel {
 
     public SupplyOrderState? State { get; set; }
 
+    [Display(Name = "Order by")]
     public SupplyOrderOrderType? OrderType { get; set; }
 
+    [Display(Name = "Creation date")]
     [DataType(DataType.Date)]
     public DateTime? CreationDate { get; set; }
 
+    [Display(Name = "Last update date")]
     [DataType(DataType.Date)]
     public DateTime? LastUpdateDate { get; set; }
 

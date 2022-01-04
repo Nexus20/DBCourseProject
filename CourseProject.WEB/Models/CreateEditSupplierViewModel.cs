@@ -16,5 +16,6 @@ public class CreateEditSupplierViewModel : BaseViewModel {
     public string Email { get; set; }
 
     [Required]
+    [Display(Name = "Brand")]
     public int BrandId { get; set; }
 }

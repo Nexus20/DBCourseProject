@@ -1,0 +1,16 @@
+﻿@model SupplyOrderViewModel
+
+@{
+    ViewBag.Title = "Cancel supply order";
+}
+
+<h2>Cancel supply order #@Model.Id</h2>
+
+<div class="row">
+    <div class="col-12">
+        <form asp-action="ConfirmCancelSupplyOrder" asp-controller="SupplyOrders" asp-area="Admin">
+            <input type="hidden" asp-for="Id"/>
+            <input type="submit" value="Cancel this order" class="btn btn-primary"/>
+        </form>
+    </div>
+</div>

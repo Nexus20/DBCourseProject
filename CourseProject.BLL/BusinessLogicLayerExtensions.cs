@@ -2,8 +2,10 @@
 using CourseProject.BLL.DataHandlers.BrandDataHandlers;
 using CourseProject.BLL.DataHandlers.CarDataHandlers;
 using CourseProject.BLL.DataHandlers.CarInStockDataHandlers;
+using CourseProject.BLL.DataHandlers.EquipmentItemCategoryDataHandlers;
 using CourseProject.BLL.DataHandlers.ModelDataHandlers;
 using CourseProject.BLL.DataHandlers.PurchaseOrderDataHandlers;
+using CourseProject.BLL.DataHandlers.ShowroomDataHandlers;
 using CourseProject.BLL.DataHandlers.SupplierDataHandlers;
 using CourseProject.BLL.DataHandlers.SupplyOrderDataHandlers;
 using CourseProject.BLL.FilterModels;
@@ -96,6 +98,18 @@ namespace CourseProject.BLL {
             services.AddScoped<SupplyOrderOrderIdFilterDataHandler>();
             services.AddScoped<SupplyOrderSupplierIdFilterDataHandler>();
             services.AddScoped<SupplyOrderStateFilterDataHandler>();
+
+            services.AddScoped<IPipelineBuilderDirector<Showroom, ShowroomFilterModel>, ShowroomSelectionPipelineBuilderDirector>();
+
+            services.AddScoped<ShowroomAddressSearchDataHandler>();
+            services.AddScoped<ShowroomPhoneSearchDataHandler>();
+            services.AddScoped<ShowroomOrderDataHandler>();
+
+            services.AddScoped<IPipelineBuilderDirector<EquipmentItemCategory, EquipmentItemCategoryFilterModel>, EquipmentItemCategorySelectionPipelineBuilderDirector>();
+
+            services.AddScoped<EquipmentItemCategoryNameDataHandler>();
+            services.AddScoped<EquipmentItemCategoryUnitsOfMeasureSearchDataHandler>();
+            services.AddScoped<EquipmentItemCategoryOrderDataHandler>();
 
             services.AddScoped(typeof(SkipObjectsDataHandler<,>));
             services.AddScoped(typeof(TakeObjectsDataHandler<,>));

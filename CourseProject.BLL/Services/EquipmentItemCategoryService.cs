@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
+using CourseProject.BLL.Pipeline;
+using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
@@ -13,9 +16,12 @@ public class EquipmentItemCategoryService : IEquipmentItemCategoryService {
 
     private readonly IMapper _mapper;
 
-    public EquipmentItemCategoryService(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IPipelineBuilderDirector<EquipmentItemCategory, EquipmentItemCategoryFilterModel> _builderDirector;
+
+    public EquipmentItemCategoryService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<EquipmentItemCategory, EquipmentItemCategoryFilterModel> builderDirector) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _builderDirector = builderDirector;
     }
 
     public async Task<OperationResult> CreateCategoryAsync(EquipmentItemCategoryDto modelDto) {
@@ -56,7 +62,7 @@ public class EquipmentItemCategoryService : IEquipmentItemCategoryService {
 
     public IEnumerable<EquipmentItemCategoryDto> GetAllCategories() {
 
-        var source = _unitOfWork.GetRepository<IRepository<EquipmentItemCategory>, EquipmentItemCategory>().FindAll();
+        var source = _unitOfWork.GetRepository<IRepository<EquipmentItemCategory>, EquipmentItemCategory>().Find(includeExpressions: ec => ec.EquipmentItems);
 
         return _mapper.Map<IEnumerable<EquipmentItemCategory>, IEnumerable<EquipmentItemCategoryDto>>(source);
     }
@@ -70,5 +76,24 @@ public class EquipmentItemCategoryService : IEquipmentItemCategoryService {
         operationResult.Result = _mapper.Map<EquipmentItemCategory, EquipmentItemCategoryDto>(model);
 
         return operationResult;
+    }
+
+    public async Task<DtoListWithPossibleEntitiesCount<EquipmentItemCategoryDto>> GetAllCategoriesAsync(EquipmentItemCategoryFilterModel filterModel) {
+
+        var pipeline = new SelectionPipeline<EquipmentItemCategory, EquipmentItemCategoryFilterModel>(filterModel, _builderDirector);
+
+        var expressions = pipeline.Process();
+
+        var source = _unitOfWork.GetRepository<IRepository<EquipmentItemCategory>, EquipmentItemCategory>().FindAllWithDetails(expressions);
+
+        var possibleCarsCount = await _unitOfWork.GetRepository<IRepository<EquipmentItemCategory>, EquipmentItemCategory>()
+            .CountAsync(expressions.FilterExpressions);
+
+        //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
+
+        return new DtoListWithPossibleEntitiesCount<EquipmentItemCategoryDto>() {
+            Dtos = _mapper.Map<IEnumerable<EquipmentItemCategory>, IEnumerable<EquipmentItemCategoryDto>>(source),
+            PossibleDtosCount = possibleCarsCount
+        };
     }
 }

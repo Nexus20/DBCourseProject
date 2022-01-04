@@ -10,5 +10,5 @@ public class CreateEditCarViewModel : BaseViewModel {
     [Display(Name = "Model")]
     public int ModelId { get; set; }
 
-    public IFormFileCollection Images { get; set; }
+    public IFormFileCollection? Images { get; set; }
 }

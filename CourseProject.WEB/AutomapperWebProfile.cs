@@ -27,10 +27,12 @@ public class AutomapperWebProfile : Profile {
         CreateMap<ShowroomDto, CreateEditShowroomViewModel>().ReverseMap();
         CreateMap<UserDto, UserViewModel>().ReverseMap();
         CreateMap<ClientDto, ClientViewModel>().ReverseMap();
+        CreateMap<UserDto, EditPersonalInfoViewModel>().ReverseMap();
         CreateMap<ManagerDto, ManagerViewModel>().ReverseMap();
         CreateMap<SupplyOrderDto, SupplyOrderViewModel>().ReverseMap();
         CreateMap<SupplyOrderPartDto, SupplyOrderPartViewModel>().ReverseMap();
         CreateMap<CarInStockDto, CarInStockViewModel>().ReverseMap();
+        CreateMap<ClientPersonalDataViewModel, ClientPersonalDataDto>().ReverseMap();
 
         CreateMap<RegisterViewModel, UserDto>().ReverseMap();
         CreateMap<CreateUserViewModel, UserDto>().ReverseMap();
@@ -48,6 +50,8 @@ public class AutomapperWebProfile : Profile {
         CreateMap<PurchaseOrderFilterModel, PurchaseOrderFilterViewModel>().ReverseMap();
         CreateMap<SupplyOrderFilterModel, SupplyOrderFilterViewModel>().ReverseMap();
         CreateMap<CarInStockFilterModel, CarInStockFilterViewModel>().ReverseMap();
+        CreateMap<ShowroomFilterModel, ShowroomFilterViewModel>().ReverseMap();
+        CreateMap<EquipmentItemCategoryFilterModel, EquipmentItemCategoryFilterViewModel>().ReverseMap();
 
         CreateMap<MaxOrdersClientDto, MaxOrdersClientViewModel>().ReverseMap();
         CreateMap<MostPurchasedModelDto, MostPurchasedModelViewModel>().ReverseMap();

@@ -107,7 +107,6 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="@($"dropdownMenuButton{item.Id}")">
                             <li><a asp-action="Edit" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
-                            <li><a asp-action="Details" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Details</a></li>
                             @if (item.CarsCount == 0) {
                                 <li class="dropdown-divider"></li>
                                 <li><a asp-action="Delete" asp-area="Admin" asp-controller="Brands" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>

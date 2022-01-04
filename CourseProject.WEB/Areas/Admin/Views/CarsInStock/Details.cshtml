@@ -11,16 +11,14 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <dl class="row">
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.EquipmentItemValues)
-            </dt>
-            <dd class="col-sm-8">
-                @foreach (var item in Model.EquipmentItemValues) {
-                    <div>@item.EquipmentItem.Category.Name: @item.Value @(item.EquipmentItem.Category.UnitsOfMeasure == "none" ? "" : item.EquipmentItem.Category.UnitsOfMeasure)</div>
-                }
-            </dd>
-        </dl>
+        <div class="mb-3">
+            @Html.DisplayNameFor(model => model.EquipmentItemValues)
+        </div>
+        <ul class="list-group mb-3">
+            @foreach (var item in Model.EquipmentItemValues) {
+                <li class="list-group-item">@item.EquipmentItem.Category.Name: @item.Value @(item.EquipmentItem.Category.UnitsOfMeasure == "none" ? "" : item.EquipmentItem.Category.UnitsOfMeasure) &dollar; @item.Price</li>
+            }
+        </ul>
     </div>
     <div class="col-sm-6 fotorama" data-nav="thumbs">
         @foreach (var image in Model.Car.Photos) {

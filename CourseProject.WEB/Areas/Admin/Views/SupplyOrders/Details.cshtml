@@ -38,7 +38,7 @@
                 Cars info
             </dt>
             <dd class="col-sm-10">
-                
+
                 @if (Model.Parts.Any()) {
 
                     @foreach (var orderPart in Model.Parts) {
@@ -60,27 +60,24 @@
             </dd>
         </dl>
     </div>
-    <div class="col-12">
-        <div class="col-5">
-            <div class="d-flex gap-1">
-                <a asp-action="Index" asp-area="Admin" asp-controller="SupplyOrders" class="btn btn-primary">Go to list</a>
-                
-                @switch (Model.State) {
-                    case SupplyOrderState.New:
-                        <a asp-action="AddCarsToSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Add cars to this order</a>
-                        <a asp-action="SendSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Send order to the supplier</a>
-                        break;
-                    case SupplyOrderState.Processing:
-                        <a asp-action="CloseSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Close this order</a>
-                        <a asp-action="CancelSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Cancel this order</a>
-                        break;
-                    case SupplyOrderState.Closed:
-                        break;
-                    case SupplyOrderState.Canceled:
-                        break;
-                }
-                @*<a asp-action="Delete" asp-area="Admin" asp-controller="SupplyOrders" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>*@
-            </div>
+    <div class="col-5">
+        <div class="d-flex gap-1">
+            <a asp-action="Index" asp-area="Admin" asp-controller="SupplyOrders" class="btn btn-primary">Go to list</a>
+            @switch (Model.State) {
+                case SupplyOrderState.New:
+                    <a asp-action="AddCarsToSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Add cars to this order</a>
+                    <a asp-action="SendSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Send order to the supplier</a>
+                    break;
+                case SupplyOrderState.Processing:
+                    <a asp-action="CloseSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Close this order</a>
+                    <a asp-action="CancelSupplyOrder" asp-area="Admin" asp-controller="SupplyOrders" asp-route-supplyOrderId="@Model.Id" class="btn btn-primary">Cancel this order</a>
+                    break;
+                case SupplyOrderState.Closed:
+                    break;
+                case SupplyOrderState.Canceled:
+                    break;
+            }
+            @*<a asp-action="Delete" asp-area="Admin" asp-controller="SupplyOrders" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>*@
         </div>
     </div>
 </div>

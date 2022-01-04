@@ -1,4 +1,5 @@
-﻿@model PurchaseOrderViewModel
+﻿@using CourseProject.Domain
+@model PurchaseOrderViewModel
 
 @{
     ViewBag.Title = $"Purchase request #{Model.Id}";
@@ -37,6 +38,12 @@
     <dd class="col-sm-8">
         @Html.DisplayFor(model => model.Client.Email)
     </dd>
+    <dt class="col-sm-4">
+        @Html.DisplayNameFor(model => model.Manager)
+    </dt>
+    <dd class="col-sm-8">
+        @Html.DisplayFor(model => model.ManagerId)
+    </dd>
 </dl>
 
 <div class="row">
@@ -65,5 +72,31 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+
+<div class="col-5">
+    <div class="d-flex gap-1">
+        <a asp-action="Index" asp-area="Admin" asp-controller="SupplyOrders" class="btn btn-primary">Go to list</a>
+        @switch (Model.State) {
+            case PurchaseOrderState.New:
+
+                <form method="post" asp-action="AcceptPurchaseOrder" asp-area="Admin" asp-controller="PurchaseOrders">
+                    <input type="hidden" name="purchaseOrderId" value="@Model.Id"/>
+                    <input type="submit" value="Accept this order" class="btn btn-primary"/>
+                </form>
+
+                break;
+            case PurchaseOrderState.Processing:
+                <a asp-action="ClosePurchaseOrder" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-purchaseOrderId="@Model.Id" class="btn btn-primary">Close this order</a>
+                <a asp-action="CancelPurchaseOrder" asp-area="Admin" asp-controller="PurchaseOrders" asp-route-purchaseOrderId="@Model.Id" class="btn btn-primary">Cancel this order</a>
+                break;
+            case PurchaseOrderState.Closed:
+                break;
+            case PurchaseOrderState.Canceled:
+                break;
+        }
+        @*<a asp-action="Delete" asp-area="Admin" asp-controller="SupplyOrders" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>*@
     </div>
 </div>

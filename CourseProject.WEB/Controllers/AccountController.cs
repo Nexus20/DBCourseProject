@@ -93,5 +93,36 @@ namespace CourseProject.WEB.Controllers {
             await _signInService.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPersonalInfo() {
+
+            var result = await _userService.GetClientByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            var model = _mapper.Map<ClientDto, EditPersonalInfoViewModel>(result.Result);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPersonalInfo(EditPersonalInfoViewModel viewModel) {
+
+            var model = _mapper.Map<EditPersonalInfoViewModel, UserDto>(viewModel);
+
+            var result = await _userService.UpdateUserPersonalDataAsync(model, User);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            return RedirectToAction(nameof(Cabinet));
+        }
     }
 }

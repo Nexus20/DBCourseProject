@@ -64,8 +64,50 @@ public class CarService : ICarService {
         return operationResult;
     }
 
-    public Task<OperationResult> EditCarAsync(CarDto carDto) {
-        throw new NotImplementedException();
+    public async Task<OperationResult> EditCarAsync(CarDto carDto, IFormFileCollection formFileCollection = null,
+        string directoryPath = null) {
+
+        var operationResult = new OperationResult();
+
+        await using var transaction = _unitOfWork.BeginTransaction();
+
+        try {
+            var car = _mapper.Map<CarDto, Car>(carDto);
+            _unitOfWork.GetRepository<IRepository<Car>, Car>().Update(car);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            if (formFileCollection.Any() && !string.IsNullOrWhiteSpace(directoryPath)) {
+
+                directoryPath = Path.Combine(directoryPath, car.Id.ToString());
+
+                if (!Directory.Exists(directoryPath)) {
+                    var dirInfo = new DirectoryInfo(directoryPath);
+                    dirInfo.Create();
+                }
+
+                foreach (var uploadedImage in formFileCollection) {
+
+                    var path = $"/img/cars/{car.Id}/{uploadedImage.FileName}";
+
+                    await using (var fileStream = new FileStream(Path.Combine(directoryPath, uploadedImage.FileName), FileMode.Create)) {
+                        await uploadedImage.CopyToAsync(fileStream);
+                    }
+
+                    await _unitOfWork.GetRepository<IRepository<CarPhoto>, CarPhoto>().CreateAsync(new CarPhoto() { CarId = car.Id, Path = path });
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex) {
+            await transaction.RollbackAsync();
+            operationResult.AddError("Unexpected", $"There is an error: {ex.Message}");
+        }
+
+        return operationResult;
     }
 
     public async Task<OperationResult> DeleteCarAsync(int id, string directoryPath = null) {

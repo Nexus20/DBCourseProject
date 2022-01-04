@@ -10,31 +10,35 @@
 <div>
     <div class="row">
         <div class="col-sm-6">
-            <dl class="row">
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.EquipmentItems)
-                </dt>
-                <dd class="col-sm-8">
-                <ul class="list-group" id="equipment-list">
-                    @foreach (var item in Model.EquipmentItems) {
-                        <li class="list-group-item equipment-item">
-                            <div class="d-flex justify-content-between">
-                                <div class="equipment-item-category-name">@item.Category.Name</div>
-                            </div>
-                            <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="@item.Id">
-                                @foreach (var value in item.EquipmentItemValues) {
-                                    <li class="list-group-item equipment-item-value">
-                                        <div class="d-flex justify-content-between">
-                                            <div class="equipment-item-value-name">@value.Value</div>
+            <div class="mb-3">@Html.DisplayNameFor(model => model.EquipmentItems)</div>
+            <ul class="list-group mb-3" id="equipment-list">
+                @foreach (var item in Model.EquipmentItems) {
+                    <li class="list-group-item equipment-item">
+                        <div class="d-flex justify-content-between">
+                            <div class="equipment-item-category-name">@item.Category.Name</div>
+                        </div>
+                        <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="@item.Id">
+                            @foreach (var value in item.EquipmentItemValues) {
+                                <li class="list-group-item equipment-item-value">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="equipment-item-value-name">@value.Value 
+                                            
+                                            @if (value.Price > 0) {
+                                                @Html.Raw($"(&dollar; {value.Price})")
+                                            }
+                                            else {
+                                                @Html.Raw("(Standard)")
+                                            }
+
+
                                         </div>
-                                    </li>
-                                }
-                            </ul>
-                        </li>
-                    }
-                </ul>
-            </dd>
-            </dl>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
         </div>
         <div class="col-sm-6 fotorama" data-nav="thumbs">
             @foreach (var image in Model.Photos) {

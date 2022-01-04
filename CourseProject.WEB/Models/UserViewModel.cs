@@ -1,4 +1,6 @@
-﻿namespace CourseProject.WEB.Models; 
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CourseProject.WEB.Models; 
 
 public class UserViewModel {
 
@@ -12,7 +14,8 @@ public class UserViewModel {
 
     public string Patronymic { get; set; }
 
-    public string Phone { get; set; }
+    [Display(Name = "Phone number")]
+    public string PhoneNumber { get; set; }
 
     public string Email { get; set; }
 
@@ -21,4 +24,6 @@ public class UserViewModel {
     public string Password { get; set; }
 
     public string Role { get; set; } = "user";
+
+    public string FullName => $"{Surname} {Name} {Patronymic}";
 }

@@ -1,9 +1,11 @@
-﻿using CourseProject.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+using CourseProject.Domain;
 
 namespace CourseProject.WEB.Models; 
 
 public class SupplyOrderViewModel : BaseViewModel {
 
+    [Display(Name = "Supplier")]
     public int SupplierId { get; set; }
 
     public SupplierViewModel? Supplier { get; set; }
@@ -16,7 +18,9 @@ public class SupplyOrderViewModel : BaseViewModel {
 
     public virtual ICollection<SupplyOrderPartViewModel>? Parts { get; set; }
 
+    [Display(Name = "Creation date")]
     public DateTime CreationDate { get; set; }
 
+    [Display(Name = "Last update date")]
     public DateTime LastUpdateDate { get; set; }
 }

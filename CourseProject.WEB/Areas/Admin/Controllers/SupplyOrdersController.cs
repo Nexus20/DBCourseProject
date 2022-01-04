@@ -311,6 +311,36 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CancelSupplyOrder(int supplyOrderId) {
+
+            var result = await _supplyOrderService.GetOrderByIdAsync(supplyOrderId);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            var model = _mapper.Map<SupplyOrderDto, SupplyOrderViewModel>(result.Result);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmCancelSupplyOrder(int id) {
+
+            var result = await _supplyOrderService.CancelSupplyOrderAsync(id);
+
+            if (result.HasErrors) {
+                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
+                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
         //public IActionResult CreateSalesReport() {
 
         //    var dto = _purchaseOrderService.GetAllOrders();
@@ -322,7 +352,7 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
         //    return File(CreatePdf(model), "application/pdf");
         //}
 
-        private byte[] CreatePdf(SalesReportViewModel model) {
+        private async Task<byte[]> CreatePdf(SalesReportViewModel model) {
 
             var globalSettings = new GlobalSettings {
                 ColorMode = ColorMode.Color,
@@ -334,7 +364,7 @@ namespace CourseProject.WEB.Areas.Admin.Controllers {
 
             var objectSettings = new ObjectSettings {
                 PagesCount = true,
-                HtmlContent = _viewRenderService.RenderToString("PurchaseOrders/SalesReport", model),
+                HtmlContent = await _viewRenderService.RenderToString("PurchaseOrders/SalesReport", model),
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css", "pdf.css") },
                 HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
                 FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Invoice" }

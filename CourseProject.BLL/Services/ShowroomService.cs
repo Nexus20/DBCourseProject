@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using CourseProject.BLL.DTO;
+using CourseProject.BLL.FilterModels;
 using CourseProject.BLL.Interfaces;
+using CourseProject.BLL.Pipeline;
+using CourseProject.BLL.PipelineBuilders;
 using CourseProject.BLL.Validation;
 using CourseProject.DAL.Entities;
 using CourseProject.DAL.Interfaces;
@@ -13,9 +16,12 @@ public class ShowroomService : IShowroomService {
 
     private readonly IMapper _mapper;
 
-    public ShowroomService(IUnitOfWork unitOfWork, IMapper mapper) {
+    private readonly IPipelineBuilderDirector<Showroom, ShowroomFilterModel> _builderDirector;
+
+    public ShowroomService(IUnitOfWork unitOfWork, IMapper mapper, IPipelineBuilderDirector<Showroom, ShowroomFilterModel> builderDirector) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _builderDirector = builderDirector;
     }
 
     public async Task<OperationResult> CreateShowroomAsync(ShowroomDto dto) {
@@ -82,5 +88,24 @@ public class ShowroomService : IShowroomService {
         operationResult.Result = _mapper.Map<Showroom, ShowroomDto>(model);
 
         return operationResult;
+    }
+
+    public async Task<DtoListWithPossibleEntitiesCount<ShowroomDto>> GetAllShowroomsAsync(ShowroomFilterModel filterModel) {
+
+        var pipeline = new SelectionPipeline<Showroom, ShowroomFilterModel>(filterModel, _builderDirector);
+
+        var expressions = pipeline.Process();
+
+        var source = _unitOfWork.GetRepository<IRepository<Showroom>, Showroom>().FindAllWithDetails(expressions);
+
+        var possibleCarsCount = await _unitOfWork.GetRepository<IRepository<Showroom>, Showroom>()
+            .CountAsync(expressions.FilterExpressions);
+
+        //logger.LogInformation($"All games were returned. Returned games count: {source.Count()}");
+
+        return new DtoListWithPossibleEntitiesCount<ShowroomDto>() {
+            Dtos = _mapper.Map<IEnumerable<Showroom>, IEnumerable<ShowroomDto>>(source),
+            PossibleDtosCount = possibleCarsCount
+        };
     }
 }

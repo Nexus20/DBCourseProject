@@ -1,4 +1,5 @@
-﻿using CourseProject.BLL.FilterModels;
+﻿using System.ComponentModel.DataAnnotations;
+using CourseProject.BLL.FilterModels;
 
 namespace CourseProject.WEB.Models.FilterViewModels; 
 
@@ -11,5 +12,6 @@ public class SupplierFilterViewModel : FilterViewModel {
 
     public string? Phone { get; set; }
 
+    [Display(Name = "Order by")]
     public SupplierOrderType OrderType { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using CourseProject.BLL.DTO;
 using CourseProject.BLL.Interfaces;
 using CourseProject.BLL.Validation;
@@ -86,6 +87,28 @@ public class UserService : IUserService {
 
         await _unitOfWork.UserManager.AddToRoleAsync(client, "user");
         await _unitOfWork.SignInManager.SignInAsync(client, false);
+
+        return operationResult;
+    }
+
+    public async Task<OperationResult> UpdateUserPersonalDataAsync(UserDto model, ClaimsPrincipal claims) {
+
+        var operationResult = new OperationResult();
+
+        var user = await _unitOfWork.UserManager.GetUserAsync(claims);
+
+        if (user == null) {
+            operationResult.AddError(nameof(model.Id), "Such user not found");
+            return operationResult;
+        }
+
+        user.Name = model.Name;
+        user.Surname = model.Surname;
+        user.Patronymic = model.Patronymic;
+        user.Email = model.Email;
+        user.PhoneNumber = model.PhoneNumber;
+
+        await _unitOfWork.UserManager.UpdateAsync(user);
 
         return operationResult;
     }

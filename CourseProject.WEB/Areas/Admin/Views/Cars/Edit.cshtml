@@ -9,46 +9,44 @@
 <hr />
 <div class="row">
     <div class="col-sm-6">
-        <dl class="row">
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.ViewModel.FullModel)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.ViewModel.FullModel)
-            </dd>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.ViewModel.EquipmentItems)
-            </dt>
-            <dd class="col-sm-8">
-                <ul class="list-group" id="equipment-list">
-                    @foreach (var item in Model.ViewModel.EquipmentItems) {
-                        <li class="list-group-item equipment-item">
-                            <div class="d-flex justify-content-between">
-                                <div class="equipment-item-category-name">@item.Category.Name</div>
-                                <button class="btn btn-outline-success btn-add-equipment-item-value" title="Add value to this equipment item" data-equipment-item-id="@item.Id">
-                                    <span class="fa fa-plus"></span>
-                                </button>
-                                <button class="btn btn-outline-danger btn-delete-equipment-item" title="Remove this equipment item" data-equipment-item-id="@item.Id">
-                                    <span class="fa fa-times"></span>
-                                </button>
-                            </div>
-                            <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="@item.Id">
-                                @foreach (var value in item.EquipmentItemValues) {
-                                    <li class="list-group-item equipment-item-value">
-                                        <div class="d-flex justify-content-between">
-                                            <div class="equipment-item-value-name">@value.Value</div>
-                                            <button class="btn btn-outline-danger btn-delete-equipment-item-value" title="Remove this equipment item value" data-equipment-item-value-id="@value.Id">
-                                                <span class="fa fa-times"></span>
-                                            </button>
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
-                        </li>
-                    }
-                </ul>
-            </dd>
-        </dl>
+
+        <div class="mb-3">
+            @Html.DisplayNameFor(model => model.ViewModel.FullModel):
+            @Html.DisplayFor(model => model.ViewModel.FullModel)
+        </div>
+
+        <div class="mb-3">
+            @Html.DisplayNameFor(model => model.ViewModel.EquipmentItems)
+        </div>
+        <ul class="list-group mb-3" id="equipment-list">
+            @foreach (var item in Model.ViewModel.EquipmentItems) {
+                <li class="list-group-item equipment-item">
+                    <div class="d-flex justify-content-between">
+                        <div class="equipment-item-category-name">@item.Category.Name</div>
+                        <div>
+                            <button class="btn btn-outline-success btn-add-equipment-item-value" title="Add value to this equipment item" data-equipment-item-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                            </button>
+                            <button class="btn btn-outline-danger btn-delete-equipment-item" title="Remove this equipment item" data-equipment-item-id="@item.Id">
+                                <span class="fa fa-times"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="@item.Id">
+                        @foreach (var value in item.EquipmentItemValues) {
+                            <li class="list-group-item equipment-item-value">
+                                <div class="d-flex justify-content-between">
+                                    <div class="equipment-item-value-name">@value.Value</div>
+                                    <button class="btn btn-outline-danger btn-delete-equipment-item-value" title="Remove this equipment item value" data-equipment-item-value-id="@value.Id">
+                                        <span class="fa fa-times"></span>
+                                    </button>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
     </div>
 </div>
 <div class="row">
@@ -58,20 +56,20 @@
             <input type="hidden" asp-for="EditModel.Id" />
             <div class="mb-3">
                 <label asp-for="EditModel.Submodel" class="form-label"></label>
-                <input asp-for="EditModel.Submodel" class="form-control" />
+                <input asp-for="EditModel.Submodel" class="form-select" name="Submodel" />
                 <span asp-validation-for="EditModel.Submodel" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="EditModel.ModelId" class="form-label"></label>
-                <select asp-for="EditModel.ModelId" class="form-control" asp-items="ViewBag.Models"></select>
+                <select asp-for="EditModel.ModelId" class="form-select" asp-items="ViewBag.Models" name="ModelId"></select>
                 <span asp-validation-for="EditModel.ModelId" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="EditModel.Images" class="form-label"></label>
-                <input type="file" asp-for="EditModel.Images" multiple accept="image/*" />
+                <input type="file" asp-for="EditModel.Images" multiple accept="image/*" name="Images" class="form-control" />
             </div>
             <div class="mb-3">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Accept changes" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -80,16 +78,16 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" value="@Model.ViewModel.Id" id="car-id" />
             <div class="mb-3">
-                <label for="categories-select">Select equipment categories for this car</label>
-                <select id="categories-select" class="form-control">
+                <label for="categories-select" class="form-label">Select equipment categories for this car</label>
+                <select id="categories-select" class="form-select">
                     @foreach (var category in (ViewBag.EquipmentCategories as IEnumerable<EquipmentItemCategoryViewModel>)!) {
                         <option value="@category.Id">@category.Name (@category.UnitsOfMeasure)</option>
                     }
                 </select>
             </div>
             <div class="mb-3">
-                <label for="is-optional-check">Is optional</label>
-                <input type="checkbox" id="is-optional-check" class="form-check" value="true" />
+                <input type="checkbox" id="is-optional-check" class="form-check-input" value="true" />
+                <label for="is-optional-check" class="form-check-label">Is optional</label>
             </div>
             <div class="mb-3">
                 <button type="button" id="btn-add-categories" class="btn btn-primary">Add categories</button>
@@ -98,8 +96,8 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="mt-3">
+    <a asp-action="Index" asp-controller="Cars" asp-area="Admin" class="btn btn-primary">Back to List</a>
 </div>
 
 @{
@@ -159,11 +157,11 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="mb-3">
                         <label for="value-input">Value</label>
-                        <input type="text" id="value-input" class="form-control"/>
+                        <input type="text" id="value-input" class="form-control" />
                     </div>
                     <div class="mb-3">
                         <label for="price-input">Price</label>
-                        <input type="text" id="price-input" class="form-control"/>
+                        <input type="text" id="price-input" class="form-control" />
                     </div>
                 </form>
             </div>
@@ -180,7 +178,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
     $('#btn-add-categories').click(e => {
 
@@ -288,7 +286,7 @@
 
 
             $('#btn-confirm-delete-equipment-item').click(e2 => {
-                
+
                 $.ajax({
                     url: '@Url.Action("DeleteEquipmentItem", "Cars")',
                     data: { equipmentItemId },
@@ -321,9 +319,8 @@
 
 
             $('#btn-confirm-delete-equipment-item-value').click(e2 => {
-                
                 $.ajax({
-                    url: '@Url.Action("DeleteEquipmentItemValue", "Cars")',
+                    url: '@Url.Action("DeleteEquipmentItemValue", "Cars", new {area = "Admin"})',
                     data: { equipmentItemValueId },
                     success: data => {
                         $(e.currentTarget).parents('.equipment-item-value').remove();

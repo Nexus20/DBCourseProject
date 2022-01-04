@@ -1,6 +1,4 @@
 ﻿using CourseProject.BLL.DataHandlers;
-using CourseProject.BLL.DataHandlers.PurchaseOrderDataHandlers;
-using CourseProject.BLL.DataHandlers.SupplierDataHandlers;
 using CourseProject.BLL.DataHandlers.SupplyOrderDataHandlers;
 using CourseProject.BLL.FilterModels;
 using CourseProject.DAL.Entities;

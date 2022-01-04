@@ -8,7 +8,7 @@ public class PurchaseOrderFilterModel : FilterModel {
 
     public string ManagerId { get; set; }
 
-    public PurchaseOrderState State { get; set; }
+    public PurchaseOrderState? State { get; set; }
 
     public PurchaseOrderOrderType OrderType { get; set; }
 

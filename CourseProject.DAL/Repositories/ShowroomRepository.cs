@@ -15,6 +15,10 @@ public class ShowroomRepository : Repository<Showroom> {
             .AsNoTracking()
             .Include(s => s.CarsInStock)
                 .ThenInclude(cis => cis.Car)
+                    .ThenInclude(c => c.Photos)
+                    .AsNoTracking()
+            .Include(s => s.CarsInStock)
+                .ThenInclude(cis => cis.Car)
                     .ThenInclude(c => c.Model)
                         .ThenInclude(m => m.Brand)
                         .AsNoTracking()
@@ -23,13 +27,6 @@ public class ShowroomRepository : Repository<Showroom> {
                     .ThenInclude(pv => pv.EquipmentItemValue)
                         .ThenInclude(ev => ev.EquipmentItem)
                             .ThenInclude(ei => ei.Category)
-                            .AsNoTracking()
-            .Include(s => s.CarsInStock)
-                .ThenInclude(cis => cis.CarInStockEquipmentItemValues)
-                    .ThenInclude(pv => pv.EquipmentItemValue)
-                        .ThenInclude(ev => ev.EquipmentItem)
-                            .ThenInclude(ei => ei.Car)
-                                .ThenInclude(c => c.Photos)
-                                .AsNoTracking();
+                            .AsNoTracking();
     }
 }

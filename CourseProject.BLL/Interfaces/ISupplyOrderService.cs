@@ -22,4 +22,6 @@ public interface ISupplyOrderService {
     Task<OperationResult<int>> TakeCarsToShowroom(CloseSupplyOrderDto dto);
 
     Task<OperationResult> CloseSupplyOrderAsync(int supplyOrderId);
+
+    Task<OperationResult> CancelSupplyOrderAsync(int supplyOrderId);
 }
