@@ -199,18 +199,60 @@ public class PurchaseOrderService : IPurchaseOrderService {
 
         var operationResult = new OperationResult();
 
-        var purchaseOrder = await _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>()
-            .FirstOrDefaultAsync(po => po.Id == purchaseOrderId);
+        await using var transaction = _unitOfWork.BeginTransaction();
 
-        if (purchaseOrder == null) {
-            operationResult.AddError(nameof(purchaseOrderId), "Such purchase order not found");
-            return operationResult;
+        try {
+
+            var purchaseOrder = await _unitOfWork.GetRepository<IPurchaseOrderRepository, PurchaseOrder>()
+                .FirstOrDefaultAsync(po => po.Id == purchaseOrderId, po => po.PurchaseOrderEquipmentItemsValues);
+
+            if (purchaseOrder == null) {
+                operationResult.AddError(nameof(purchaseOrderId), "Such purchase order not found");
+                return operationResult;
+            }
+
+            var purchaseOrderEquipmentItemValuesIds =
+                purchaseOrder.PurchaseOrderEquipmentItemsValues.Select(x => x.EquipmentItemValueId).ToList();
+
+            var manager = await _unitOfWork.GetRepository<IRepository<Manager>, Manager>()
+                .FirstOrDefaultAsync(m => m.Id == purchaseOrder.ManagerId);
+
+            var carsInStock = _unitOfWork.GetRepository<IRepository<CarInStock>, CarInStock>()
+                .FindAllWithDetails(c => c.ShowroomId == manager.ShowroomId);
+
+            foreach (var carInStock in carsInStock) {
+
+                var carInStockEquipmentItemValuesIds = carInStock.CarInStockEquipmentItemValues
+                    .Select(x => x.EquipmentItemValueId).ToList();
+
+                var concatenatedEquipmentItemValuesIds =
+                    purchaseOrderEquipmentItemValuesIds.Concat(carInStockEquipmentItemValuesIds);
+
+                var distinctEquipmentItemValuesIds = concatenatedEquipmentItemValuesIds.Distinct().ToList();
+
+                if (distinctEquipmentItemValuesIds.Count == purchaseOrderEquipmentItemValuesIds.Count &&
+                    distinctEquipmentItemValuesIds.Count == carInStockEquipmentItemValuesIds.Count) {
+
+                    purchaseOrder.VinCode = carInStock.VinCode;
+
+                    _unitOfWork.GetRepository<IRepository<CarInStockEquipmentItemValue>, CarInStockEquipmentItemValue>().Delete(x => x.CarInStockId == carInStock.Id);
+                    await _unitOfWork.SaveChangesAsync();
+                    _unitOfWork.GetRepository<IRepository<CarInStock>, CarInStock>().Delete(c => c.VinCode == purchaseOrder.VinCode);
+
+                    break;
+                }
+            }
+
+            purchaseOrder.State = PurchaseOrderState.Closed;
+
+            _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().Update(purchaseOrder);
+            await _unitOfWork.SaveChangesAsync();
+            await transaction.CommitAsync();
         }
-
-        purchaseOrder.State = PurchaseOrderState.Closed;
-
-        _unitOfWork.GetRepository<IRepository<PurchaseOrder>, PurchaseOrder>().Update(purchaseOrder);
-        await _unitOfWork.SaveChangesAsync();
+        catch (Exception ex) {
+            await transaction.RollbackAsync();
+            operationResult.AddError("Unexpected", $"There is an error: {ex.Message}");
+        }
 
         return operationResult;
     }

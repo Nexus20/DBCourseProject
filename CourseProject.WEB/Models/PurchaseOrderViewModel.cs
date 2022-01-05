@@ -23,6 +23,7 @@ namespace CourseProject.WEB.Models {
         [Display(Name = "Last update date")]
         public DateTime LastUpdateDate { get; set; }
 
+        [Display(Name = "VIN Code")]
         public string? VinCode { get; set; }
 
         public int ShowroomId { get; set; }

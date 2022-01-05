@@ -82,6 +82,12 @@
                             <h6 class="card-subtitle mb-2 text-muted">
                                 @item.EquipmentItemsValues.ElementAt(0).EquipmentItem.Car.FullModel
                             </h6>
+                            
+                            @if (item.State == PurchaseOrderState.Closed) {
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    VIN Code: @item.VinCode
+                                </h6>
+                            }
                             <ul class="list-group">
                                 @foreach (var equipmentItemValue in item.EquipmentItemsValues) {
                                     <li class="list-group-item">@equipmentItemValue.EquipmentItem.Category.Name: @equipmentItemValue.Value (&dollar; @equipmentItemValue.Price)</li>

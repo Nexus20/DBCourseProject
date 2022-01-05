@@ -291,7 +291,7 @@ public class CarService : ICarService {
         }
         catch (Exception ex) {
             await transaction.RollbackAsync();
-            operationResult.AddError("Unexpected", "There is unexpected error");
+            operationResult.AddError("Unexpected", $"There is an error: {ex.Message}");
         }
 
         return operationResult;
