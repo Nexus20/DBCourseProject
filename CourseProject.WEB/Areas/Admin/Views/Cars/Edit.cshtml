@@ -36,7 +36,7 @@
                         @foreach (var value in item.EquipmentItemValues) {
                             <li class="list-group-item equipment-item-value">
                                 <div class="d-flex justify-content-between">
-                                    <div class="equipment-item-value-name">@value.Value</div>
+                                    <div class="equipment-item-value-name">@value.Value (&dollar; @value.Price)</div>
                                     <button class="btn btn-outline-danger btn-delete-equipment-item-value" title="Remove this equipment item value" data-equipment-item-value-id="@value.Id">
                                         <span class="fa fa-times"></span>
                                     </button>
@@ -210,7 +210,7 @@
                                     <span class="fa fa-times"></span>
                                 </button>
                             </div>
-                            <ul class="list-group equipment-item-values-list mt-3">
+                            <ul class="list-group equipment-item-values-list mt-3" data-equipment-item-id="${data.id}">
                             </ul>
                         </li>`
                 );

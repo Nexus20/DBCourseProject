@@ -61,14 +61,13 @@ public class StatisticsRepository : IStatisticsRepository {
         await using var command = Context.Database.GetDbConnection().CreateCommand();
 
         command.CommandText = "WITH cte(Brand, Model, OrdersCount, rn) AS ( " +
-                              "SELECT b.[Name], m.[Name], count(poeiv.PurchaseOrderId) AS OrdersCount, ROW_NUMBER() OVER(ORDER BY b.[Name] ASC) AS rn FROM[dbo].[Models] m " +
-                              "JOIN dbo.Brands b ON m.BrandId = b.Id " +
-                              "JOIN dbo.Cars c ON c.ModelId = m.Id " +
-                              "JOIN dbo.EquipmentItems ei ON ei.CarId = c.Id " +
-                              "JOIN dbo.EquipmentItemValues eiv ON eiv.Id = ei.Id " +
-                              "JOIN dbo.PurchaseOrderEquipmentItemsValues poeiv ON poeiv.EquipmentItemValueId = eiv.Id " +
-                              "JOIN dbo.PurchaseOrders po ON po.Id = poeiv.PurchaseOrderId " +
-                              "WHERE po.[State] = 2 " +
+                              "SELECT b.[Name], m.[Name], count(*) AS OrdersCount, ROW_NUMBER() OVER(ORDER BY b.[Name] ASC) AS rn FROM dbo.PurchaseOrders po " +
+                              "JOIN dbo.PurchaseOrderEquipmentItemsValues poeiv ON poeiv.PurchaseOrderId = po.Id " +
+                              "JOIN dbo.EquipmentItemValues eiv ON eiv.Id = poeiv.EquipmentItemValueId " +
+                              "JOIN dbo.EquipmentItems ei ON ei.Id = eiv.EquipmentItemId " +
+                              "JOIN dbo.Cars c ON c.Id = ei.CarId " +
+                              "JOIN dbo.Models m ON m.Id = c.ModelId " +
+                              "JOIN dbo.Brands b ON b.Id = m.BrandId " +
                               "GROUP BY b.[Name], m.[Name]) " +
                               "SELECT Brand, Model, OrdersCount FROM cte WHERE rn <= @top ORDER BY OrdersCount DESC";
 
