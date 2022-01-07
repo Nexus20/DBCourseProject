@@ -75,14 +75,23 @@ namespace CourseProject.WEB.Controllers {
         [HttpGet]
         public async Task<IActionResult> Cabinet() {
 
-            var result = await _userService.GetClientByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            UserViewModel model;
 
-            if (result.HasErrors) {
-                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
-                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            var clientResult = await _userService.GetClientByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (clientResult.HasErrors) {
+
+                var userResult = await _userService.GetUserByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                if (userResult.HasErrors) {
+                    TempData["Errors"] = JsonSerializer.Serialize(userResult.Errors);
+                    return RedirectToAction(nameof(ErrorController.Error502), "Error");
+                }
+                model = _mapper.Map<UserDto, UserViewModel>(userResult.Result);
             }
-
-            var model = _mapper.Map<ClientDto, ClientViewModel>(result.Result);
+            else {
+                model = _mapper.Map<ClientDto, ClientViewModel>(clientResult.Result);
+            }
 
             return View(model);
         }
@@ -97,14 +106,25 @@ namespace CourseProject.WEB.Controllers {
         [HttpGet]
         public async Task<IActionResult> EditPersonalInfo() {
 
-            var result = await _userService.GetClientByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            EditPersonalInfoViewModel model;
 
-            if (result.HasErrors) {
-                TempData["Errors"] = JsonSerializer.Serialize(result.Errors);
-                return RedirectToAction(nameof(ErrorController.Error502), "Error");
+            var clientResult = await _userService.GetClientByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (clientResult.HasErrors) {
+
+                var userResult = await _userService.GetUserByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                if (userResult.HasErrors) {
+                    TempData["Errors"] = JsonSerializer.Serialize(userResult.Errors);
+                    return RedirectToAction(nameof(ErrorController.Error502), "Error");
+                }
+
+                model = _mapper.Map<UserDto, EditPersonalInfoViewModel>(userResult.Result);
+            }
+            else {
+                model = _mapper.Map<ClientDto, EditPersonalInfoViewModel>(clientResult.Result);
             }
 
-            var model = _mapper.Map<ClientDto, EditPersonalInfoViewModel>(result.Result);
 
             return View(model);
         }

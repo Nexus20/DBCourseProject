@@ -2,5 +2,5 @@
 
 public class ClientViewModel  : UserViewModel {
 
-    public virtual ICollection<PurchaseOrderViewModel> PurchaseOrders { get; set; }
+    public ICollection<PurchaseOrderViewModel> PurchaseOrders { get; set; }
 }

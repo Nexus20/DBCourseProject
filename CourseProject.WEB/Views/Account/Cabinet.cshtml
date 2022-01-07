@@ -1,5 +1,5 @@
 ﻿@using CourseProject.Domain
-@model ClientViewModel
+@model UserViewModel
 
 <h1>Personal info</h1>
 <hr>
@@ -51,9 +51,9 @@
 
 <h2 class="mt-3">Purchase orders</h2>
 
-@if (Model.PurchaseOrders is {Count: > 0 }) {
+@if ((Model as ClientViewModel)?.PurchaseOrders is {Count: > 0 }) {
     <div class="row">
-        @foreach (var item in Model.PurchaseOrders) {
+        @foreach (var item in (Model as ClientViewModel)?.PurchaseOrders) {
 
 
             var state = item.State switch {
